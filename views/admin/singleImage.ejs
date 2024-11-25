@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nest Mart - Product Edit</title>
+    <link rel="stylesheet" href="/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #3BB77E;
+            --secondary-color: #253D4E;
+            --background-color: #f7f8f9;
+            --card-background: #ffffff;
+            --border-color: #ececec;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--background-color);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--secondary-color);
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .product-container {
+            padding: 20px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .save-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-button:hover {
+            background: #2ea56f;
+        }
+
+        .product-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .main-info, .side-info {
+            background: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .image-preview {
+            width: 60%;
+            height: 200px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background: #f8f8f8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,0,0,0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            background: #e8f6ea;
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .text-muted {
+            color: #7e7e7e;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+    </style>
+   
+</head>
+<body>
+    
+    <div class="dashboard-header" style="display: flex; flex-direction: column;align-items: first baseline;">
+        
+        <h1 class="page-title">Edit Product</h1>
+        <div style="display: flex;">
+        <a href="/admin/" style="color: #253D4E;text-decoration: none;">Home</a>
+        <a href="/admin/productList" style="color: #253D4E;text-decoration: none;">/ product List </a>
+        <a href="/admin/SingleImage/:id"  style="color: #253D4E;text-decoration: none">/ Edit Product</a>
+        </div>
+        
+    </div>
+   
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="product-container">
+        <form id="updateProductForm">
+            <div class="product-form">
+                <div class="main-info">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="title" value="<%=result.productTitle %>">
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="description" rows="4"><%=result.description %></textarea>
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Main Image</label>
+                        <div class="image-preview">
+                            <img id="mainImagePreview" src="http://localhost:4000/images/<%=result.primaryImage%>" alt="Main product image">
+                        </div>
+                        <input type="file" id="primaryImageInput" accept="image/*" style="margin-top: 10px;">
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Gallery Images</label>
+                        <div class="gallery-grid">
+                           
+                                    <div class="gallery-item">
+                                        
+                                        <img src="http://localhost:4000/images/<%= result.additonalImage[0] %>" alt="Gallery image ">
+                                       
+                                    </div>
+                                    <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
+                            
+                                    <div class="gallery-item">
+                                        <img src="http://localhost:4000/images/<%= result.additonalImage[1] %>" alt="Gallery image ">
+                                       
+                                    </div>
+                                    <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
+                            
+                                <!-- Show a default message if there are no images available -->
+                               
+                         
+                            
+                        </div>
+                        
+                    </div>
+    
+                    <div id="imageCropModal" style="display: none;">
+                        <img id="cropImage" alt="Image to crop" style="max-width: 100%;" />
+                        <button type="button" id="cropButton" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4">Crop</button>
+                    </div>
+                </div>
+    
+                <div class="side-info">
+                    <!-- <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="productStatus">
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="outOfStock">Out of Stock</option>
+                        </select>
+                    </div> -->
+    
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="form-control" id="productCategory">
+                            <% category.forEach(item=> {%> 
+                            <option value="<%=item.category %>"><%=item.category %></option>
+                            <%})%>
+                            
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" class="form-control" min="1" id="regularPrice" value="<%=result.RegulerPrice %>" step="0.01">
+                    </div>
+    
+                    
+                        <label>Offer Price</label>
+                        <h4 type="number" class="form-control" min="0" max="100" id="offer" value="<%=result.OfferPrice%>" step="0.01" style="color: #2ea56f;"><%=result.OfferPrice%></h4>
+                        
+                        <button type="button"  data-id="<%= result.id %>" class="removebutton">Remove Offer</button>
+                      
+                   
+                    <div class="form-group">
+                        <label>Offer Percentage %</label>
+                        <input type="number" class="form-control" min="0" max="100" id="offerPrice" value="<%=offer%>" step="0.01">
+                        <span></span>
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Stock Quantity</label>
+                        <input type="number" class="form-control" min="0" id="stock" value="<%=result.Stock %>">
+                        <div style="padding-top: 8px;">
+                        <% if (result.Stock > 10) { %>
+                            <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full" style="background-color: #84ec7d; padding: 3px; border-radius: 5px;">
+                                In Stock
+                            </span>
+                        <% } else if (result.Stock > 0) { %> 
+                            <span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full" style="background-color: #ecea7d; padding: 3px; border-radius: 5px;">
+                                Low Stock
+                            </span>
+                        <% } else { %> 
+                            <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full" style="background-color: #f57a7a; padding: 3px; border-radius: 5px;">
+                                Out of Stock
+                            </span>
+                        <% } %> 
+                    </div>
+                    </div>
+    
+                    <!-- <div class="form-group">
+                        <label>SKU</label>
+                        <input type="text" class="form-control" id="productSKU" value="<%=result.sku %>">
+                    </div>
+     -->
+                    <button type="submit" data-id="<%= result.id %>" class="save-button">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+      document.querySelector('.removebutton').addEventListener('click', function() {
+    const productId = this.getAttribute("data-id");
+    let formData = new FormData();
+    formData.append('remove', productId);
+
+    console.log(formData.get('remove')); // Logs the productId
+
+    fetch('/admin/remove', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+
+
+
+     
+     document.addEventListener('DOMContentLoaded', function () {
+    const primaryImageInput = document.getElementById('primaryImageInput');
+    const additionalImageInputs = document.querySelectorAll('.additionalImageInput');
+    console.log(additionalImageInputs,'image input');
+    
+    const imageCropModal = document.getElementById('imageCropModal');
+    const cropImage = document.getElementById('cropImage');
+    const cropButton = document.getElementById('cropButton');
+    let cropper;
+    let croppedBlobs = {}; 
+    function handleImageCrop(file, inputName) {
+        // console.log(file,inputName,'inputNAME');
+        
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                cropImage.src = e.target.result;
+                imageCropModal.style.display = 'block';
+
+                if (cropper) cropper.destroy();
+
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                });
+
+                cropButton.onclick = () => {
+                    if (cropper) {
+                        const canvas = cropper.getCroppedCanvas();
+                        canvas.toBlob(blob => {
+                            croppedBlobs[inputName] = blob;
+                            console.log(croppedBlobs,'blobs');
+                            
+                            imageCropModal.style.display = 'none';
+                            cropper.destroy();
+                            cropper = null;
+                        });
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Event listener for primary image input
+    primaryImageInput.addEventListener('change', event => {
+        const file = event.target.files[0];
+        handleImageCrop(file, 'primaryImage');
+    });
+
+   
+    additionalImageInputs.forEach((input, index) => {
+    console.log(`Processing input at index ${index}:`, input); 
+    
+    input.addEventListener('change', event => {
+        const file = event.target.files[0];
+        console.log(`File selected at index ${index}:`, file); 
+        handleImageCrop(file, `additionalImage${index}`);
+    });
+});
+
+   
+    document.getElementById('updateProductForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        const title = document.getElementById("title").value.trim();
+
+        
+        const saveButton = document.querySelector('.save-button');
+        const productId = saveButton.getAttribute("data-id");
+        formData.append('productId', productId);
+     console.log(formData.get('productId'));
+     
+        
+
+        if (title && title.match(/^[A-Za-z][A-Za-z ]*$/)) {
+            formData.append('title', title);
+        }
+
+       
+        const fieldsToCheck = ['description', 'regularPrice', 'offerPrice', 'category', 'stock'];
+        fieldsToCheck.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field && field.value.trim()) {
+                formData.append(fieldId, field.value.trim());
+            }
+        });
+
+        
+        if (croppedBlobs['primaryImage']) {
+    formData.append('primaryImage', croppedBlobs['primaryImage'], 'primary-image-cropped.jpg');
+}
+
+
+if (additionalImageInputs) {
+    additionalImageInputs.forEach((input, index) => {
+        if (croppedBlobs[`additionalImage${index}`]) {
+           
+            formData.append(`additionalImage${index}`, croppedBlobs[`additionalImage${index}`], `additional-image-${index}-cropped.jpg`);
+            console.log(`Appended additionalImage${index} to formData`);
+        } else {
+          
+            console.log(`No updated blob for additionalImage${index}, skipping formData append`);
+        }
+    });
+}
+
+       
+        fetch('/admin/updateProduct', {
+            method: 'PATCH', 
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data =>{
+            if(data.success){
+                showToast(data.message, 'success');
+            }else{
+                showToast(data.message, 'error');
+            }
+        } )
+        
+    });
+});
+
+
+
+    </script>
+       <script src="/showNotification.js"></script>
+</body>
+</html>

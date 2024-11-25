@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/admin/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            :root {
+                --primary-green: #3BB77E;
+                --light-green: #DEF9EC;
+                --danger-red: #FFE1E1;
+            }
+    
+            .btn-primary {
+                background-color: var(--primary-green);
+                border-color: var(--primary-green);
+            }
+    
+            .btn-primary:hover {
+                background-color: #2a9d64;
+                border-color: #2a9d64;
+            }
+    
+            .btn-danger {
+                background-color: #FF5B5B;
+                border-color: #FF5B5B;
+            }
+    
+            .btn-danger:hover {
+                background-color: #e24444;
+                border-color: #e24444;
+            }
+    
+            .offer-badge {
+                background-color: var(--primary-green);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 5px;
+                font-size: 12px;
+            }
+    
+            .table {
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+    
+            .table thead th {
+                background-color: var(--primary-green);
+                color: white;
+            }
+    
+            .table td, .table th {
+                border-color: #eee;
+            }
+        </style>
+        <link rel="stylesheet" href="/toast.css">
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+       <%-include('../partials/sidebar.ejs')%>
+        <main class="main-wrap">
+          <%-include('../partials/adminHeader.ejs')%>
+            <section class="content-main">
+                <div class="container-fluid py-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h2 class="mb-0">Offer Management</h2>
+                                <div>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductOfferModal">
+                                        <i class="fas fa-plus me-2"></i>Add Product Offer
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryOfferModal">
+                                        Add Category Offer
+                                    </button>
+                                </div>
+                            </div>
+            
+                            <!-- Product Offers -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary-green text-white">
+                                    <h5 class="mb-0" style="color: grey;">Product Offers</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Category</th>
+                                                    <th>Offer</th>
+                                                    <th>Description</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Apple</td>
+                                                    <td>Fruits</td>
+                                                    <td><span class="offer-badge">50% OFF</span></td>
+                                                    <td>Summer Sale Special</td>
+                                                    <td>
+                                                        <button>
+                                                            <i class="fas fa-trash"></i> Delete
+                                                          </button>
+                                                          <button>
+                                                            <i class="fas fa-edit"></i> Edit
+                                                          </button>
+                                                    </td>
+                                                </tr>
+                                                <!-- Add more product offer rows here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            
+                            <!-- Category Offers -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary-green text-white">
+                                    <h5 class="mb-0" style="color: grey;">Category Offers</h5>
+                                </div>
+                                <% offer.forEach(item=>{ %> 
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Category</th>
+                                                    <th>Offer</th>
+                                                    <th>Description</th>
+                                                    <th>Created At</th>
+                                                    <th>Expire At</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><%=item.categoryData.category%></td>
+                                                    <td><span class="offer-badge"><%=item.offer %>% OFF</span></td>
+                                                    <td><%=item.description %> </td>
+                                                    <td><%= new Date(item.createdAt).toLocaleDateString('en-GB') %></td>
+                                                    <td><%= new Date(item.expiredAt).toLocaleDateString('en-GB') %></td>
+
+                                                    <td>
+                                                        <button class="btn btn-outline-secondary btn-sm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button type="button" onclick="clearOfferPrice('<%=item._id %>')" class="btn btn-outline-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <!-- Add more category offer rows here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <%})%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Add Product Offer Modal -->
+                <div class="modal fade" id="addProductOfferModal" tabindex="-1" aria-labelledby="addProductOfferModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary-green">
+                                <h5 class="modal-title" id="addProductOfferModalLabel">Add Product Offer</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="offerForm">
+                                    <!-- Product Selection -->
+                                    <div class="mb-3">
+                                        <label for="productSelect" class="form-label">Select Product</label>
+                                        <select class="form-select" id="productSelect" required>
+                                            <option selected disabled>Choose a product</option>
+                                            <!-- Dynamically populate options using server-side or client-side code -->
+                                        </select>
+                                    </div>
+                
+                                    <!-- Offer Percentage -->
+                                    <div class="mb-3">
+                                        <label for="offerPercentage" class="form-label">Offer Percentage</label>
+                                        <input type="number" class="form-control" id="offerPercentage" min="0" max="100" placeholder="Enter offer percentage" required>
+                                    </div>
+                
+                                    <!-- Offer Description -->
+                                    <div class="mb-3">
+                                        <label for="offerDescription" class="form-label">Offer Description</label>
+                                        <textarea class="form-control" id="offerDescription" rows="3" placeholder="Enter offer description" required></textarea>
+                                    </div>
+                
+                                    <!-- Dates -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="createdAt" class="form-label">Created At</label>
+                                            <input type="date" class="form-control" id="createdAt" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="expiredAt" class="form-label">Expired At</label>
+                                            <input type="date" class="form-control" id="expiredAt" required>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="saveOfferButton">Save Offer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            
+                <!-- Add Category Offer Modal -->
+                <div class="modal fade" id="addCategoryOfferModal" tabindex="-1" aria-labelledby="addCategoryOfferModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="addCategoryOfferModalLabel">Add Category Offer</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newCategoryForm">
+                                    <div class="mb-3">
+                                        <label for="newCategoryName" class="form-label">Category Name</label>
+                                        <select class="form-select" name="productSelect" id="selected" >
+                                           
+                                            <% item.forEach(item => { %>
+                                              <option value="<%= item._id %>"><%= item.category %></option> <!-- Use the actual ObjectId -->
+                                            <% }) %>
+                                           </select>
+                                          
+                                          
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newCategoryDescription" class="form-label">Category Description</label>
+                                        <textarea class="form-control" id="newCategoryDescription" rows="3" placeholder="Enter category description"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newCategoryImage" class="form-label">Offer Percentage</label>
+                                        <input type="number" min="0" max="100" class="form-control" id="Offer" >
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="newCreatedAt" class="form-label">Created At</label>
+                                            <input type="date" class="form-control" id="newCreatedAt" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="newExpiredAt" class="form-label">Expired At</label>
+                                            <input type="date" class="form-control" id="newExpiredAt" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-success">Save Category</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+            </section>
+            
+        </main>
+        <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/admin/js/vendors/select2.min.js"></script>
+        <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+        <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+        <script src="/showNotification.js"></script>
+
+        <!--  category   -->
+        <script>
+            
+            
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('newCategoryForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const categoryID = document.getElementById('selected').value;
+                    const offerPercentage = document.getElementById('Offer').value;
+                    const offerDescription = document.getElementById('newCategoryDescription').value;
+                    const createdAt = new Date( document.getElementById('newCreatedAt').value)
+                    const expiredAt =  new Date( document.getElementById('newExpiredAt').value)
+
+                    if(createdAt>expiredAt){
+                        return alert('Expired date should be greater than xreated')
+                    }
+                   
+                    
+        console.log({ categoryID, offerPercentage, offerDescription, createdAt, expiredAt });
+
+        // Validation
+        if (!categoryID || !offerPercentage || !offerDescription || !createdAt || !expiredAt) {
+            alert('Please fill all the fields!');
+            return;
+        }
+
+        // Send data to the server
+        fetch(`/admin/addOffer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryID,
+                offerPercentage,
+                offerDescription,
+                createdAt,
+                expiredAt
+            })
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to save offer');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                alert('Offer saved successfully!');
+                location.reload();
+            })
+            .catch((error) => {
+                console.error('Error saving offer:', error);
+                alert('Failed to save offer. Please try again.');
+            });
+    });
+});
+
+
+
+async function clearOfferPrice(OfferID) {
+  console.log(OfferID,"offerid");
+  
+    try {
+        const response = await fetch('/admin/clearOffer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ OfferID })
+        });
+        
+        const data = await response.json();
+        console.log(data)
+        if (data.success) {
+            alert('Offer price cleared successfully!' ,'success');
+            location.reload();
+        } else {
+            alert(data.message,'error');
+        }
+    } catch (error) {
+        console.error('Error clearing offer price:', error);
+    }
+}
+        </script>
+    </body>
+</html>
+
+<!-- <% if (item.Offer) { %>
+    <button type="button" class="btn btn-outline-danger" onclick="clearOfferPrice('<%= item.Offer.id %>')"  >
+     Remove Offer
+     </button>
+     <% }else { %>
+     <button type="button" class="btn btn-outline-success" data-id="<%= item.id %>"  data-bs-toggle="modal" data-bs-target="#offerModal">
+     Add Offer
+     </button>
+     <% } %> -->
+<!-- <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="offerModalLabel">Manage Product Offer</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="productTitle" class="form-label">Category Title</label>
+                        <input type="text" value="<%=item.category %>" class="form-control"  id="productTitle" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Offer Description</label>
+                        <input type="text"  class="form-control"  id="description" placeholder="write Description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="offerPercentage" class="form-label">Offer Percentage</label>
+                        <input type="number" class="form-control" id="offerPercentage" min="0" max="100" placeholder="Enter offer percentage">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="createdAt" class="form-label">Created At</label>
+                            <input type="date" class="form-control" id="createdAt" placeholder="Created date" >
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="expiredAt" class="form-label">Expired At</label>
+                            <input type="date" class="form-control" id="expiredAt" placeholder="Updated date" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  onclick="saveOffer('<%= item._id %>')">Save Changes</button>
+            </div>
+        </div>
+    </div>
+ </div> -->
+<!--  
+document.getElementById('saveOfferButton').addEventListener('click', () => {
+    const product = document.getElementById('productSelect').value;
+    const offerPercentage = document.getElementById('offerPercentage').value;
+    const offerDescription = document.getElementById('offerDescription').value;
+    const createdAt = new Date(document.getElementById('createdAt').value);
+    const expiredAt = new Date(document.getElementById('expiredAt').value);
+
+    // Validate fields
+    if (!product || !offerPercentage || !offerDescription || !createdAt || !expiredAt) {
+        alert('Please fill out all fields.');
+        return;
+    }
+
+    if (offerPercentage < 0 || offerPercentage > 100) {
+        alert('Offer percentage must be between 0 and 100.');
+        return;
+    }
+
+    if (expiredAt <= createdAt) {
+        alert('Expiration date must be after the created date.');
+        return;
+    }
+
+    // Send data to the server
+    const offerData = {
+        product,
+        offerPercentage,
+        offerDescription,
+        createdAt,
+        expiredAt,
+    };
+
+    console.log('Offer Data to Submit:', offerData);
+
+    // You can replace this with an AJAX request or fetch API to submit the data.
+    alert('Offer saved successfully!');
+    // Close the modal (requires Bootstrap's JavaScript loaded)
+    $('#addProductOfferModal').modal('hide');
+});  -->
+

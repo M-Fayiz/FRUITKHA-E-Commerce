@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nest - Category Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        /* Add Category Form */
+        .add-category-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #40c057;
+            box-shadow: 0 0 0 2px rgba(64, 192, 87, 0.2);
+        }
+
+        .btn-add {
+            background: #40c057;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Category List */
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .category-item {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .category-name {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .category-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #339af0;
+            color: white;
+        }
+
+        .btn-list {
+            background: #40c057;
+            color: white;
+        }
+
+        .btn-unlist {
+            background: #fa5252;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Subcategory styles */
+        .subcategory-list {
+            padding: 1rem 1.5rem 1rem 3.5rem;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .subcategory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .subcategory-item:last-child {
+            border-bottom: none;
+        }
+
+        .subcategory-name {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .subcategory-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        /* Dropdown arrow */
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+
+        /* Add Subcategory button */
+        .btn-add-sub {
+            background: none;
+            border: 1px dashed #40c057;
+            color: #40c057;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .btn-add-sub:hover {
+            background: #f1f9f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="category-card">
+            <div class="card-header">
+                <h1 class="card-title">Category Management</h1>
+            </div>
+
+            <!-- Add Category Form -->
+            <form class="add-category-form">
+                <input type="text" class="form-input" placeholder="New Category Name">
+                <input type="file" class="form-input" accept="image/*">
+                <button type="submit" class="btn-add">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Category
+                </button>
+            </form>
+
+            <!-- Category List -->
+            <div class="category-list">
+                <%/* categories.forEach(function(category) { */%>
+                <!-- Fresh Fruit Category Example -->
+                <div class="category-item">
+                    <div class="category-header" onclick="toggleSubcategories(this)">
+                        <div class="category-name">
+                            <img src="/api/placeholder/40/40" alt="Fresh Fruit" class="category-image">
+                            <span>Fresh Fruit</span>
+                        </div>
+                        <div class="category-actions">
+                            <button class="btn btn-edit">Edit</button>
+                            <button class="btn btn-list">List</button>
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="subcategory-list" style="display: none;">
+                        <div class="subcategory-item">
+                            <div class="subcategory-name">
+                                <img src="/api/placeholder/30/30" alt="Berries" class="subcategory-image">
+                                <span>Berries</span>
+                            </div>
+                            <div class="category-actions">
+                                <button class="btn btn-edit">Edit</button>
+                                <button class="btn btn-list">List</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-sub">+ Add Subcategory</button>
+                    </div>
+                </div>
+
+                <!-- Dry Fruits Category Example -->
+                <div class="category-item">
+                    <div class="category-header" onclick="toggleSubcategories(this)">
+                        <div class="category-name">
+                            <img src="/api/placeholder/40/40" alt="Dry Fruits" class="category-image">
+                            <span>Dry Fruits</span>
+                        </div>
+                        <div class="category-actions">
+                            <button class="btn btn-edit">Edit</button>
+                            <button class="btn btn-unlist">Unlist</button>
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="subcategory-list" style="display: none;">
+                        <!-- Add your subcategories here -->
+                    </div>
+                </div>
+                <%/* }); */%>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSubcategories(element) {
+            const subcategoryList = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            
+            if (subcategoryList.style.display === 'none') {
+                subcategoryList.style.display = 'block';
+                arrow.classList.add('active');
+            } else {
+                subcategoryList.style.display = 'none';
+                arrow.classList.remove('active');
+            }
+        }
+
+        // Toggle List/Unlist button
+        document.querySelectorAll('.btn-list, .btn-unlist').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent dropdown from toggling
+                const isList = button.classList.contains('btn-list');
+                if (isList) {
+                    button.classList.remove('btn-list');
+                    button.classList.add('btn-unlist');
+                    button.textContent = 'Unlist';
+                } else {
+                    button.classList.remove('btn-unlist');
+                    button.classList.add('btn-list');
+                    button.textContent = 'List';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

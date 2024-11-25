@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruitkha - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            color: #FF6B35;
+            margin-left: 10px;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .login-btn {
+            background-color: #FF6B35;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #e55a2a;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            color: #666;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .links a:hover {
+            color: #FF6B35;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+
+        .google-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="/toast.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <%-include('../partials/toast.ejs')%>
+    <!-- In your header -->
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+
+</head>
+<body>
+    <div>
+        <div class="toast-container" id="toastContainer"></div>
+    <div class="container">
+        <div class="logo-container">
+            <img src="/img/logo.png"  alt="Fruitkha Logo" width="250">
+            <!-- <img src="/images/logo.png"> -->
+            <!-- <div class="logo-text">
+                <h1>Fruitkha</h1>
+                <p>Fresh Fruits Online</p>
+            </div> -->
+        </div>
+    </div>
+        <form class="login-form" id="login_form" >
+            <h2 style="font-weight:500 ;">Log in</h2>
+            
+            <div class="form-group">
+                <input type="email" name="email" id="email" placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit"  class="login-btn">Log in</button>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <div class="links">
+                <a href="/signUp">Create an Account</a>
+                <a href="/email">Forgot Password</a>
+            </div>
+
+            <a style="text-decoration: none;" href="/auth/google" class="google-btn">
+                <img src="/img/icons8-google-logo-96.png" alt="Google Icon" width="20">
+                Sign in with Google
+            </a>
+
+            <!-- <% if (locals.error) { %>
+                <div class="error-message" style="color: red; text-align: center;">
+                    <%= error %>
+                </div>
+            <% } %> -->
+        </form>
+    </div>
+
+    <script src="js/login.js"></script>
+    <script src="/showNotification.js"></script>
+    
+    <script>
+        // function handleForgot(e){
+        //   const email= document.getElementById('email').value
+        //   console.log(email, " ", e)
+        //   e.href = `/getOTP/${email}`
+
+        // }
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Fruitkha</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #F28123;
+            --sidebar-width: 280px;
+            --sidebar-bg: #fff;
+            --sidebar-hover: #f8f9fa;
+            --sidebar-active: #e8f0fe;
+            --sidebar-text: #333;
+        }
+        
+        body {
+            font-size: 16px;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .main-content {
+            margin-left: 30px;
+            padding: 40px;
+            background-color: #f8f9fa;
+         
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+        }
+        
+        .nav-link {
+            color: var(--sidebar-text);
+            padding: 16px 25px;
+            margin: 6px 0;
+            transition: all 0.3s;
+            border-radius: 0;
+            font-size: 16px;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            background-color: var(--sidebar-active);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .nav-link i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .content-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .content-card h5 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d97320;
+            border-color: #d97320;
+        }
+        
+        .form-label {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            font-size: 15px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .navbar {
+            padding: 15px 0;
+        }
+        
+        .navbar-brand img {
+            height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .content-card {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/toast.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="toast-container" id="toastContainer"></div>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#">
+                <img src="/img/logo.png" alt="Fruitkha" height="50">
+            </a>
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+       <%-include('../partials/profileSIDEBAR.ejs')%>
+
+        <!-- Main Content -->
+        <div class="main-content ">
+            <!-- Profile Details -->
+            <div class="content-card">
+                <h5>Profile Details</h5>
+                <form action="" id="edit-profile">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" id="FIRST" value="<%=user.firstName%>" class="form-control" >
+                            <span id="Firsterror" style="color: #ff2b2b; font-size: 12px;"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" id="LAST" value="<%=user.lastName%>" class="form-control" >
+                            <span id="Lasterror" style="color: #ff2b2b; font-size: 12px;"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="ID" value="<%=user.id %>" hidden>
+                        <!-- <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="user.email">
+                        </div> -->
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" value="<%=user.phone%>"  class="form-control" >
+                            <span id="PHONEerror" style="color: #ff2b2b; font-size: 12px;"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+             </form>
+            </div>
+
+            <!-- Password Settings -->
+            <div class="content-card">
+                <h5>Password Settings</h5>
+                <div class="row">
+                    <div class="col-md-12">
+                     <form action="" id="pass-form">
+                        <div class="mb-4">
+                            <label class="form-label">Current Password</label>
+                            
+                            <input id="password" type="password" class="form-control">
+                            <span id="Passworderror" style="color: #ff2a2a; font-size: 12px;"></span>
+                        </div>
+                        <div class="mb-4">
+                            <input type="text" value="<%=user.id%>" name="" id="userID" hidden>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">New Password</label>
+                            <input id="PAS1" type="password" class="form-control">
+                            <span id="PAS1error" style="color: #ff2a2a; font-size: 12px;"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Confirm New Password</label>
+                            <input id="PAS2"  type="password" class="form-control">
+                            <span id="PAS2error" style="color: #ff2a2a; font-size: 12px;"></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="#" class="forgot-password">Forgot your password?</a>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </div>
+                     </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <script src="/showNotification.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('edit-profile').addEventListener('submit',(e)=>{
+            e.preventDefault()
+
+            const FIRST=document.getElementById('FIRST').value.trim()
+            const LAST=document.getElementById('LAST').value.trim()
+            const phone=document.getElementById('phone').value.trim()
+            const ID=document.getElementById('ID').value
+console.log(ID)
+            console.log(FIRST,LAST,phone)
+         const isValid=true
+
+        if (!FIRST.match(/^[A-Za-z ]+$/))  {  
+        document.getElementById('Firsterror').innerHTML='First Name should be letters'
+        isValid=false;
+        }
+        if (!LAST.match(/^[A-Za-z ]+$/))  {  
+        document.getElementById('Lasterror').innerHTML='Last Name should be letters'
+        isValid=false;
+        }
+        if (!phone.match(/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/)) {
+        
+        document.getElementById('PHONEerror').innerHTML='Phone number should be in a valid format'
+        isValid=false;
+        }
+
+
+                fetch('/editProfile', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ FIRST, LAST, phone,ID }),
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                            alert(data.message, 'success'); // Show success toast
+                            setTimeout(() => {
+                                location.reload(); // Reload the page after 500ms
+                            }, 500);
+                        } else {
+                            alert(data.message, 'error'); // Show error toast
+                        }
+
+                });
+
+
+        })
+ 
+    // <!-- Change Password -->
+    
+  document.getElementById('pass-form').addEventListener('submit',(e)=>{
+    e.preventDefault()
+
+    const password=document.getElementById('password').value
+    const PAS1=document.getElementById('PAS1').value
+    const PAS2=document.getElementById("PAS2").value
+    const userID=document.getElementById('userID').value
+   console.log('userID',userID);
+
+    let Valid=true
+
+                // if (!password.match(/^(?=.*\d).{8,}$/)||!PAS1.match(/^(?=.*\d).{8,}$/)) {
+                // document.getElementById('Passworderror').innerHTML='Password should be 8 digit'
+                // Valid=false;
+                // }
+
+                if (!PAS1.match(/^(?=.*[0-9])(?=.*[!@#$%^&])[a-zA-Z0-9!@#$%^&]{6,16}$/)) {
+
+                document.getElementById('PAS1error').innerHTML='Password must contain at least one number and one special character.'
+                Valid=false;
+                }
+
+                if (PAS1 !== PAS2) {
+                    document.getElementById('PAS2error').innerHTML=''
+                    document.getElementById('PAS2error').innerHTML='Password and Confirm Password do not Match.'
+                    Valid=false;
+                }
+
+         fetch('/change-Password',{
+            method:'PATCH',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                password,
+                PAS1,
+                userID
+            })
+         }).then(res=>res.json())
+         .then(data=>{
+            console.log(data)
+            if(data.success){
+                alert(data.message,'success')
+                // setTimeout(()=>{
+                //     location.reload()
+                // })
+            }else{
+                alert(data.message)
+            }
+         })   
+
+  })
+    </script>
+</body>
+</html>
+
+

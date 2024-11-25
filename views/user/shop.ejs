@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+	<!-- title -->
+	<title>Shop</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/css/responsive.css">
+
+	<style>
+		/* Basic button styling for pagination links */
+		.pagination-wrap ul {
+		  display: inline-block;
+		  padding: 0;
+		  margin: 0;
+		}
+		
+		.pagination-wrap ul li {
+		  display: inline;
+		  margin: 0 5px;
+		}
+		
+		.pagination-wrap ul li a {
+		  display: inline-block;
+		  padding: 8px 12px;
+		  font-size: 14px;
+		  color: #333;
+		  border: 1px solid #ccc;
+		  border-radius: 20px;
+		  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+		}
+		
+		/* Highlight the active page */
+		.pagination-wrap ul li a.bg-emerald-500 {
+		  background-color: #f28123; /* Emerald */
+		  color: #fff;
+		}
+		
+		/* Hover state for pagination buttons */
+		.pagination-wrap ul li a:hover {
+		  background-color: #f28123; /* Hover effect color */
+		  color: #fff;
+		  border-color: #f28123;
+		  transform: scale(1.05);
+		}
+		
+		/* Additional hover effect to change other buttons */
+		.pagination-wrap ul li a:hover ~ li a {
+		  background-color: #d1fae5; /* Light emerald shade for inactive buttons */
+		  color: #f28123;
+		}
+		</style>
+		<style>
+			.search-container {
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			 
+			 
+			  font-family: Arial, sans-serif;
+			}
+		
+			.search-wrapper {
+			  position: relative;
+			  width: 100%;
+			  max-width: 500px;
+			  margin: 0 20px;
+			}
+		
+			#search-input {
+			  width: 100%;
+			  padding: 15px 20px;
+			  padding-right: 50px;
+			  border: none;
+			  border-radius: 30px;
+			  font-size: 16px;
+			  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+			  transition: all 0.3s ease;
+			  background: rgb(239, 238, 238);
+			}
+		
+			.search-input:focus {
+			  outline: none;
+			  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+			  transform: translateY(-2px);
+			}
+		
+			.search-button {
+			  position: absolute;
+			  right: 15px;
+			  top: 50%;
+			  transform: translateY(-50%);
+			  border: none;
+			  background: none;
+			  cursor: pointer;
+			  padding: 0;
+			}
+		
+			.search-icon {
+			  width: 20px;
+			  height: 20px;
+			  fill: #666;
+			  transition: fill 0.3s ease;
+			}
+		
+			.search-button:hover .search-icon {
+			  fill: #333;
+			}
+		
+			/* Optional: Add a placeholder animation */
+			.search-input::placeholder {
+			  color: #999;
+			  transition: opacity 0.3s ease;
+			}
+		
+			.search-input:focus::placeholder {
+			  opacity: 0.5;
+			}
+		  </style>
+		  <style>
+		 /* Grid Layout */
+		 .product-grid {
+		   display: grid;
+		   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Compact grid layout */
+		   gap: 8px; /* Reduced spacing between items */
+		   padding: 8px;
+		 }
+		 
+		 /* Individual Product Styling */
+		 .single-product-item {
+		   background-color: #fff;
+		   border: 1px solid #ddd;
+		   border-radius: 8px;
+		   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		   overflow: hidden;
+		   padding: 10px;
+		   margin: 15px;
+		   display: flex;
+		   flex-direction: column;
+		   
+		   
+		 }
+		 
+		 /* Product Image */
+		 .product-image img {
+		   width: 100%;
+		   height: 200px; /* Compact height */
+		   object-fit: cover;
+		   border-radius: 8px;
+		 }
+		 
+		 /* Product Info */
+		 
+		 
+		 .product-info h3 {
+		   font-size: 16px;
+		   margin-bottom: 2px;
+		   font-weight: bold;
+		 }
+		 
+		 .product-info .price {
+		   font-size: 14px;
+		   color: #333;
+		   font-weight: bold;
+		 }
+		 
+		 .stock-label {
+		   margin-top: 5px;
+		   padding: 3px 8px;
+		   font-size: 12px;
+		   font-weight: bold;
+		   border-radius: 5px;
+		 }
+		 
+		 .stock-label.in-stock {
+		   background-color: #d4edda;
+		   color: #155724;
+		 }
+		 
+		 .stock-label.low-stock {
+		   background-color: #fff3cd;
+		   color: #856404;
+		 }
+		 
+		 .stock-label.out-of-stock {
+		   background-color: #f8d7da;
+		   color: #721c24;
+		 }
+		 
+		 /* Product Actions */
+		 .product-actions {
+		   display: flex;
+		   align-items: center;
+		   justify-content: space-between;
+		   margin-top: 10px;
+		   width: 100%;
+		 }
+		 
+		 .quantity-input {
+		   width: 50px;
+		   padding: 5px;
+		   text-align: center;
+		   border: 1px solid #ddd;
+		   border-radius: 5px;
+		 }
+		 
+		 .cart-btn {
+		   padding: 5px 15px;
+		   background-color: #f89c0e;
+		   color: white;
+		   font-size: 14px;
+		   font-weight: bold;
+		   border: none;
+		   border-radius: 5px;
+		   cursor: pointer;
+		   transition: background-color 0.3s ease;
+		 }
+		 
+		 .cart-btn:hover {
+		   background-color: #d9780c;
+		 }
+		 .cart-btn.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+		 
+		
+		</style>
+
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+
+	<%-include('../partials/Header.ejs') %>
+	<!-- end header -->
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Shop</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="search-container">
+			<div class="search-wrapper">
+			  <input type="text" id="search-input" placeholder="Search..." oninput="handleSearch()">
+			  <button class="search-button">
+				<svg class="search-icon" viewBox="0 0 24 24">
+				  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+				</svg>
+			  </button>
+			</div>
+		  </div>
+	</div>
+	<!-- end breadcrumb section -->
+	
+	<!-- products -->
+	<div class="product-section mt-150 mb-150"style="display: flex;flex-wrap: wrap;padding: Bottom 10%;;">
+		<div class="container" >
+
+			<div class="row">
+                <div class="col-md-12">
+                    <div class="product-filters">
+                        <ul>
+                           <li><a style="color: #f28123;" class="active" href="/shop">All</a></li> 
+						   <% listedCategory.forEach(item=>{ %>
+                           <li><a style="color: #f28123;" href="/shop?category=<%=item.category %>"><%=item.category %></a></li> 
+						<% })%>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+			<div style="display: flex;flex-direction: column; align-items: center; "><h4 style="color: grey;font-weight:500 ;"><%=message%></h4></div>
+			<div class="row product-lists" id="prodo" >
+				
+				<% products.forEach(item => { %>
+				  
+					<div>
+						<div class="product-grid">
+							<div class="single-product-item">
+							  <!-- Your current single-product-item HTML goes here -->
+							  <!-- Example of one product -->
+							  <div style="width: 300px;" class="product-image">
+								<a href="/product/<%= item._id %>">
+								  <img src="http://localhost:4000/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
+								  <% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
+									<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
+									<% if(offer>0){%> 
+									<div style="position: absolute; top: 25px; left: 25px; background-color: green; border-radius: 5px; padding: 8px;">
+									  <span style="color: rgb(255, 255, 255); font-weight: 600;">
+										<%= offer %>% OFF
+									  </span>
+									</div>
+									<%}%>	
+								  <% } %>
+								</a>
+							  </div>
+							  <div style=" display: flex; flex-direction: column;margin-left: 15px; margin-right: 15px;">
+								<!-- Add your product content here -->
+								<h3><%= item.productTitle %></h3>
+								<span>
+								<div style="display: flex; flex-direction: column;">
+								  <% if (item.OfferPrice) { %>
+									<div style="display: flex;justify-content: space-between;">
+									<p style="color: gray; margin: 5px 0;">
+									  <span>Per Kg</span>
+									  <del><%= item.RegulerPrice %></del>₹
+									</p><span><h3 style="color: green; margin: 5px 0;">Offer: <%= item.OfferPrice %> ₹</h3></span>
+								  </div>
+								  	
+								  <% } else { %>
+									<p style="margin: 5px 0; font-size: 22px;">Per Kg <span style="font-weight: bold;"><%= item.RegulerPrice %></span>₹</p>
+								  <% } %>
+								  <div>
+								 </span>
+									<!-- Stock Status -->
+									<% if (item.Stock > 10) { %>
+									  <div>
+										<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
+										  In Stock: <%= item.Stock %>
+										</span>
+									  </div>
+									<% } else if (item.Stock > 0) { %>
+									  <div>
+										<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
+										  Low Stock: <%= item.Stock %>
+										</span>
+									  </div>
+									<% } else { %>
+									  <div>
+										<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
+										  Out of Stock
+										</span>
+									  </div>
+									<% } %>
+								  </div>
+								</div>
+								<div style="display: flex; flex-direction: column; justify-content: center; padding: 3px;">
+									<% if (item.Stock > 0) { %>
+										<a href="cart.html" class="cart-btn">
+										  <i class="fas fa-shopping-cart"></i> Add to Cart
+										</a>
+									  <% } else { %>
+										<a href="#" class="cart-btn disabled" style="pointer-events: none; opacity: 0.5; background-color: rgb(251, 179, 179); color: rgb(255, 0, 0);">
+										  <i class="fas fa-shopping-cart"></i> Unavailable
+										</a>
+									  <% } %>
+								  </div>
+							  </div>
+							</div>
+							<!-- Repeat for other products -->
+						  </div>
+						  
+					
+				  </div>
+				 
+				  <% }) %>
+		 	  </div>
+	    	</div>
+		
+		
+	</div>
+	<!-- end products -->
+
+	<div class="row" style="padding-bottom: 20px;">
+		<div class="col-lg-12 text-center">
+			<div class="pagination-wrap">
+				
+				<ul>
+					<li style="border-radius: 20px;"><% if (currentPage > 1) { %>
+						<a href="/shop?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+							Previous
+						</a>
+					<% } %></li>
+					<%= console.log("Current Page: ", currentPage) %>
+					<%= console.log("Total Pages: ", totalPages) %>
+					
+					<% 
+                    const maxButtons = 3;	
+                    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    
+                  
+                    if (endPage - startPage + 1 < maxButtons) {
+                        startPage = Math.max(1, endPage - maxButtons + 1);
+                    }
+                %>
+    
+					<li><% for (let i = startPage; i <= endPage; i++) { %>
+						<a href="/shop?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+							<%= i %>
+						</a>
+					<% } %></li>
+
+					<li><% if (currentPage < totalPages) { %>
+                    <a href="/shop?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                        Next
+                    </a>
+                <% } %></li>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- logo carousel -->
+	<%-include('../partials/footer.ejs')%>
+
+<script>
+//   console.log("Category:", "<%= Category %>");
+ async function handleSearch() {
+    const query = document.getElementById('search-input').value.trim();
+	console.log('query',query);
+	
+
+    if (query) {
+        try {
+            const response = await fetch(`/search?search=${encodeURIComponent(query)}`);
+            const products = await response.json(); 
+
+			console.log(products);
+			if (!products.length) return displayNoProduct()
+            displayProduct(products);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+            document.querySelector('.product-lists').innerHTML = '<p>Error fetching search results.</p>';
+        }
+    } else {
+        fetchAllproduct();
+    }
+}
+
+async function fetchAllproduct() {
+	console.log('fetch');
+	
+    try {
+        const response = await fetch('/ALL');
+		console.log('respo',response);
+		
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const products = await response.json();
+        displayProduct(products.products);
+
+    } catch (error) {
+        console.error('Error fetching products:', error.message);
+        document.querySelector('.product-lists').innerHTML = '<p>Error fetching all products.</p>';
+    }
+}
+
+function displayProduct(products) {
+	console.log('produc',products);
+	
+    const productList = document.querySelector('.product-lists');
+    if (products.length === 0) {
+        productList.innerHTML = '<h4 style="color:grey;">No products found.</h4>';
+        return;
+    }
+
+    productList.innerHTML = products.map(item => `
+        <div class="col-md-4 product-item" style=' overflow: hidden;'>
+			
+		  
+            <div class="single-product-item">
+                <div style="width: 280px;" class="product-image">
+                    <a href="/product/${item._id}">
+                        <img src="http://localhost:4000/images/${item.primaryImage}" alt="${item.productTitle}">
+                        ${item.OfferPrice > 0 ? `<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px;">
+                            <span style="color: rgb(255, 255, 255); font-weight: 600;">${Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100)}% OFF</span>
+                        </div>` : ''}
+                    </a>
+                </div>
+                <div style="display: flex; flex-direction: column;margin-left: 15px; margin-right: 15px;">
+                    <h3>${item.productTitle}</h3>
+                    <div style='display flex';>
+                        ${item.OfferPrice ? `<p style="color: gray;">Per Kg <del>${item.RegulerPrice}</del>₹</p>
+                        <h3 style="color: green;">Offer: ${item.OfferPrice} ₹</h3>` 
+                        : `<p>Per Kg ${item.RegulerPrice}₹</p>`}
+                    </div>
+                    <div>
+                        ${item.Stock > 10 ? `<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">In Stock: ${item.Stock}</span>` :
+                        item.Stock > 0 ? `<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">Low Stock: ${item.Stock}</span>` :
+                        `<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">Out of Stock</span>`}
+                    </div>
+                </div>
+                <div>
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function displayNoProduct(){
+
+	const productList = document.querySelector('.product-lists');
+	productList.innerHTML =" <h4 style='color:grey; margin-left:50px;' >No products found.</h4>"
+
+}
+
+</script>	
+	
+	
+	<!-- jquery -->
+	<script src="/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/js/main.js"></script>
+
+</body>
+</html>

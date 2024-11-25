@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/toast.css">
+        <link rel="shortcut icon" type="image/x-icon" href="/admin/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <style>
+            /* Reset and base styles */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+    
+            /* Container styles */
+            .container {
+                padding: 2rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+    
+            /* Card styles */
+            .card {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+    
+            .card-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    
+            .card-title {
+                font-size: 1.5rem;
+                color: #2c3e50;
+            }
+    
+            /* Search input styles */
+            .search-container {
+                position: relative;
+            }
+    
+            .search-input {
+                padding: 0.5rem 1rem 0.5rem 2.5rem;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 0.9rem;
+                width: 300px;
+                background-color: #f8f9fa;
+            }
+    
+            .search-input:focus {
+                outline: none;
+                border-color: #40c057;
+                box-shadow: 0 0 0 2px rgba(64, 192, 87, 0.2);
+            }
+    
+            .search-icon {
+                position: absolute;
+                left: 0.75rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #6c757d;
+            }
+    
+            /* Table styles */
+            .table-container {
+                overflow-x: auto;
+                padding: 1rem;
+            }
+    
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+    
+            th {
+                background-color: #f8f9fa;
+                padding: 1rem;
+                text-align: left;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                color: #6c757d;
+                font-weight: 600;
+            }
+    
+            td {
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+            }
+    
+            tr:hover {
+                background-color: #f8f9fa;
+            }
+    
+            /* User status badges */
+            .status-badge {
+                padding: 0.25rem 0.75rem;
+                border-radius: 20px;
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+    
+            .status-active {
+                background-color: #e6f4ea;
+                color: #40c057;
+            }
+    
+            .status-blocked {
+                background-color: #feeceb;
+                color: #fa5252;
+            }
+    
+            /* Action buttons */
+            .btn {
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+            }
+    
+            .btn-block {
+                background-color: #fa5252;
+                color: white;
+            }
+    
+            .btn-unblock {
+                background-color: #40c057;
+                color: white;
+            }
+    
+            .btn:hover {
+                opacity: 0.9;
+            }
+    
+            /* User avatar and info */
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+    
+            .avatar {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                background-color: #e9ecef;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <%-include('../partials/sidebar.ejs') %>
+        <!--  -->
+        <div class="toast-container" id="toastContainer"></div>
+        <main class="main-wrap">
+            <%-include('../partials/adminHeader')%>
+            
+            <section class="content-main">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="card-title">User Management</h1>
+                            <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" id="UserStatus" onchange="navigateToStaus()" >
+                                <option value="/admin/userList">Status</option>
+                                <option value="/admin/userList">Status</option>
+                                <option value="/admin/userList?Block=true">Active</option>
+                                <option value="/admin/userList?Block=false">Blocked</option>
+                            </select>
+                            <div class="search-container">
+                                <input type="text" class="search-input" placeholder="Search users..." id="searchInput">
+                                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Ind</th>
+                                        <th>User ID</th>
+                                        <th>Email</th>
+                                        <th>Last Login</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- EJS Loop Template -->
+                                    <%user.forEach((user,index)=> { %>
+                                    <tr id='trId<%= user._id %>'>
+                                        <!-- <td>
+                                            <div class="user-info">
+                                               
+                                                
+                                            </div>
+                                        </td> -->
+                                        <td><%= index + 1 %></td>
+                                        <td><%= user.id %></td>
+                                       
+                                        <td><%= user.email %></td>
+                                        <td><%= new Date(user.lastLogin).toLocaleDateString() %></td>
+                                        <td>
+                                           
+                                                <% if (user.isActive==true){ %>
+                                                    <span class="status-badge status-active">Active</span>
+                                             <%    }else {%>
+                                                <span class="status-badge status-blocked">Blocked</span>
+                                            <% } %> 
+                                                
+                                           
+                                        </td>
+                                        <td>
+                                            <% if (user.isActive===true){%>
+                                                <button class="btn btn-block" onclick="toggleUserStatus('<%= user.id %>',false, '<%= index %>')">
+                                                    Block 
+                                                </button>
+                                            <% }else{ %>
+                                                
+                                                    <button class="btn btn-unblock" onclick="toggleUserStatus('<%= user.id %>',true, '<%= index %>')">Unblock</button>
+                                            
+                                           <% } %>
+                                           
+                                        </td>
+                                    </tr>
+                                    <%})%>
+                                    
+                                
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-100 p-4">
+                    <div class="flex items-center justify-between">
+                        <!-- <p class="text-sm text-gray-500">
+                            Showing <%= (currentPage - 1) * 6 + 1 %> to <%= Math.min(currentPage * 6, totalUser) %> of <%= totalUser %> users
+                        </p> -->
+                        <div class="flex gap-2">
+                            <!-- Previous Button -->
+                            <% if (currentPage > 1) { %>
+                                <a href="/admin/userList?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Previous
+                                </a>
+                            <% } %>
+                
+                            <!-- Page Numbers -->
+                            <% 
+                                const maxButtons = 3; 
+                                let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                                let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+                
+                                
+                                if (endPage - startPage + 1 < maxButtons) {
+                                    startPage = Math.max(1, endPage - maxButtons + 1);
+                                }
+                            %>
+                
+                            <% for (let i = startPage; i <= endPage; i++) { %>
+                                <a href="/admin/userList?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                                    <%= i %>
+                                </a>
+                            <% } %>
+                
+                            <!-- Next Button -->
+                            <% if (currentPage < totalPages) { %>
+                                <a href="/admin/userList?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Next
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <script src="/showNotification.js"></script>
+                <script>
+                 function navigateToStaus(){
+                    const selectedOption = document.getElementById('UserStatus').value;
+                    window.location.href = selectedOption;
+                 }
+
+                    // Search functionality
+                    document.getElementById('searchInput').addEventListener('input', function(e) {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const rows = document.querySelectorAll('tbody tr');
+                        
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+            
+                    // Toggle user status
+                    function toggleUserStatus(userId,condition, i){
+            
+                        fetch("/admin/toogleUserStatus",{
+                            method:"PATCH",
+                            headers:{
+                                "Content-Type":"application/json; charset=UTF-8"
+                            },
+                            body:JSON.stringify({userId,condition})
+                        })
+                        .then(res=> res.json())
+                        .then(data=>{
+                            console.log(data);
+                            
+                            if(data.success){
+                                updateHtml(data.response, i)
+                                    showToast(data.message,'success')
+                                }else if(data.success==false){
+                                    alert(data.message)
+                                }
+                        })
+                    }
+            
+                    function updateHtml(user, i){
+                        console.log(user)
+                        let element = `
+                        
+                            <!-- <td>
+                                <div class="user-info">
+                                    
+                                    
+                                </div>
+                            </td> -->
+                            <td>${i+1}</td>
+                            <td>${user._id}</td>
+                            
+                            <td>${user.email}</td>
+                            <td>${new Date(user.lastLogin).toLocaleDateString() }</td>
+                            <td>   
+                            ${!user.isActive
+                             ? '<span class="status-badge status-active">Active</span>'
+                             : '<span class="status-badge status-blocked">Blocked</span>'
+                            }
+                            </td>
+                            <td>
+                                ${!user.isActive 
+                                ?`<button class="btn btn-block" onclick="toggleUserStatus('${user._id}',false,'${i}')">Block</button>`
+                                :`<button class="btn btn-unblock" onclick="toggleUserStatus('${user._id}',true,'${i}')">Unblock</button>`
+                                }
+                                
+            
+                            </td>
+                        `
+            
+                        let tr = document.getElementById(`trId${user._id}`)
+                        console.log(tr)
+                        tr.innerHTML = element
+                        console.log(tr)
+                    }
+                </script>            </section>
+            
+        </main>
+        <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/admin/js/vendors/select2.min.js"></script>
+        <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+        <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

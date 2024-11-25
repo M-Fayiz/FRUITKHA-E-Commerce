@@ -1,0 +1,75 @@
+<header class="main-header navbar">
+    <div class="col-search">
+        <nav style="padding-left: 50px;">
+   
+            <ul  style="display: flex;">
+                <li class="breadcrumb-item current-list-item"><a href="/admin/" style="color: #737373;">Home</a></li>
+                <% if (CURRENTpage && CURRENTpage === 'about') { %>
+                    <li class="breadcrumb-item active" aria-current="page"  style="color: #737373;">About</li>
+                <% } else if (CURRENTpage && CURRENTpage === 'shop') { %>
+                    <li class="breadcrumb-item active" aria-current="page"  style="color: #737373;">Shop</li>
+                <% } else if (CURRENTpage && CURRENTpage === 'userList') { %>
+                    <li class="breadcrumb-item"><a href="/admin/userList"  style="color: #737373;">User Manage</a></li>
+                    <!-- <li class="breadcrumb-item active" aria-current="page"  style="color: #d7d7d7;">Product</li> -->
+              
+                <% } else if (CURRENTpage && CURRENTpage === 'category') { %>
+                    <li class="breadcrumb-item"><a href="/admin/category"  style="color: #737373;">Category</a></li>
+                    
+              
+                <% } else if (CURRENTpage && CURRENTpage === 'productForm') { %>
+                    <li class="breadcrumb-item"><a href="/admin/product"  style="color: #737373;">Product Form</a></li>
+                    <!-- <li class="breadcrumb-item active" aria-current="page"  style="color: #d7d7d7;">Product</li> -->
+           
+                <% } else if (CURRENTpage && CURRENTpage === 'productList') { %>
+                    <li class="breadcrumb-item"><a href="/admin/productList"  style="color: #737373;">Product List</a></li>
+                    <!-- <li class="breadcrumb-item active" aria-current="page"  style="color: #737373;">Add Product</li> -->
+               
+               
+                <% } else if (CURRENTpage && CURRENTpage === 'singleProduct') { %>
+                    <li class="breadcrumb-item"><a href="/admin/getSingle"  style="color: #737373;">Product List</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"  style="color: #989898;">Add Product</li>
+               
+                <% } %>
+                </ul>
+       
+    </nav>
+    </div>
+    <div class="col-nav">
+        <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
+        <ul class="nav">
+            <!-- <li class="nav-item">
+                <a class="nav-link btn-icon" href="#">
+                    <i class="material-icons md-notifications animation-shake"></i>
+                    <span class="badge rounded-pill">3</span>
+                </a>
+            </li> -->
+            <li class="nav-item">
+                <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+            </li>
+            <!-- <li class="dropdown nav-item">
+                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                    <a class="dropdown-item text-brand" href="#"><img src="/assets/admin/imgs/theme/flag-us.png" alt="English" />English</a>
+                    <a class="dropdown-item" href="#"><img src="/assets/admin/imgs/theme/flag-fr.png" alt="Français" />Français</a>
+                    <a class="dropdown-item" href="#"><img src="/assets/admin/imgs/theme/flag-jp.png" alt="Français" />日本語</a>
+                    <a class="dropdown-item" href="#"><img src="/assets/admin/imgs/theme/flag-cn.png" alt="Français" />中国人</a>
+                </div>
+            </li> -->
+            <li class="dropdown nav-item">
+                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin/imgs/people/avatar-2.png" alt="User" /></a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                    <!-- <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                    <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                    <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                    <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                    <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>

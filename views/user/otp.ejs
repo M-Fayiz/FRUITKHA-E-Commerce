@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .otp-input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            outline: none;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+    <link rel="stylesheet" href="/toast.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
+            <div class="text-center space-y-2">
+                <div class="inline-block p-3 rounded-full bg-indigo-100 text-indigo-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900">Verification Code</h1>
+                <p class="text-gray-500">We've sent a verification code to</p>
+<% if (typeof email !== 'undefined') { %>
+    <p class="text-gray-900 font-medium"><%= email %></p>
+<% } %>
+<% if (typeof RESULT !== 'undefined') { %>
+    <p class="text-gray-900 font-medium"><%= RESULT %></p>
+<% } %>
+
+            </div> 
+       <form id="otpForm">
+            <div class="space-y-6">
+                <div class="flex justify-center space-x-4">
+                    <input type="text" maxlength="1" class="otp-input" autofocus>
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                    <input type="text" maxlength="1" class="otp-input">
+                </div>
+                <div class="text-center">
+                    <div class="timer text-lg font-semibold text-indigo-600 mb-4">
+                        <span id="timer">02:00</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors">
+                    Verify Code
+                </button>
+      </form>
+
+                <div class="text-center">
+                    <button  id="resendBtn" class="text-indigo-600 hover:text-indigo-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Resend Code
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center text-sm text-gray-500">
+                Didn't receive the code? <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Contact Support</a>
+            </div>
+        </div>
+    </div>
+<script src="/showNotification.js"></script>
+    <script>
+        // Timer functionality
+        function startTimer(duration) {
+            let timer = duration;
+            const timerDisplay = document.getElementById('timer');
+            const resendBtn = document.getElementById('resendBtn');
+            
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    resendBtn.disabled = false;
+                    timerDisplay.textContent = "00:00";
+                }
+            }, 1000);
+        }
+
+        // Start timer with 2 minutes
+        startTimer(10);
+
+        // OTP input handling
+        const inputs = document.querySelectorAll('.otp-input');
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key !== 'Backspace' && input.value) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value) {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+      
+      
+        document.getElementById('resendBtn').addEventListener('click', () => {
+            // Reset timer
+          console.log('clicked');
+          
+            
+            document.getElementById('resendBtn').disabled = true;
+            startTimer(10);
+            
+            // Clear inputs
+            inputs.forEach(input => input.value = '');
+            inputs[0].focus();
+        });
+    </script>
+    <script src="/js/OTP.js"></script>
+</body>
+</html>

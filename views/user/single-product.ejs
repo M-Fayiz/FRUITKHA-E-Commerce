@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+	<!-- title -->
+	<title>Single Product</title>
+	<%-include('../partials/toast.ejs')%>
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/css/responsive.css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<style>
+		
+        :root {
+            --primary-color: #ff6b35;
+            --text-color: #333;
+            --border-color: #eee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .product-gallery {
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary-color);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .category {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .price {
+            font-size: 24px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .price span {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .quantity input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            margin: 0 10px;
+        }
+
+        .add-to-cart {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #ff5722;
+        }
+
+        .product-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .meta-item {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .meta-item span {
+            color: #333;
+            font-weight: 500;
+        }
+		#reviews-section {
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    display: none;
+}
+
+#reviews-section[style*="display: block"] {
+    opacity: 1;
+}
+
+	</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/fontawesome.min.css" integrity="sha512-OYtfQLIh44db+qhIErkWKrmij09a8CNwItEH4yiRIY0gZhRj2sKNIIsRrvEPdqMbgzT1opjSAJXsteTfxuJjOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<%-include('../partials/Header.ejs')%>
+	<!-- end header -->
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>See more Details</p>
+						<h1>Single Product</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- single product -->
+	<div class="product-container">
+		
+		<div class="product-gallery">
+			<div class="main-image">
+				<img id="mainImage" src="http://localhost:4000/images/<%=item.primaryImage%>" alt="Main product image">
+			</div>
+			<div class="thumbnail-container">
+				<div class="thumbnail active" onclick="changeImage(this)">
+					<img src="http://localhost:4000/images/<%=item.primaryImage%>" alt="Product thumbnail 1">
+					<% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
+						<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
+						<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px; padding-left: 8px;padding-right: 8px;">
+							<span style="color: rgb(255, 255, 255); font-weight: 600; font-size: 20px;">
+								<%= offer %>% OFF
+							</span>
+						</div>
+					<% } %>
+				</div>
+				<div class="thumbnail" onclick="changeImage(this)">
+					<img src="http://localhost:4000/images/<%=item.additonalImage[0]%>" alt="Product thumbnail 2">
+				</div>
+				<div class="thumbnail" onclick="changeImage(this)">
+					<img src="http://localhost:4000/images/<%=item.additonalImage[1]%>" alt="Product thumbnail 3">
+				</div>
+			</div>
+		</div>
+
+        <div class="product-info">
+			<div ><i class="fa-solid fa-heart " style="color: #ff1414;font-size: 40px;"></i></div>
+            <div class="category"><%=item.category %></div>
+            <h1 class="product-title"><%=item.productTitle %></h1>
+            <h2 class="" style="font-size: 20px;"><%=item.description %></h2>
+            
+           
+            <div class="quantity">
+                <label>Quantity:</label>
+                <input type="number" value="1" min="1">
+                <span>kg</span>
+            </div>
+			<div class="average-rating" style="margin-bottom: 20px;">
+				<span style="font-size: 24px; font-weight: bold; color: var(--primary-color);">4.5</span>
+				<span style="color: #ffcc00; font-size: 20px;">
+					★★★★☆
+				</span>
+				<p style="color: #666; font-size: 14px;">Based on 10 reviews</p>
+			</div>
+			<div>
+			<% if (item.OfferPrice) { %>
+				<p style="color: gray; margin: 5px 0; font-size: 20px;"><span>Per Kg</span> <del><%= item.RegulerPrice %></del>₹</p>
+				<h3 style="color: green; margin: 5px 0; font-size: 30px; ">Offer: <%= item.OfferPrice %>₹</h3>
+			  <% } else { %>
+				<p style="margin: 5px 0; font-size: 25px; ">Per Kg <span style="font-weight: bold; color: #484848; font-size: 30px;"><%= item.RegulerPrice %>₹</span></p>
+			  <% } %>
+			</div>
+			<% if (item.Stock > 0) { %>
+				<a href="cart.html" class="cart-btn">
+				  <i class="fas fa-shopping-cart"></i> Add to Cart
+				</a>
+			  <% } else { %>
+				<a href="#" class="cart-btn disabled" style="pointer-events: none; opacity: 0.5; background-color: rgb(255, 212, 212); color: rgb(255, 19, 19);">
+				  <i class="fas fa-shopping-cart"></i> Unavailable
+				</a>
+			  <% } %>
+            <div class="product-meta">
+                <div class="meta-item">
+                    Category: <span>Offer <%=cat.Offer%> %</span>
+                </div>
+				<% if (item.Stock > 10) { %> 
+					<span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+						In Stock: <%= item.Stock %> kg
+					</span>
+				<% } else if (item.Stock > 0) { %> 
+					<span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+						Low Stock: <%= item.Stock %> kg
+					</span>
+				<% } else { %> 
+					<span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+						Out of Stock
+					</span>
+				<% } %>
+              
+            </div>
+        </div>
+	
+    </div>
+	<!-- end single product -->
+
+<!-- Reviews and Ratings Section -->
+ <div style="padding-left: 50px; padding-right: 50px;">
+<button id="review-button" style="background: var(--primary-color); color: white; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+    Show Reviews
+</button>
+
+<!-- Reviews and Ratings Section -->
+<div id="reviews-section" style="margin-top: 40px; display: none; margin-left: 40px; margin-right: 40px;"> <!-- Initially hidden -->
+    <h2 style="font-size: 24px; margin-bottom: 20px;">Customer Reviews</h2>
+
+    <div class="review">
+        <h3 style="font-size: 18px; margin-bottom: 5px;">John Doe</h3>
+        <p style="color: #ffcc00; margin-bottom: 5px;">
+            ★★★★★
+        </p>
+        <p style="font-size: 14px; color: #555;">
+            "Great product! The quality is excellent, and delivery was fast. Will purchase again."
+        </p>
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+    </div>
+
+    <div class="review">
+        <h3 style="font-size: 18px; margin-bottom: 5px;">Jane Smith</h3>
+        <p style="color: #ffcc00; margin-bottom: 5px;">
+            ★★★★☆
+        </p>
+        <p style="font-size: 14px; color: #555;">
+            "Good value for the price, but the packaging could be improved."
+        </p>
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+    </div>
+
+    <div class="review">
+        <h3 style="font-size: 18px; margin-bottom: 5px;">Alex Johnson</h3>
+        <p style="color: #ffcc00; margin-bottom: 5px;">
+            ★★★☆☆
+        </p>
+        <p style="font-size: 14px; color: #555;">
+            "The product was decent, but I expected better quality for the price."
+        </p>
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+    </div>
+
+    <!-- Add Your Review -->
+    <div class="add-review" style="margin-top: 30px;">
+        <h3 style="font-size: 20px; margin-bottom: 15px;">Leave a Review</h3>
+        <form action="/submit-review" method="POST">
+            <label for="name" style="display: block; margin-bottom: 5px;">Your Name</label>
+            <input type="text" id="name" name="name" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;" required>
+
+            <label for="rating" style="display: block; margin-bottom: 5px;">Rating</label>
+            <select id="rating" name="rating" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Very Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Very Poor</option>
+            </select>
+
+            <label for="review" style="display: block; margin-bottom: 5px;">Your Review</label>
+            <textarea id="review" name="review" rows="5" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;" required></textarea>
+
+            <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 15px 40px; border-radius: 5px; cursor: pointer; font-size: 16px;">Submit Review</button>
+        </form>
+    </div>
+</div>
+</div>
+
+	<!-- more products -->
+	<div class="more-products mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="section-title">	
+						<h3><span class="orange-text">Related</span> Products</h3>
+						<!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p> -->
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<% related.forEach(item=>{%> 
+					<% if(item.isList===true){ %>
+				<div class="col-lg-4 col-md-6 text-center" >
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="/product/<%=item._id%>"><img src="http://localhost:4000/images/<%=item.primaryImage%>" alt=""></a>
+							<% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
+								<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
+								<div style="position: absolute; top: 5px; left: 15px; background-color: green; border-radius: 2px; padding: 10px;">
+									<span style="color: rgb(255, 255, 255); font-weight: 600;">
+										<%= offer %>% OFF
+									</span>
+								</div>
+							<% } %>
+						</div>
+						<h3><%=item.productTitle %></h3>
+
+						<% if (item.OfferPrice) { %>
+							<p style="color: gray; margin: 5px 0;"><span>Per Kg</span> <del><%= item.RegulerPrice %></del>₹</p>
+							<h3 style="color: green; margin: 5px 0;">Offer: <%= item.OfferPrice %>₹</h3>
+						  <% } else { %>
+							<p style="margin: 5px 0;">Per Kg <%= item.RegulerPrice %>₹</p>
+						  <% } %>
+<!--  -->
+						  <% if (item.Stock > 10) { %> kg
+							<div>
+							<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
+								In Stock: <%= item.Stock %> kg
+							</span>
+						  </div>
+						<% } else if (item.Stock > 0) { %> 
+							<div >
+							<span  class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded ">
+								Low Stock: <%= item.Stock %> kg
+							</span>
+						</div>
+						<% } else { %> 
+							<div>
+							<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
+								Out of Stock
+							</span>
+						</div>
+						<% } %>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<%}%>
+				<%})%>
+			</div>
+		</div>
+	</div>
+	<!-- end more products -->
+
+	<!-- logo carousel -->
+	<div class="logo-carousel-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="logo-carousel-inner">
+						<div class="single-logo-item">
+							<img src="/img/company-logos/1.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/img/company-logos/2.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/img/company-logos/3.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/img/company-logos/4.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/img/company-logos/5.png" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end logo carousel -->
+
+	<!-- footer -->
+	<div class="footer-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box about-widget">
+						<h2 class="widget-title">About us</h2>
+						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box get-in-touch">
+						<h2 class="widget-title">Get in Touch</h2>
+						<ul>
+							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
+							<li>support@fruitkha.com</li>
+							<li>+00 111 222 3333</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box pages">
+						<h2 class="widget-title">Pages</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="about.html">About</a></li>
+							<li><a href="services.html">Shop</a></li>
+							<li><a href="news.html">News</a></li>
+							<li><a href="contact.html">Contact</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box subscribe">
+						<h2 class="widget-title">Subscribe</h2>
+						<p>Subscribe to our mailing list to get the latest updates.</p>
+						<form action="index.html">
+							<input type="email" placeholder="Email">
+							<button type="submit"><i class="fas fa-paper-plane"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end footer -->
+	
+	<!-- copyright -->
+	<div class="copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>,  All Rights Reserved.<br>
+						Distributed By - <a href="https://themewagon.com/">Themewagon</a>
+					</p>
+				</div>
+				<div class="col-lg-6 text-right col-md-12">
+					<div class="social-icons">
+						<ul>
+							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end copyright -->
+	
+	
+	<script>
+
+// Get references to the button and review section
+const reviewButton = document.getElementById('review-button');
+	const reviewsSection = document.getElementById('reviews-section');
+	
+	// Add click event listener to the button
+	reviewButton.addEventListener('click', () => {
+		if (reviewsSection.style.display === 'none') {
+			reviewsSection.style.display = 'block';
+			reviewButton.textContent = 'Hide Reviews'; 
+		} else {
+			reviewsSection.style.display = 'none'; 
+			reviewButton.textContent = 'Show Reviews'; 
+		}
+	});
+
+		function changeImage(thumbnail) {
+		
+			const imageUrl = thumbnail.querySelector('img').src;
+	
+			
+			document.getElementById('mainImage').src = imageUrl;
+	
+			
+			document.querySelectorAll('.thumbnail').forEach(thumb => {
+				thumb.classList.remove('active');
+			});
+			thumbnail.classList.add('active');
+		}
+	
+		// Optional: Image zoom functionality
+		const mainImage = document.getElementById('mainImage');
+		const mainImageContainer = document.querySelector('.main-image');
+	
+		mainImageContainer.addEventListener('mousemove', (e) => {
+			const bounds = mainImageContainer.getBoundingClientRect();
+			const x = (e.clientX - bounds.left) / bounds.width;
+			const y = (e.clientY - bounds.top) / bounds.height;
+			
+			mainImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+			mainImage.style.transform = 'scale(1.5)';
+		});
+	
+		mainImageContainer.addEventListener('mouseleave', () => {
+			mainImage.style.transform = 'scale(1)';
+		});
+	</script>
+	<!-- jquery -->
+	<script src="/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/js/main.js"></script>
+
+</body>
+</html>
