@@ -467,8 +467,10 @@
 
   <link rel="stylesheet" href="/toast.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Template CSS -->
     <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/SHOW.css">
   </head>
  
   <body>
@@ -476,7 +478,7 @@
     <div class="toast-container" id="toastContainer"></div>
     <div class="screen-overlay"></div>
     <%-include('../partials/sidebar.ejs') %>
-  
+  <%-include('../partials/block.ejs')%>
     <main class="main-wrap">
     <%-include('../partials/adminHeader')%>
       <section class="content-main">
@@ -684,10 +686,13 @@ document.getElementById('closeModal').addEventListener('click', function () {
               if(data.success){
               
                 showToast(data.message, 'success');
-                alert(data.message)
-                updateHtml(data.response)
+                setTimeout(()=>{
+                  location.reload()
+                })
+                // alert(data.message)
+                // updateHtml(data.response)
             }else{
-              alert(data.message)
+            
               showToast(data.message, 'error');
             }
                 
@@ -763,12 +768,14 @@ fetch('/admin/EditCategory', {
   .then(data => {
     console.log(data)
     if(data.success){
-      showToast(data.message, 'success');
-      alert(data.message)
-                updateHtml(data.response)
+      showToast(data.message,'success');
+      // alert(data.message)
+               setTimeout(()=>{
+                location.reload()
+              })
             }else{
               showToast(data.message, 'error');
-              alert(data.message)
+              // alert(data.message)
             }
   })
   .catch(error => console.error('Error:', error));
@@ -836,12 +843,14 @@ fetch('/admin/EditCategory', {
          .then(data=>{
          
           if(data.success){
-            alert(data.message)
+            // alert(data.message)
             console.log(data)
             showToast(data.message, 'success');
-               
+               setTimeout(()=>{
+                location.reload()
+               })
             }else{
-              alert(data.message)
+              // alert(data.message)
               console.log(data)
               showToast(data.message, 'error');
             }
@@ -853,52 +862,16 @@ fetch('/admin/EditCategory', {
          }
   
     })
-    function updateHtml(item){
-      console.log("iijjjj",item);
-      
-      let element=`
-                    <div class="category-header">
-                      <div class="category-name">
-                        <img src="http://localhost:4000/images/${item.image}" style="width: 60px;height: 60px;" alt="Category Image" class="category-image">
-                        <span>${item.category} </span>
-                      </div>
-                      <p> ${item.description} </p>
-                      <div>
-                        <h5 style="color: green;">${item.Offer}</h5>
-                       ${item.Offer ?`  
-                          <button style="border-radius: 8px; border: none; color: gray; padding: 5px; background-color: rgb(214, 214, 214);" id="clearOfferBtn" onclick="clearOfferPrice('${item.category}')">Clear Offer</button>
-                        `:`""`}
-                       
-                      </div>
-                      <div class="category-actions">
-                        <button class="btn btn-edit" id="openEditModal">Edit</button>
-                      ${item.isList===true?
+   
 
-                        `<button class="btn btn-outline-success" onclick="toggleItemStatus('${item._id}',true)">List</button>`
-                       :
-                       ` <button class="btn btn-outline-danger" onclick="toggleItemStatus('${item._id}',false)">Unlist</button>`
-                      }
-                        <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                      </div>
-                    </div>
-                    
-                  `
-
-
-      let modify = document.getElementById(`divTAbl${item._id}`)
-      modify.innerHTML=element
-    }
-
-    // Add category  {{{{{{{{{{{{{{{}}}}}}}}}}}}}}} 
+    
       </script>
  <!-- card .// -->
       </section>
       <!-- content-main end// -->
   
     </main>
-    <script src="/showNotification.js"></script>
+    <script src="/TOAST.js"></script>
     <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin/js/vendors/select2.min.js"></script>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+	<!-- title -->
+	<title>Cart</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+	<style>
+
+		 
+	</style>
+	<!-- favicon -->
+	 <link rel="stylesheet" href="/SHOW.css">
+	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/css/responsive.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+	<style>
+		
+	</style>
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <!-- <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div> -->
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<%-include('../partials/Header.ejs')%>
+	<!-- end header -->
+<%-include('../partials/block.ejs')%>
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg" style="position: relative;top: 0;right: 0%;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Cart</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+<div></div>
+	<!-- cart -->
+<div >	 
+	<div class="cart-section mt-80 mb-80 " >
+		 <div style="padding-left: 30px;"><h2>Shopping Cart</h2> </div>
+		<div class="container" >
+			<% if( !data.Products || data.Products.length === 0 ){%> 
+			<div class="row" >
+				<!-- HEADER -->
+				<div class="container my-5">
+					
+								<div style="display: flex;justify-content: center;align-items: center;">
+									
+									<h3 style="opacity: 10px; "><%= info || "No items in your cart." %></h3>
+									
+								</div>
+					     <%} else {%>
+							<table class="cart-table">
+								<thead class="cart-table-head">
+									<tr class="table-head-row" >
+										
+										<th class="product-image">Product <Details></Details></th>
+										<th class="product-name">Name</th>
+										<th class="product-price">Price</th>
+										<th class="product-quantity">Quantity</th>
+										<th class="product-total">Total</th>
+										<th class="product-remove">Remove</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<%data.Products.forEach((item)=>{%>
+									<tr class="table-body-row">
+										
+										<td class="product-image">
+											<div  >
+												<!-- <a href="/product/<%= item.productId._id %>"></a> -->
+												<img style="border-radius: 8px;" src="http://localhost:4000/images/<%= item.productId.primaryImage %>" alt="Product Image" >
+											</div>
+										</td>
+										<td class="product-name">
+											<div >
+												<h5 style="font-weight: 500; "><%=item.productId.productTitle%></h5>
+											</div>
+										</td>
+										<td class="product-price">
+											<div>
+												<% if (item.productId.OfferPrice) { %>
+												  <div >
+												  
+												   <span><h4 style="color: green; margin: 5px 0; font-size: 15px;">Offer: <%= item.productId.OfferPrice %> ₹</h4></span>
+												   <p style="color: gray; margin: 5px 0;">
+													  <span style="color: red;">Per Kg</span>
+													  <del style="color: red;"><%= item.productId.RegulerPrice %></del>₹
+													</p>
+												  </div>
+													
+												<% } else { %>
+												  <p style="margin: 5px 0; font-size: 15px;">Per Kg <span style="font-weight: bold;"><%= item.productId.RegulerPrice %></span>₹</p>
+												<% } %>
+												<div>
+										</td>
+										<td class="product-quantity">
+											<div class="d-flex align-items-center mb-3">
+												<button type="button" class="btn btn-outline-secondary btn-sm  dec-button"  data-id="<%=item.productId.id %>" >-</button>
+												<input
+												  style="margin-top: 15px;"
+												  type="number"
+												  class="form-control mx-2 quantity-input"
+												  id="quantity"
+												  value="<%=item.quantity%>" 
+												  min='1'
+												  readonly
+												>
+												<button type="button" class="btn btn-outline-secondary btn-sm inc-button"  data-id="<%= item.productId.id %>" >+</button>
+											  </div>
+										</td>
+										<td class="product-total">
+											
+												Subtotal: <span id="subtotal-<%= item.productId.id %>"><%= item.quantity * item.productId.RegulerPrice %> ₹</span>
+											
+										</td>
+										<td class="product-remove">
+											<button id="rm-button" style="border: none; background: none;" data-id='<%=item.productId.id%>' onclick="remove(this)"><i class="far fa-trash-alt"></i></button> 
+							
+									</tr>
+									<%})%>
+										
+									
+								</tbody>
+							</table>
+							
+								
+								
+			    </div>
+			</div>
+ <!-- FINISH HEADER -->
+ <!-- START SECOND PART -->
+ 
+
+  
+				<div class="col-lg-4" >
+					<div class="total-section">
+						<table class="total-table">
+							<thead class="total-table-head">
+								<tr class="table-total-row">
+									<th>Total</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="total-data">
+									<td><strong>Subtotal: </strong></td>
+									<%if(data.subTotal!=='undefined'){%>
+										<td  >₹<%=data.subTotal%></td>
+									
+									<%}%>
+								</tr>
+							</tbody>
+						</table>
+						<div class="cart-buttons">
+							
+							<a href="/checkout" class="boxed-btn black">Check Out</a>
+						</div>
+					</div>
+					
+				</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+	<!-- end cart -->
+</div>
+	<!-- logo carousel -->
+	<%-include('../partials/footer.ejs')%>
+	<!-- end copyright -->
+	<script src="/TOAST.js"></script>
+	<!-- jquery -->
+	<script src="/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/js/main.js"></script>
+	<script>
+		
+		 
+		document.addEventListener("DOMContentLoaded", () => {
+    console.log('GET IN UPDATE CART QUANTITY');
+
+    
+    document.querySelectorAll(".inc-button").forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-id');
+            updateCartQuantity(productId, 1); 
+        });
+    });
+
+   
+    document.querySelectorAll('.dec-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-id');
+            updateCartQuantity(productId, -1); 
+        });
+    });
+
+   
+    const updateCartQuantity = (productId, QNTY) => {
+        fetch('/update-quantity', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, QNTY })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+					
+					location.reload()
+
+                } else {
+					showToast(data.message,'error')
+                    console.error('Failed to update quantity');
+                }
+            })
+            .catch(error => {
+                console.error('Error while updating Cart:', error);
+            });
+    };
+});
+
+
+
+
+    function remove(button){
+		const productId = button.getAttribute('data-id');
+		console.log(productId)
+		 
+		 fetch('/removeCart',{
+			method:'post',
+			headers:{
+				'Content-Type':'application/json'
+			},
+			body:JSON.stringify({productId})
+		 }).then(res=>res.json())
+		 .then(data=>{
+			if(data.success){
+				showToast(data.message,'success')
+				setTimeout(()=>{
+					location.reload()
+				},500)
+			}else{
+				showToast(data.message,'erroe')
+			}
+		 })
+	}
+
+	
+
+    </script>
+
+</body>
+</html>

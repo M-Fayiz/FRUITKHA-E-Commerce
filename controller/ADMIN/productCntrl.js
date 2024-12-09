@@ -1,20 +1,20 @@
-const adminModel=require('../model/adminModel')
-const USER=require('../model/userModel')
+const adminModel=require('../../model/ADMIN/adminModel')
+const USER=require('../../model/User/userModel')
 
-const category=require('../model/category');
+const category=require('../../model/ADMIN/category');
 const { response } = require('express');
 
-const PRODUCT=require('../model/product');
-const categoryModel = require('../model/category');
+const PRODUCT=require('../../model/ADMIN/product');
+const categoryModel = require('../../model/ADMIN/category');
 
 
 const addProduct = async (req, res) => {
     console.log(req.files);
     
     try {
-        const { title, description, regularPrice, offerPrice, Stock, category, subCategories } = req.body;
+        const { title, description, regularPrice, expiry, Stock, category, subCategories } = req.body;
         
-        const OFFER=regularPrice*(1-offerPrice/100)
+        // const OFFER=regularPrice*(1-offerPrice/100)
         console.log(title);
         
         const test = await PRODUCT.findOne({
@@ -45,7 +45,7 @@ const addProduct = async (req, res) => {
             productTitle: title,
             description: description,
             RegulerPrice: regularPrice, 
-            OfferPrice: OFFER,
+            ExpirAt: expiry,
             Stock: Stock, 
             Category: category,
             primaryImage: primaryImage,

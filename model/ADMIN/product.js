@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-
+const {ObjectId}=mongoose.Schema.Types
 const productModel= new mongoose.Schema({
     productTitle:{
         type:String,
@@ -34,8 +34,17 @@ const productModel= new mongoose.Schema({
         type:String,
         required:false
     },
-    Brand:{
-        type:String
+    offerId:{
+        type:ObjectId
+
+    },
+    ExpirAt:{
+        type:Date,
+        
+    },
+    isWishList:{
+        type:Boolean,
+        default:false
     },
     isList:{
         type:Boolean,

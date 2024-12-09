@@ -1,7 +1,7 @@
-const USER=require('../model/userModel')
+const USER=require('../model/User/userModel')
 
 const userAuth=(req,res,next)=>{
-console.log("Auth hello",req.session);
+
 
      if(req.session.user){
         res.redirect("/")
@@ -50,12 +50,23 @@ const adminAuth=(req,res,next)=>{
     }
 }
 
+const sessionAuth=(req,res,next)=>{
+    // console.log("Auth hello",req.session);
+    
+         if(!req.session.user){
+            res.redirect("/login")
+         }
+         else{
+            next()
+         }
+    }
 
 
 module.exports={
     userAuth,
     adminAuth,
-    blockUser
+    blockUser,
+    sessionAuth
     
 }
 

@@ -1,0 +1,38 @@
+
+
+    .swal2-modal {
+      background-color: #fff !important;
+      color: #333 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1) !important;
+      padding: 30px !important;
+    }
+    .swal2-title {
+      color: #333 !important;
+      font-size: 24px !important;
+      font-weight: bold !important;
+      margin-bottom: 20px !important;
+    }
+    .swal2-content {
+      color: #555 !important;
+      font-size: 16px !important;
+      line-height: 1.5 !important;
+      margin-bottom: 30px !important;
+    }
+    .swal2-confirm,
+    .swal2-cancel {
+      background-color: #f26522 !important;
+      border-color: #f26522 !important;
+      color: #fff !important;
+      font-size: 16px !important;
+      font-weight: bold !important;
+      padding: 12px 24px !important;
+      border-radius: 6px !important;
+      transition: all 0.3s !important;
+    }
+    .swal2-confirm:hover,
+    .swal2-cancel:hover {
+      background-color: #d95414 !important;
+      border-color: #d95414 !important;
+    }
+ 

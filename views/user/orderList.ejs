@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Order List</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .page-container {
+      display: flex;
+      max-width: 800px;
+      margin: 30px auto;
+      gap: 20px;
+    }
+    .sidebar-container {
+      flex: 0 0 250px; /* Set sidebar width */
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: fit-content; /* Ensure it wraps the content */
+    }
+    .order-list-container {
+      flex-grow: 1;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .order-header {
+      font-weight: bold;
+      font-size: 20px;
+      color: #f37421;
+    }
+    .order-item {
+      border: 1px solid #e9ecef;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .order-item .product {
+      display: flex;
+      align-items: center;
+    }
+    .product img {
+      max-width: 80px;
+      border-radius: 8px;
+      margin-right: 15px;
+    }
+    .product-details {
+      flex-grow: 1;
+    }
+    .product-details p {
+      margin: 0;
+    }
+    .pending {
+  color: orange;
+ /* color: lightyellow; */
+}
+
+.shipped {
+  color: blue;
+  /* color: lightblue; */
+}
+
+.on-delivery {
+  color: green;
+  /* color: lightgreen; */
+}
+
+.delivered {
+  color: darkgreen;
+  /* color: lightseagreen; */
+}
+
+.cancelled {
+  /* color: white; */
+ color: red;
+}
+
+.return {
+  color: darkorange;
+  /* background-color: lightcoral; */
+}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <%- include('../partials/profile_NAV.ejs') %>
+  
+    <!-- Sidebar -->
+ 
+    <div style="display: flex;">
+      <%- include('../partials/profileSIDEBAR.ejs') %>
+      <div class="page-container"></div>
+  <% if(typeof info !=='undefined'){%>
+    <h5><%=info%></h5>
+  <% }else {%>
+    
+    <!-- Order List -->
+    <div class="order-list-container">
+      <h2 class="text-center mb-4">Your Orders</h2>
+    <% orders.forEach(order => { %>
+      <!-- Order Card -->
+      <div class="order-item">
+        <div>
+        <h4 class="order-header">Order ID: <%= order._id %></h4>
+        <p>Order Date: <%= new Date(order.createdAt).toLocaleString('en-US', {
+            weekday: 'short', 
+            month: 'short',    
+            day: '2-digit',    
+            year: 'numeric',   
+            hour: 'numeric',   
+            minute: '2-digit', 
+            hour12: true      
+          }) %></p>
+         <p>Total: ₹<%= order.GRND_TOTAL %></p>
+         <p class="status "class="<%= 
+         order.status === 'Pending' ? 'pending' : 
+         order.status === 'Shipped' ? 'shipped' : 
+         order.status === 'On Delivery' ? 'on-delivery' : 
+         order.status === 'Delivered' ? 'delivered' : 
+         order.status === 'Cancelled' ? 'cancelled' : 
+         order.status === 'Return' ? 'return' : '' 
+         %>" >Status: <%= order.status %></p>
+         <% if(order.status!=='Cancelled' ){%>
+          <button type="button" data-id="<%= order._id %>"  onclick="cancel(this)" class="btn btn-outline-danger">Cancel</button>
+        <% }%>
+        
+        </div>
+        <hr>
+        <!-- Product Details -->
+        
+            <% order.Products.forEach(item => { %>
+              <div class="product" style="margin: 8px;">
+                <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" alt="Product Image">
+                <div class="product-details" style="display: flex;justify-content: space-around;">
+                  <p><strong><%= item.product.productTitle %></strong></p>
+             
+                  <p>Quantity: <%= item.quantity %> x ₹<%=item.Price %></p>
+                  <div>
+                    <p>Total :<%= item.TOTAL%>  </p>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          
+            
+        <hr>
+       
+        <div class="text-end">
+          <a href="/orderDetails/<%=order.id%>" class="btn btn-outline-secondary btn-sm mt-3">View Details</a>
+        </div>
+        <% }) %>
+        <%}%>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function cancel(element){
+    const orderId = element.getAttribute('data-id')
+    console.log(orderId)
+
+    fetch('/oder-cancel',{
+      method:'post',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        orderId
+      })
+    }).then(res=>{
+      res.json()
+    }).then(data=>{
+      alert(data.message)
+    })
+  }
+</script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  ></script>
+</body>
+</html>

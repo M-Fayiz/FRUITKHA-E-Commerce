@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
+const{ObjectId}=mongoose.Schema.Types
 
-const userSchema= new mongoose.Schema({
+const userSchema= mongoose.Schema({
     firstName:{
             type:String,
             required:true
@@ -35,7 +36,16 @@ const userSchema= new mongoose.Schema({
     lastLogin:{
         type:Date,
         required:true
-    }
+    },
+    isGoogle:{
+        type:Boolean,
+        default:false
+    },
+    usedCoupon:[{
+       
+        usageCount:{type:Number,required:true},
+        coupon:{type:ObjectId}
+    }]
 },{timestamps:true})
 
 module.exports=mongoose.model('user',userSchema)

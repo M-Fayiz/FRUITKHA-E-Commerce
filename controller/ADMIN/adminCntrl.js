@@ -1,11 +1,11 @@
-const adminModel=require('../model/adminModel')
+const adminModel=require('../../model/ADMIN/adminModel')
 const bcrypt=require('bcrypt')
-const USER=require('../model/userModel')
+const USER=require('../../model/User/userModel')
 
-const category=require('../model/category');
+const category=require('../../model/ADMIN/category');
 const { response, json } = require('express');
 
-const PRODUCT=require('../model/product')
+const PRODUCT=require('../../model/ADMIN/product')
 
  const securePassword = async (password) => {
     try {
@@ -122,10 +122,13 @@ const addCategory = async (req, res) => {
 const categoryStatus=async(req,res)=>{
     try {
         const {itemId,condition}=req.body
-
+        let status;
+      condition==true?status='Listed':status='Un Listed'
+        
+      
     category.findByIdAndUpdate(itemId,{isList:condition})
     .then(response=>{
-        res.json({success:true,response:response})
+        res.json({success:true,message:`succesfully ${status}`})
     })
 
     } catch (error) {

@@ -8,6 +8,7 @@
 
 	<!-- title -->
 	<title>Shop</title>
+	
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 	<!-- favicon -->
@@ -252,7 +253,137 @@
 		 
 		
 		</style>
-
+		
+		 <style>
+			 :root {
+				 --primary-color: #F28123;
+				 --dark-color: #051922;
+			 }
+	 
+			 .sidebar {
+				 position: fixed;
+				 left: -300px;
+				 top: 0;
+				 height: 100vh;
+				 width: 300px;
+				 background-color: white;
+				 transition: 0.3s;
+				 z-index: 1000;
+				 box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+				 display: flex;
+				 flex-direction: column;
+			 }
+	 
+			 .sidebar.active {
+				 left: 0;
+			 }
+	 
+			 .sidebar-toggle {
+				 position: fixed;
+				 left: 20px;
+				 top: 20px;
+				 z-index: 1001;
+				 background-color: var(--primary-color);
+				 border: none;
+				 color: white;
+				 padding: 10px 15px;
+				 border-radius: 5px;
+				 transition: 0.3s;
+			 }
+	 
+			 .sidebar-toggle.hidden {
+				 opacity: 0;
+				 visibility: hidden;
+			 }
+	 
+			 .sidebar-header {
+				 background-color: var(--dark-color);
+				 color: white;
+				 padding: 20px;
+				 flex-shrink: 0;
+			 }
+	 
+			 .close-btn {
+				 color: white;
+				 background: none;
+				 border: none;
+				 font-size: 1.5rem;
+			 }
+	 
+			 .price-range {
+				 padding: 10px;
+			 }
+	 
+			 .filter-section {
+				 padding: 15px;
+				 border-bottom: 1px solid #eee;
+			 }
+	 
+			 .filter-title {
+				 color: var(--dark-color);
+				 font-weight: 600;
+				 margin-bottom: 15px;
+			 }
+	 
+			 .form-check-input:checked {
+				 background-color: var(--primary-color);
+				 border-color: var(--primary-color);
+			 }
+	 
+			 .overlay {
+				 position: fixed;
+				 top: 0;
+				 left: 0;
+				 width: 100%;
+				 height: 100%;
+				 background-color: rgba(0,0,0,0.5);
+				 display: none;
+				 z-index: 999;
+			 }
+	 
+			 .overlay.active {
+				 display: block;
+			 }
+	 
+			 /* Scrollable content area */
+			 .sidebar-content {
+				 flex-grow: 1;
+				 overflow-y: auto;
+				 padding-bottom: 80px; /* Make room for the fixed button */
+			 }
+	 
+			 /* Fixed button container at bottom */
+			 .button-container {
+				 position: fixed;
+				 bottom: 0;
+				 left: -300px;
+				 width: 300px;
+				 padding: 15px;
+				 background-color: white;
+				 border-top: 1px solid #eee;
+				 transition: 0.3s;
+				 z-index: 1002;
+			 }
+	 
+			 .sidebar.active + .button-container,
+			 .sidebar.active ~ .button-container {
+				 left: 0;
+			 }
+	 
+			 .apply-btn {
+				 background-color: var(--primary-color);
+				 color: white;
+				 border: none;
+				 padding: 10px 20px;
+				 border-radius: 5px;
+				 width: 100%;
+			 }
+	 
+			 .apply-btn:hover {
+				 background-color: #e67615;
+			 }
+		 </style>
+<link rel="stylesheet" href="/toast.css">
 </head>
 <body>
 	
@@ -268,7 +399,7 @@
 
 	<%-include('../partials/Header.ejs') %>
 	<!-- end header -->
-
+	<div class="toast-container" id="toastContainer"></div>
 	<!-- search area -->
 	<div class="search-area">
 		<div class="container">
@@ -288,6 +419,75 @@
 	</div>
 	<!-- end search arewa -->
 	
+	<div class="sidebar" id="sidebar">
+		<div class="sidebar-header d-flex justify-content-between align-items-center">
+			<h5 class="mb-0">Filter Products</h5>
+			<button class="close-btn" id="closeBtn">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
+	
+		<div class="sidebar-content">
+			<!-- Price Range -->
+			<div class="filter-section">
+				<h6 class="filter-title">Price Range</h6>
+				<div class="price-range">
+					<input type="range" class="form-range" min="0" max="1000" id="priceRange">
+					<div class="d-flex justify-content-between">
+						<span>₹0</span>
+						<span id="priceValue">₹500</span>
+						<span>₹1000</span>
+					</div>
+				</div>
+			</div>
+	
+			<!-- Categories -->
+			<div class="filter-section">
+
+				<h6 class="filter-title">Categories</h6>
+				<% data.forEach(item => { %>
+					<div class="form-check mb-2">
+					  <input class="form-check-input category" type="checkbox" id="sort-category" value="<%= item.category %>">
+					  <label class="form-check-label" for="sort-category"><%= item.category %></label>
+					</div>
+				  <% }) %>
+				  
+				
+			</div>
+	
+			<!-- Sort By -->
+			<div class="filter-section">
+				<h6 class="filter-title">Sort By</h6>
+				<select class="form-select" id="sortBy"> <!-- Added id="sortBy" -->
+					<option value="LOW">Price: Low to High</option>
+					<option value="HIGH">Price: High to Low</option>
+					<option value="NEWEST">Newe Arrivals</option>
+					<option value="A_TO_Z">Aa to Zz</option>
+					<option value="Z_TO_A">Zz to Aa</option>
+					<!-- <option value="POPULARITY">Popularity</option> -->
+				  </select>
+				  
+			</div>
+	
+			<!-- Availability -->
+			<div class="filter-section">
+				<h6 class="filter-title">Availability</h6>
+				<div class="form-check mb-2">
+					<input class="form-check-input" type="radio" name="availability" id="inStock">
+					<label class="form-check-label" for="inStock">In Stock</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="availability" id="allItems">
+					<label class="form-check-label" for="allItems">All Items</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Fixed Button Container -->
+	<div class="button-container">
+		<button id="applyFiltersBtn" class="apply-btn">Apply Filters</button>
+	</div>
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -300,6 +500,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div class="search-container">
 			<div class="search-wrapper">
 			  <input type="text" id="search-input" placeholder="Search..." oninput="handleSearch()">
@@ -312,7 +513,10 @@
 		  </div>
 	</div>
 	<!-- end breadcrumb section -->
-	
+	<button class="sidebar-toggle" id="sidebarToggle">
+		<i class="fas fa-filter"></i> Filters
+	</button>
+	<div class="overlay" id="overlay"></div>
 	<!-- products -->
 	<div class="product-section mt-150 mb-150"style="display: flex;flex-wrap: wrap;padding: Bottom 10%;;">
 		<div class="container" >
@@ -397,9 +601,9 @@
 								</div>
 								<div style="display: flex; flex-direction: column; justify-content: center; padding: 3px;">
 									<% if (item.Stock > 0) { %>
-										<a href="cart.html" class="cart-btn">
+										<button class="cart-btn" onclick="pass('<%=item.id%>','<%=item.productTitle%>','<%=item.RegulerPrice%>','<%=item.OfferPrice%>')">
 										  <i class="fas fa-shopping-cart"></i> Add to Cart
-										</a>
+										</button>
 									  <% } else { %>
 										<a href="#" class="cart-btn disabled" style="pointer-events: none; opacity: 0.5; background-color: rgb(251, 179, 179); color: rgb(255, 0, 0);">
 										  <i class="fas fa-shopping-cart"></i> Unavailable
@@ -464,30 +668,70 @@
 	</div>
 	<!-- logo carousel -->
 	<%-include('../partials/footer.ejs')%>
-
+<script src="/showNotification.js"></script>
 <script>
 //   console.log("Category:", "<%= Category %>");
- async function handleSearch() {
+document.getElementById('applyFiltersBtn').addEventListener('click', async function() {
+    await handleSearch();
+});
+
+async function handleSearch() {
     const query = document.getElementById('search-input').value.trim();
-	console.log('query',query);
-	
+    const categories = document.querySelectorAll(".form-check-input");
+    const sortBy = document.getElementById("sortBy");
+    const priceRange = document.getElementById("priceRange");
 
+    console.log('query', query);
+
+    const selectedCategories = Array.from(categories)
+        .filter((checkbox) => checkbox.checked) 
+        .map((checkbox) => checkbox.value);
+
+    console.log('selectedCategories:', selectedCategories);
+
+    const selectedSortBy = sortBy.value;
+    console.log('selectedSortBy:', selectedSortBy);
+
+   
+    let params = new URLSearchParams();
+
+    
     if (query) {
-        try {
-            const response = await fetch(`/search?search=${encodeURIComponent(query)}`);
-            const products = await response.json(); 
+        params.append('search', query);
+    }
 
-			console.log(products);
-			if (!products.length) return displayNoProduct()
-            displayProduct(products);
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-            document.querySelector('.product-lists').innerHTML = '<p>Error fetching search results.</p>';
+    if (selectedCategories.length > 0) {
+        params.append('selectedCategories', selectedCategories.join(','));
+    }
+
+    if (priceRange) {
+        params.append('priceRange', priceRange.value);
+    }
+
+    if (selectedSortBy) {
+        params.append('sortOrder', selectedSortBy);
+    }
+
+   
+    const url = `/search?${params.toString()}`;
+
+    try {
+       
+        const response = await fetch(url);
+        const products = await response.json(); 
+
+        console.log(products);
+        if (!products.length) {
+            return displayNoProduct();
         }
-    } else {
-        fetchAllproduct();
+        displayProduct(products);
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        document.querySelector('.product-lists').innerHTML = '<p>Error fetching search results.</p>';
     }
 }
+
+
 
 async function fetchAllproduct() {
 	console.log('fetch');
@@ -583,6 +827,67 @@ function displayNoProduct(){
 	<script src="/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+	<script>
+		
+		const sidebar = document.getElementById('sidebar');
+		const overlay = document.getElementById('overlay');
+		const sidebarToggle = document.getElementById('sidebarToggle');
+		const closeBtn = document.getElementById('closeBtn');
+		const priceRange = document.getElementById('priceRange');
+		const priceValue = document.getElementById('priceValue');
+	
+		
+		function toggleSidebar() {
+			sidebar.classList.toggle('active');
+			overlay.classList.toggle('active');
+			sidebarToggle.classList.toggle('hidden');
+		}
+	
+		
+		sidebarToggle.addEventListener('click', toggleSidebar);
+		closeBtn.addEventListener('click', toggleSidebar);
+		overlay.addEventListener('click', toggleSidebar);
+	
+		
+		priceRange.addEventListener('input', (e) => {
+			priceValue.textContent = `₹${e.target.value}`;
+		});
+
+/////////////|| ADD TO CART ||///////////////////////
+
+function pass(productId,name,Reguler,Offer){
+	console.log(productId,name,Reguler,Offer)
+
+	fetch('/addCart',{
+		method:'post',
+		headers:{
+			'Content-Type':'application/json'
+		},
+		body:JSON.stringify({
+			productId,name,Reguler,Offer
+		})
+	}).then(res=>res.json())
+	.then(data=>{
+		if(data.success){
+			showToast(data.message,'success')
+		}else{
+			showToast(data.message,'error')
+		}
+		
+	})
+}
+
+
+
+
+
+
+
+
+
+
+	</script>
 </body>
 </html>

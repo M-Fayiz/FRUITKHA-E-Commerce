@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+	<!-- title -->
+	<title>Check Out</title>
+<style>
+	.order-summary {
+      width: 350px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-summary h2 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+  
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-details h4 {
+      font-size: 18px;
+      margin: 0 0 5px 0;
+      color: #333;
+    }
+
+    .item-details p {
+      font-size: 14px;
+      color: #666;
+      margin: 0;
+    }
+
+    .item-price {
+      font-size: 16px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .order-total {
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+      margin-top: 15px;
+    }
+
+    .order-total div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .order-total div span {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .order-total .total {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .coupon {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .coupon input {
+      width: 70%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .coupon button {
+      padding: 8px 15px;
+      background-color: #FF6600;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .coupon button:hover {
+      background-color: #555;
+    }
+	.add-address-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #3179d7; /* Blue background */
+    color: white; /* White text */
+    text-align: center;
+    text-decoration: none; /* Remove underline */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .add-address-btn:hover {
+    background-color: #b6d3f2; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+  }
+
+  .add-address-btn:active {
+    background-color: #004494; /* Even darker blue on click */
+    transform: translateY(0); /* Reset lift effect */
+  }
+</style>
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/css/responsive.css">
+     <link rel="stylesheet" href="/SHOW.css">
+	 <!-- Add SweetAlert2 CDN link in the head of your HTML -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<%-include('../partials/Header.ejs')%>
+	<!-- end header -->
+<%-include('../partials/block.ejs')%>
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Check Out Product</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- check out section -->
+	<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+		 <form action="" id="order-form">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="checkout-accordion-wrap">
+					 
+						<div class="accordion" id="accordionExample">
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingOne">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						          Select Address
+						        </button>
+						      </h5>
+						    </div>
+
+						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						      <div class="card-body">
+								<%if(address && address.length > 0) { %>  <!-- Ensure address is valid -->
+									<% address.forEach(item => { %>
+										<label class="card mb-3" style="padding: 7px; display: block; border: 1px solid #ccc; cursor: pointer;">
+											<input type="radio" name="selectedAddress" id="addresId" value="<%= item._id %>" style="display: block;" >
+										
+											<div class="card-body" >
+											  <h5 class="card-title"><%= item.Address_name %></h5>
+											  <div style="display: flex; flex-wrap: wrap; gap: 3px;">
+												<p><span style="color: #5a5a5a;">Name:</span> <%= item.Name %></p>
+												<p><span style="color: #5a5a5a;">State:</span> <%= item.State %></p>
+												<p><span style="color: #5a5a5a;">City:</span> <%= item.District %></p>
+												<p><span style="color: #5a5a5a;">Place:</span> <%= item.place %></p>
+												<p><span style="color: #5a5a5a;">Pin code:</span> <%= item.PIN %></p>
+												<p><span style="color: #5a5a5a;">Landmark:</span> <%= item.mark %></p>
+											  </div>
+										
+											  <div class="text-end">
+												<button type="button" class="btn btn-outline-info" style="padding: 5px;" data-bs-toggle="modal" data-bs-target="#editAddressModal" onclick="editAddress('<%=item.Address_name %>','<%=item.Name%>','<%=item.State %>','<%= item.District %>','<%=item.place%>','<%=item.PIN %>','<%=item.mark%>','<%=item.id%>')">
+													Edit Address
+												  </button>
+											  </div>
+											</div>
+										  </label>
+									<% }) %>
+								  <% } else { %>
+									<div>
+									  <p style="color: rgb(48, 48, 48);">No Address Added Yet</p>
+									</div>
+									<div>
+										<a href="/address" class="add-address-btn">+ Add Address</a>
+									  </div>
+									  
+								  <% } %>
+						      </div>
+						    </div>
+						  </div>
+						  
+						  
+						</div>
+						<div class="payment-methods">
+							<h3 class="mb-4" style="font-weight: 500;">Select Payment Method</h3>
+		
+							<!-- Razorpay Payment Option -->
+							<div class="payment-method" style="border:solid #ccc; border-radius: 10px; padding: 5px;">
+								<input type="radio" name="paymentMethod" id="razorpay" value="razorpay" >
+								<label for="razorpay">
+									
+									<div>
+										<h5>Razorpay Online Payment</h5>
+										<p class="text-muted">Pay securely using credit/debit cards, net banking, UPI, and wallets</p>
+									</div>
+								</label>
+							</div>
+		
+							<!-- Cash on Delivery Option -->
+							<div class="payment-method"  style="border:solid #ccc; border-radius: 10px; padding: 5px; margin-top: 8px;">
+								<input type="radio" name="paymentMethod" id="cod" value="COD">
+								<label for="cod">
+									
+									<div>
+										<h5>Cash on Delivery (COD)</h5>
+										<p class="text-muted">Pay in cash when your order is delivered</p>
+									</div>
+								</label>
+							</div>
+						</div>
+					  
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="order-details-wrap">
+						<div class="order-summary">
+							<h2>Order Summary</h2>
+							<div class="item">
+								<div class="item-details" style="display:flex;flex-direction: column;" >
+								<% cart.Products.forEach(item=>{%>
+									    <input type="text" value="<%= cart.UserID %>" hidden>
+										<div style="display: flex; justify-content: space-between;">
+										<h6 style="color: #3c3c3c;font-size: 16px;font-weight: 600;"><%=item.productId.productTitle%></h6>
+										<p>Quantity:<%=item.quantity%></p>
+										<p class="item-price">total :<%=item.TOTAL%></p>
+									   </div>
+									
+								<%})%>
+							</div>
+							  
+							</div>
+						
+							<div class="order-total">
+							  <div>
+								<span>Subtotal</span>
+								<span>₹<%=cart.subTotal%></span>
+							  </div>
+							  <div>
+								<span>Shipping</span>
+								<span>₹<%=cart.Shipping%>.00</span>
+							  </div>
+							  <div>
+								<span>Discount</span>
+								<span>₹<%=cart.Discount.discount_amount%>.00</span>
+							  </div>
+							  <div class="total">
+								<span>Total</span>
+								<span>₹<%=(cart.subTotal + cart.Shipping-cart.Discount.discount_amount).toFixed(2)%></span>
+									
+
+							  </div>
+							</div>
+						 <fieldset id="innerForm">
+							<% if(!cart.Discount.discount_amount>0){%>
+								<div class="coupon">
+									<input type="text" id="coupon-input" placeholder="Enter coupon code" />
+									<button type="button" data-total="<%=cart.subTotal%>" data-user="<%=user%>"  id="apply">Apply</button>
+							    </div>
+							<%}else {%>
+								<div class="coupon">
+								<button type="button" data-coupon="<%=cart.Discount.discountId%>" data-user="<%=user%>"  id="remove">Remove</button>
+							    </div>
+							<%}%>
+							
+							  <p id="result" style="color: red;"></p>
+						    </fieldset>
+						  </div>
+						<button type="submit" style="background-color:#FF6600 ;color: white;" class="coupon">Place Order</button>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	<!-- end check out section -->
+	<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			  <form id="edit-address-form">
+				<div class="mb-3">
+				  <label for="editAddressName" class="form-label">Address Name</label>
+				  <input type="text" class="form-control" id="editAddressName" placeholder="Home or Office" required>
+				</div>
+				<div class="mb-3">
+				  <label for="editCustomerName" class="form-label">Name of Customer</label>
+				  <input type="text" class="form-control" id="editCustomerName" placeholder="Your Name" required>
+				</div>
+				<div class="row">
+				  <div class="col-md-6 mb-3">
+					<label for="editPincode" class="form-label">Pincode</label>
+					<input type="text" class="form-control" id="editPincode" placeholder="Enter Pincode" required>
+				  </div>
+				  <div class="col-md-6 mb-3">
+					<label for="editPlace" class="form-label">Place</label>
+					<input type="text" id="editPlace" class="form-select">
+				  </div>
+				</div>
+				<div class="mb-3">
+				  <label for="editLandmark" class="form-label">Landmark</label>
+				  <input type="text" class="form-control" id="editLandmark" placeholder="Enter Landmark" required>
+				</div>
+				<div class="row">
+				  <div class="col-md-6 mb-3">
+					<label for="editCity" class="form-label">District</label>
+					<input type="text" class="form-control" id="editCity" placeholder="Enter City" required>
+				  </div>
+				  <div class="col-md-6 mb-3">
+					<label for="editState" class="form-label">State</label>
+					<input type="text" class="form-control" id="editState" placeholder="Enter State" required>
+				  </div>
+				</div>
+			  </form>
+			</div>
+			<div id="Result" class="mt-4"></div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			  <button type="submit" form="edit-address-form" class="btn btn-success">Save Changes</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	<!-- logo carousel -->
+	<%-include('../partials/footer.ejs')%>
+	<!-- jquery -->
+	 <script>
+
+document.getElementById('remove')?.addEventListener('click', () => {
+    const removeBtn = document.getElementById('remove')
+    const couponId = removeBtn.getAttribute('data-coupon')
+    const userId = removeBtn.getAttribute('data-user')
+
+
+    console.log("Removing coupon with ID:", couponId, "for user:", userId)
+
+    fetch('/remove-coupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ couponId, userId }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.message) {
+                // alert(data.message)
+                location.reload()
+            } else {
+                showToast("Failed to remove coupon. Please try again.",'error')
+            }
+        })
+        .catch((error) => {
+            console.error("Error during coupon removal:", error)
+            showToast("An error occurred while removing the coupon.",'error')
+        });
+});
+
+
+
+
+
+		document.getElementById('apply').addEventListener('click', () => {
+      const coupon = document.getElementById('coupon-input').value.trim()
+      const result = document.getElementById('result')
+
+			const applyButton = document.getElementById('apply')
+			const userId = applyButton.getAttribute('data-user')
+			const total = applyButton.getAttribute('data-total')
+
+			if (!coupon) {
+				result.innerHTML = 'Enter A Valid Coupon Code';
+				return;
+			}
+
+			fetch('/couponDetails',{
+				method:'post',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body:JSON.stringify({
+					coupon,userId,total
+				})
+			}).then(res=>res.json())
+			.then(data=>{
+				if(data.success){
+					// showToast(data.message,'success')
+					location.reload()
+				}else{
+					showToast(data.message,'error')
+				}
+			})
+			})
+
+	 </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+
+	<script src="/js/jquery.meanmenu.min.js"></script>
+
+	<script src="/js/sticker.js"></script>
+
+	<script src="/js/main.js"></script>
+     <script src="/TOAST.js"></script>
+	<script>
+		
+
+		document.getElementById('order-form').addEventListener('submit', async (e) => {
+  e.preventDefault(); 
+  const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+
+
+    if (!selectedAddress || !paymentMethod) {
+    let errorMessage = "Please select:";
+    if (!selectedAddress) errorMessage += " a shipping address";
+    if (!selectedAddress && !paymentMethod) errorMessage += " and";
+    if (!paymentMethod) errorMessage += " a payment method";
+
+    showToast(errorMessage,'info'); 
+    return; 
+  }
+
+  const form = e.target;
+  const formData = new FormData(form);
+  const formObject = Object.fromEntries(formData.entries());
+
+
+  try {
+    const response = await fetch('/placeOrder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formObject),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error placing order');
+    }
+
+    const data = await response.json();
+    if(data.success){
+		showOrderSuccess()
+		setTimeout(()=>{
+			
+			window.location.href = '/shop'; 
+		},1000)
+		
+	}else{
+		Swal.fire('Error', 'There was an issue placing your order. Please try again later.', 'error');
+	}
+    console.log(data);
+
+    
+   
+
+  } catch (error) {
+    alert('Failed to place the order: ' + error.message);
+  }
+});
+function showOrderSuccess() {
+  Swal.fire({
+    title: 'Order Placed Successfully!',
+    text: 'Your order has been placed successfully. We will notify you once it is shipped.',
+    icon: 'success',
+    confirmButtonText: 'Okay'
+  });
+}
+
+
+// EDIT Address .\///////
+
+function editAddress(Name, adName, State, District, Place, Pincode, mark, user) {
+    console.log(Name, adName, State, District, Place, Pincode, mark);
+
+    
+    document.getElementById('editCustomerName').value = Name;
+    document.getElementById('editAddressName').value = adName;
+    document.getElementById('editPincode').value = Pincode;
+    document.getElementById('editPlace').value = Place;
+    document.getElementById('editCity').value = District;
+    document.getElementById('editState').value = State;
+    document.getElementById('editLandmark').value = mark;
+
+   
+    document.getElementById('edit-address-form').setAttribute('data-user', user);
+
+    
+    document.getElementById('edit-address-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const editCustomerName = document.getElementById('editCustomerName').value.trim();
+        const editAddressName = document.getElementById('editAddressName').value.trim();
+        const editPincode = document.getElementById('editPincode').value.trim();
+        const editPlace = document.getElementById('editPlace').value.trim();
+        const editCity = document.getElementById('editCity').value.trim();
+        const editState = document.getElementById('editState').value.trim();
+        const editLandmark = document.getElementById('editLandmark').value.trim();
+        const user = document.getElementById('edit-address-form').getAttribute('data-user');
+
+        try {
+            // Fetch API to validate pincode
+            const response = await fetch(`https://api.postalpincode.in/pincode/${editPincode}`);
+            const data = await response.json();
+
+            if (data[0].Status === "Success") {
+                const postOffices = data[0].PostOffice;
+                const isValidState = postOffices.some(
+                    (office) => office.State.toLowerCase() === editState.toLowerCase()
+                );
+                const isValidDistrict = postOffices.some(
+                    (office) => office.District.toLowerCase() === editCity.toLowerCase()
+                );
+                const isValidStreet = postOffices.some(
+                    (office) => office.Name.toLowerCase() === editPlace.toLowerCase()
+                );
+
+                if (isValidState && isValidDistrict && isValidStreet) {
+                    document.getElementById('Result').innerHTML = `<p class="text-success">Validation Successful! All details match.</p>`;
+
+                   
+                    await fetch('/editADRS', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            Name: editCustomerName,
+                            AdName: editAddressName,
+                            PIN: editPincode,
+                            PLace: editPlace,
+                            City: editCity,
+                            State: editState,
+                            Mark: editLandmark,
+                            user: user,
+                        }),
+                    }).then((res) => res.json())
+                      .then((data) => {
+                        if (data.success) {
+                            // showToast(data.message, 'success');
+                            setTimeout(()=>{
+                                window.location.reload();
+                            },200)
+                           
+                        } else {
+                            // showToast(data.message, 'error');
+                        }
+                    });
+                } else {
+                    document.getElementById('Result').innerHTML = `<p class="text-danger">Validation Failed! Please check the details.</p>`;
+                }
+            } else {
+                document.getElementById('Result').innerHTML = `<p class="text-danger">Invalid Pincode or No Data Found.</p>`;
+            }
+        } catch (error) {
+            document.getElementById('Result').innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+        }
+    });
+}
+
+  
+	</script>
+
+</body>
+</html>
