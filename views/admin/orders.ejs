@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/admin/imgs/theme/favicon.svg" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- Template CSS -->
+        <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <style>
+       .pending {
+  color: orange;
+}
+
+.shipped {
+  color: blue;
+}
+
+.on-delivery {
+  color: green;
+}
+
+.delivered {
+  color: darkgreen;
+}
+
+.cancelled {
+  color: red;
+}
+
+.return {
+  color: darkorange;
+}
+
+        </style>
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <%-include('../partials/sidebar.ejs') %>
+         <%-include('../partials/block.ejs')%>
+        <main class="main-wrap">
+            <%-include('../partials/adminHeader')%>
+            
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order List</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>OrderStatus</th>
+                                            <th>Total Price</th>
+                                            <th>Order Date</th>
+                                            
+                                            <th>paymentMethod</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% orders.forEach(item=>{%>
+                                            <tr>
+                                               
+
+                                 
+            
+                                                <td>#<%=item._id%></td>
+                                                <td><%=item.UserID.firstName%></td>
+                                                <td class="<%= 
+                                                item.orderStatus === 'Pending' ? 'pending' : 
+                                                item.orderStatus === 'Shipped' ? 'shipped' : 
+                                                item.orderStatus === 'On Delivery' ? 'on-delivery' : 
+                                                item.orderStatus === 'Delivered' ? 'delivered' : 
+                                                item.orderStatus === 'Cancelled' ? 'cancelled' : 
+                                                item.orderStatus === 'Return' ? 'return' : '' 
+                                              %>">
+                                                <%= item.orderStatus %> 
+                                              </td>
+                                                <td>₹<%=item.Final_Amount%></td>
+                                                   
+                                                <td><%= new Date(item.createdAt).toISOString().split('T')[0] %></td>
+                                                <td><%=item.payment%></td>
+                                                <!-- <td></td> -->
+                                                <td class="text-end">
+                                                    <a href="/admin/order-details/<%=item._id%>" class="btn btn-sm btn-outline-primary">View</a>
+                                                </td>
+                                              
+                                            </tr>
+                                            <%})%>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="border-t border-gray-100 p-4">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-gray-500">
+                            <!-- Showing <%= (currentPage - 1) * 6 + 1 %> to <%= Math.min(currentPage * 6, totalOrders) %> of <%= totalOrders %> products -->
+                        </p>
+                        <div class="flex gap-2">
+                            <!-- Previous Button -->
+                            <% if (currentPage > 1) { %>
+                                <a href="/admin/order?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Previous
+                                </a>
+                            <% } %>
+                
+                            
+                            <% 
+                                const maxButtons = 3;
+                                let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                                let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+                
+                               
+                                if (endPage - startPage + 1 < maxButtons) {
+                                    startPage = Math.max(1, endPage - maxButtons + 1);
+                                }
+                            %>
+                
+                            <% for (let i = startPage; i <= endPage; i++) { %>
+                                <a href="/admin/order?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                                    <%= i %>
+                                </a>
+                            <% } %>
+                
+                      
+                            <% if (currentPage < totalPages) { %>
+                                <a href="/admin/order?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Next
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </section>
+            <!-- content-main end// -->
+            
+        </main>
+        <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/admin/js/vendors/select2.min.js"></script>
+        <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+        <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

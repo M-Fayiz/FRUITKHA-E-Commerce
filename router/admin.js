@@ -1,10 +1,13 @@
 const express=require('express')
 const Router=express.Router()
-const admin_Cntrl=require('../controller/adminCntrl')
+const admin_Cntrl=require('../controller/ADMIN/adminCntrl')
 const upload=require('../utils/multer')
-const product_CNTRL=require('../controller/productCntrl')
-const OFFER=require('../controller/OFFER')
-
+const product_CNTRL=require('../controller/ADMIN/productCntrl')
+const OFFER=require('../controller/ADMIN/OFFER')
+const ORDER=require('../controller/ADMIN/order')
+const STOCK=require('../controller/ADMIN/Stock')
+const COUPON=require('../controller/ADMIN/Coupon')
+const REPORT=require('../controller/ADMIN/SalesReport')
 const adminAuth=require('../middleware/auth')
 
 
@@ -13,16 +16,15 @@ Router.get('/login',admin_Cntrl.LoadLogin)
 Router.post('/verify_login',admin_Cntrl.verifyLogin)
 
 // Home,.,.,.,...
-Router.get('/',adminAuth.adminAuth,admin_Cntrl.LoadHome)
+Router.get('/',admin_Cntrl.LoadHome)
 
 // User List
 Router.get('/userList',admin_Cntrl.Load_manage)
 Router.patch('/toogleUserStatus',admin_Cntrl.toogleUserStatus)
 
-
 // For Category
 Router.post('/addCategory',upload.single('image'),admin_Cntrl.addCategory)
-Router.get('/category',adminAuth.adminAuth,admin_Cntrl.LoadCategory)
+Router.get('/category',admin_Cntrl.LoadCategory)
 
 Router.post('/clear-offer',admin_Cntrl.clearOffer)
 // 
@@ -31,18 +33,15 @@ Router.patch('/categoryStatus',admin_Cntrl.categoryStatus)
 Router.patch('/EditCategory',upload.single('image'),admin_Cntrl.EditCategory)
 
 
-//  PRODUCT *************
-Router.get('/product',adminAuth.adminAuth,product_CNTRL.productForm)
-// 
+//  PRODUCT |  PRODUCT |  PRODUCT |
+Router.get('/product',product_CNTRL.productForm)
 Router.post('/addProduct',upload.array("primaryImageInput",3),product_CNTRL.addProduct)
 
 // PRODUCT LIST ---------------
 
-Router.get('/productList',adminAuth.adminAuth,product_CNTRL.prductList)
-// 
-
-Router.get('/SingleImage/:id',adminAuth.adminAuth,product_CNTRL.getSingle)
-
+Router.get('/productList',product_CNTRL.prductList)
+Router.patch('/productList',product_CNTRL.productList)
+Router.get('/SingleImage/:id',product_CNTRL.getSingle)
 Router.patch('/updateProduct',upload.fields([
     { name: 'primaryImage', maxCount: 1 },
     { name: 'additionalImage0', maxCount: 1 },
@@ -51,12 +50,34 @@ Router.patch('/updateProduct',upload.fields([
 
 
 
-Router.patch('/productList',product_CNTRL.productList)
 
+
+//  |  OFFER  |  OFFER  |  OFFER  |  OFFER 
 Router.post('/clearOffer',OFFER.removeOFF)
-
 Router.post('/addOffer',OFFER.addOffer)
+Router.get('/Offer',OFFER.getOffer)
 
-Router.get('/Offer',adminAuth.adminAuth,OFFER.getOffer)
+// ORDER | ORDER | ORDER | ORDER ORDER ORDER 
+Router.get('/order',ORDER.order)
+Router.get('/order-details/:id',ORDER.details)
+Router.put('/OrderStatus',ORDER.OrderStatus)
+Router.post('/response',ORDER.allReturn)
+Router.post('/productRes',ORDER.forProductReturn)
+
+//  |   STOCK   |   STOCK   |   STOCK
+
+Router.get('/stock',STOCK.stock)
+Router.post('/addStock',STOCK.addQuantity)
+
+//  | COUPON | COUPON | COUPON | COUPON
+
+Router.get('/coupon',COUPON.coupon)
+Router.post('/addCoupon',COUPON.addCoupon)
+Router.patch('/editCoupon',COUPON.editCoupon)
+Router.post('/removeCoupon',COUPON.deletCoupon)
+
+// SALES REPORT  -  SALES REPORT  -  SALES REPORT
+Router.get('/sales-Report',REPORT.salesReport) 
+Router.post('/get-sales-report',REPORT.genorate)
 
 module.exports=Router

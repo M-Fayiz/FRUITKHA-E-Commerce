@@ -3,7 +3,7 @@ document.getElementById('resendBtn').addEventListener('click', async function(ev
   console.log('OTP kayari');
   
     try {
-        console.log('inside try');
+        // console.log('inside try');
         
       const response = await fetch('/resendOTP', {
         method: 'POST',
@@ -28,33 +28,22 @@ document.getElementById('resendBtn').addEventListener('click', async function(ev
 //   verify OOOO--TTTT--PPPP
   
   document.getElementById('otpForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevent form from refreshing the page
-    // let endpoint
-    // if(' <%= RESULT %>'){
-    //   console.log('result');
-      
-    //   endpoint='/forgetPASS'
-    // }else if('<%= email %>'){
-    //   console.log('email');
-      
-    //  endpoint='/verifyOTP'
-      
-    // }
-    // Collect OTP values
+    event.preventDefault();
+    const EMAIL=document.getElementById('Email-Otp').value
     const otpInputs = document.querySelectorAll('.otp-input');
     let otpValue = '';
     otpInputs.forEach(input => {
       otpValue += input.value;
     });
   
-    // Send OTP to backend
+    
     try {
       const response = await fetch('/verifyOTP', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ otp: otpValue })
+        body: JSON.stringify({ otp: otpValue ,EMAIL})
       });
 
       console.log(response)
@@ -63,12 +52,15 @@ document.getElementById('resendBtn').addEventListener('click', async function(ev
       
       if (data.success) {
        
-        alert("OTP Verified!", 'success',data.message);
-        
-        window.location.href = '/'
-      } else {
-       alert(data.message);
+        // alert("OTP Verified!", 'success',data.message);
+        showToast(data.message, 'success');
+        setTimeout(()=>{
+          window.location.href = '/'
+        },800)
        
+      } else {
+      //  alert(data.message);
+       showToast(data.message, 'error');
       }
     } catch (error) {
       console.error("Error:", error);

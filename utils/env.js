@@ -5,9 +5,9 @@ dotenv.config()
 let envVariable={
     PORT:process.env.PORT,
     MONGO_URL:process.env.MONGO_URL,
-GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
-GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET
-
+    GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET,
+    JWT_SECRET:process.env.JWT_SECRET
 
 
 }

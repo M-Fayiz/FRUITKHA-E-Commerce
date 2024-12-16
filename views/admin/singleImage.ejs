@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         :root {
@@ -272,24 +273,24 @@
                         <label>Offer Price</label>
                         <h4 type="number" class="form-control" min="0" max="100" id="offer" value="<%=result.OfferPrice%>" step="0.01" style="color: #2ea56f;"><%=result.OfferPrice%></h4>
                         
-                        <button type="button"  data-id="<%= result.id %>" class="removebutton">Remove Offer</button>
+                        <!-- <button type="button"  data-id="<%= result.id %>" class="removebutton">Remove Offer</button> -->
                       
                    
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Offer Percentage %</label>
                         <input type="number" class="form-control" min="0" max="100" id="offerPrice" value="<%=offer%>" step="0.01">
                         <span></span>
-                    </div>
+                    </div>  -->
     
                     <div class="form-group">
                         <label>Stock Quantity</label>
                         <input type="number" class="form-control" min="0" id="stock" value="<%=result.Stock %>">
                         <div style="padding-top: 8px;">
-                        <% if (result.Stock > 10) { %>
+                        <% if (result.totalStock > 10) { %>
                             <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full" style="background-color: #84ec7d; padding: 3px; border-radius: 5px;">
                                 In Stock
                             </span>
-                        <% } else if (result.Stock > 0) { %> 
+                        <% } else if (result.totalStock > 0) { %> 
                             <span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full" style="background-color: #ecea7d; padding: 3px; border-radius: 5px;">
                                 Low Stock
                             </span>
@@ -313,25 +314,25 @@
     </div>
 
     <script>
-      document.querySelector('.removebutton').addEventListener('click', function() {
-    const productId = this.getAttribute("data-id");
-    let formData = new FormData();
-    formData.append('remove', productId);
+//       document.querySelector('.removebutton').addEventListener('click', function() {
+//     const productId = this.getAttribute("data-id");
+//     let formData = new FormData();
+//     formData.append('remove', productId);
 
-    console.log(formData.get('remove')); // Logs the productId
+//     console.log(formData.get('remove')); // Logs the productId
 
-    fetch('/admin/remove', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
+//     fetch('/admin/remove', {
+//         method: 'POST',
+//         body: formData
+//     })
+//     .then(res => res.json())
+//     .then(data => {
+//         console.log(data);
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// });
 
 
 

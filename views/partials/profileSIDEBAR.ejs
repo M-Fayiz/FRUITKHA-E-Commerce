@@ -1,3 +1,148 @@
+<style>
+    :root {
+            --primary-color: #F28123;
+            --sidebar-width: 280px;
+            --sidebar-bg: #fff;
+            --sidebar-hover: #f8f9fa;
+            --sidebar-active: #e8f0fe;
+            --sidebar-text: #333;
+        }
+        
+        body {
+            font-size: 16px;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .main-content {
+            margin-left: 30px;
+            padding: 40px;
+            background-color: #f8f9fa;
+         
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+        }
+        
+        .nav-link {
+            color: var(--sidebar-text);
+            padding: 16px 25px;
+            margin: 6px 0;
+            transition: all 0.3s;
+            border-radius: 0;
+            font-size: 16px;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            background-color: var(--sidebar-active);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .nav-link i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .content-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .content-card h5 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d97320;
+            border-color: #d97320;
+        }
+        
+        .form-label {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            font-size: 15px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .navbar {
+            padding: 15px 0;
+        }
+        
+        .navbar-brand img {
+            height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .content-card {
+                padding: 25px;
+            }
+        }
+        #place {
+    white-space: normal; /* Allows text wrapping */
+    overflow-y: auto;   /* Enables scrolling if content overflows */
+    max-height: 200px;  /* Limits the height of the dropdown */
+}
+</style>
 <div class="sidebar collapse d-md-block" id="sidebar">
     <div class="d-flex flex-column py-4">
         <a href="/" class="nav-link">
@@ -6,16 +151,19 @@
         <a href="/profile" class="nav-link active">
             <i class="fas fa-user"></i> Profile
         </a>
-        <a href="#" class="nav-link">
+        <a href="/orderList" class="nav-link">
             <i class="fas fa-shopping-bag"></i> Orders
         </a>
-        <a href="#" class="nav-link">
+        <a href="/wishList" class="nav-link">
             <i class="fas fa-heart"></i> Wishlist
         </a>
-        <a href="#" class="nav-link">
+        <a href="/address" class="nav-link">
             <i class="fas fa-map-marker-alt"></i> Address
         </a>
-        <a href="/logOut/<%=user.id%>" class="nav-link text-danger">
+        <a href="/wallet" class="nav-link">
+            <i class="fas fa-wallet text-warnin"></i> Wallet
+        </a>
+        <a href="/logOut/<%=user%>" class="nav-link text-danger">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </div>

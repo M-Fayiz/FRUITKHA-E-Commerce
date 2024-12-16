@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/admin/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <style>
+            .pending {
+  color: orange;
+ /* color: lightyellow; */
+}
+
+.shipped {
+  color: blue;
+  /* color: lightblue; */
+}
+
+.on-delivery {
+  color: green;
+  /* color: lightgreen; */
+}
+
+.delivered {
+  color: darkgreen;
+  /* color: lightseagreen; */
+}
+
+.cancelled {
+  /* color: white; */
+ color: red;
+}
+
+.return {
+  color: darkorange;
+  /* background-color: lightcoral; */
+}
+        </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/SHOW.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+        
+        <%-include('../partials/sidebar.ejs') %>
+      <%-include('../partials/block.ejs')%>
+      
+        <main class="main-wrap">
+            <%-include('../partials/adminHeader')%>
+           
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order detail</h2>
+                        <!-- <p>Details for Order ID: 345</p> -->
+                    </div>
+                </div>
+                <div class="card">
+                    <header class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-6 mb-lg-0 mb-15" style="color: #747474;">
+                                <span style="font-weight: 300;"> <i class="material-icons md-calendar_today"></i> <b> <%= new Date(orders.createdAt).toLocaleString('en-US', {
+                                    weekday: 'short', 
+                                    month: 'short',    
+                                    day: '2-digit',    
+                                    year: 'numeric',   
+                                    hour: 'numeric',   
+                                    minute: '2-digit', 
+                                    hour12: true      
+                                  }) %></b> </span> <br />
+                                <small style="color: rgb(36, 36, 36); font-size: 18px   ;">Order ID: <%=orders.id%></small>
+                                
+                            </div>
+                            <p style="color: #747474;" >Order Status : <span class="<%= 
+                                orders.orderStatus === 'Pending' ? 'pending' : 
+                                orders.orderStatus === 'Shipped' ? 'shipped' : 
+                                orders.orderStatus === 'On Delivery' ? 'on-delivery' : 
+                                orders.orderStatus === 'Delivered' ? 'delivered' : 
+                                orders.orderStatus === 'Cancelled' ? 'cancelled' : 
+                                orders.orderStatus === 'Returned ' ? 'return' : '' 
+                                %>"><%=orders.orderStatus%></span> </p>
+                               <% if (orders.Return.req==true && orders.orderStatus!=="Returned"){%>
+                                <div style="display: flex; gap: 20px;align-items: center;">
+                                <p>User Request: <span style="color: red;">for Return</span> </p>
+                                  <button 
+                                    type="button" 
+                                   
+                                    data-bs-toggle="popover" 
+                                    data-bs-content="<%=orders.Return.reason%>"
+                                    data-bs-placement="top" 
+                                    data-bs-trigger="focus" style="border: none;color: #00b3ff;background:none ;">
+                                    Notify
+                                    </button>
+                                <form action="" id="approve-form">
+                                 <select name="" id="approval" style="width: 100px; height: 25px; border:0.7px solid #b1b1b1; border-radius: 5px;" >
+                                    <option value="">Select </option>
+                                    <option value="Approve">Approve</option>
+                                    <option value="Cancel">Cancel</option>
+                                   
+                                 </select>
+                                 <input type="text" id="orderrrID" value="<%=orders.id%>" hidden>
+                                </form>
+                                 </div>
+
+                                <%}%>
+                            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                              <form action="" id="status-form">
+                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" id="status">
+                                    <option>Change status</option>
+                                    <% avilable.forEach(item=>{%>
+                                    <option value="<%=item %>"><%=item %></option>
+                                    <%})%>
+                                </select>
+                                <input type="text" name="" id="OrdeID" value="<%=orders.id%>" hidden>
+                                <button type="submit" class="btn btn-primary" href="#">Save</button>
+                                <!-- <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a> -->
+                            </form>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-person"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Customer</h6>
+                                        <p class="mb-1">
+                                            <%=orders.UserID.firstName%>.<br />
+                                            <%=orders.UserID.email%><br />
+                                            <%=orders.UserID.phone%>
+                                        </p>
+                                        
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- col// -->
+                            <div class="col-md-4">
+                                
+                            </div>
+                            <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-place"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Deliver to</h6>
+                                        <p class="mb-1">
+                                            City: <%=orders.addressId.District%>, <%=orders.addressId.State%> <br />PIN :<%=orders.addressId.PIN%>, <%=orders.addressId.place%>,<%=orders.addressId.mark%> <br />
+                                           
+                                        </p>
+                                       
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- col// -->
+                        </div>
+                        <!-- row // -->
+                        <div class="">
+                            
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">Product</th>
+                                                
+                                                <th width="15%">Unit Price</th>
+                                                <th width="15%">Status</th>
+                                                <th width="15%">Request</th>
+                                                <th  width="15%">Status Ctrl</th>
+                                                <th width="15%">Quantity</th>
+                                                <th width="15%" class="text-end">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%orders.Products.forEach(item=>{%>
+                                            <tr>
+                                                <td>
+                                                    <a class="itemside" href="#">
+                                                        <div class="left">
+                                                            <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" width="40" height="40" class="img-xs" alt="Item" />
+                                                        </div>
+                                                        <div class="info"><%=item.Name%></div>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <% if (item.product.OfferPrice) { %>
+                                                          <div >
+                                                          
+                                                           <span><h4 style="color: green; margin: 5px 0; font-size: 14px;">Offer: <%= item.product.OfferPrice %> ₹</h4></span>
+                                                           <p style="color: gray; margin: 5px 0; font-size: 12px;">
+                                                              <span style="color: red;">Per Kg</span>
+                                                              <del style="color: red;"><%= item.product.RegulerPrice %></del>₹
+                                                            </p>
+                                                          </div>
+                                                            
+                                                        <% } else { %>
+                                                          <p style="margin: 5px 0; font-size: 14px;">Per Kg <span style="font-weight: bold;"><%= item.product.RegulerPrice %></span>₹</p>
+                                                        <% } %>
+                                                        <div>
+                                                </td>
+                                                <td class="<%= 
+                                            item.status === 'Pending' ? 'pending' : 
+                                            item.status === 'Shipped' ? 'shipped' : 
+                                            item.status === 'On Delivery' ? 'on-delivery' : 
+                                            item.status === 'Delivered' ? 'delivered' : 
+                                            item.status === 'Cancelled' ? 'cancelled' : 
+                                            item.status === 'Return' ? 'return' : '' 
+                                            %>">
+                                            <%= item.status %>
+                                            <td>
+                                                <%if (item.return.req==true && item.status!=="Returned") {%>
+                                                    <span style="color: red;">Return</span>
+                                                     <button 
+                                                        type="button" 
+                                                       
+                                                        data-bs-toggle="popover" 
+                                                        data-bs-content="<%=item.return.reason%>"
+                                                        data-bs-placement="top" 
+                                                        data-bs-trigger="focus" style="border: none;color: #00b3ff;background:none ;">
+                                                        <i class="bi bi-info-circle me-2"></i>
+                                                        </button>
+                                                <%}%>
+                                            </td>
+                                            <td>
+                                              
+                                                    <% if (item.return.req === true && item.status !== "Returned") { %>
+                                                      <form action="" class="individual" onsubmit="return false;">
+                                                        <select class="ind" style="width: 100px; height: 25px; border: 0.7px solid #b1b1b1; border-radius: 5px;">
+                                                          <option value="">Select</option>
+                                                          <option value="Approve">Approve</option>
+                                                          <option value="Cancel">Cancel</option>
+                                                        </select>
+                                                        <input type="text" class="itemId" value="<%= item._id%>" hidden>
+                                                        <input type="text" class="orderId" value="<%= orders._id %>" hidden>
+                                                      </form>
+                                                    <% } %>
+                                                  
+                                                  
+                                            </td>
+                                            </td>
+
+                                  
+                                                <td><%=item.quantity%></td>
+                                                <td class="text-end">₹<%=item.TOTAL%></td>
+                                            </tr>
+                                            <%})%>
+                                            
+                                        </tbody>
+                                    </table>
+                                                <hr>
+                                                    <article class="float-end">
+                                                        <dl class="dlist">
+                                                            <dt>Subtotal:</dt>
+                                                            <dd>₹<%=orders.subTotal%></dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Shipping cost:</dt>
+                                                            <dd>₹<%=orders.Shipping%></dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Discount :</dt>
+                                                            <dd>₹<%=orders.Coupon.discountValue%></dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Grand total:</dt>
+                                                            <dd><b class="h5">₹<%=orders.Final_Amount%></b></dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt class="text-muted">Status:</dt>
+                                                            <%if(orders.paymentStatus==='razorpay'){%>
+                                                                <dd>
+                                                                    <span class="badge rounded-pill alert-success text-success"><%=orders.RazorPay.razorpay_order_id%></span>
+                                                                    <p class="badge rounded-pill alert-success text-success"><%=orders.razorpay_order_id%></p>
+                                                                    <p class="badge rounded-pill alert-success text-success"><%=orders.razorpay_payment_id%></p>
+                                                                </dd>
+                                                            <%}else{%>
+                                                                 <dd>
+                                                                    <span class="badge rounded-pill alert-success text-success"><%=orders.paymentStatus%></span>
+
+                                                                 </dd>
+                                                            <%}%>
+                                                            <!-- <dd>
+                                                                <span class="badge rounded-pill alert-success text-success"><%=orders.paymentStatus%></span>
+                                                            </dd> -->
+                                                        </dl>
+                                                    </article>
+                                              
+                                                    <div class="col-lg-4">
+                                                        <div class="box shadow-sm bg-light">
+                                                            <h6 class="mb-15">Payment info</h6>
+                                                            <%if(orders.payment==='razorpay'){%>
+                                                                <%=orders.payment%>
+                                                                <dd>
+                                                                    <span class="badge rounded-pill  " style="color: grey;">RazorPay orderid: <%=orders.RazorPay.razorpay_order_id%></span>
+                                                                    <p class="badge rounded-pill " style="color: grey;"> RazorPay PaymentId: <%=orders.RazorPay.razorpay_payment_id%></p>
+                                                                    <!-- <p class="badge rounded-pill alert-success text-success"><%=orders.RazorPay.razorpay_signature%></p> -->
+                                                                </dd>
+                                                            <%}else{%>
+                                                                
+                                                                <%=orders.payment%>
+                                                                <%}%>
+                                                            
+                                                        </div>
+                                                       
+                                                    </div>
+                                      
+                                </div>
+                                <!-- table-responsive// -->
+                           
+                            <!-- col// -->
+                           
+                            
+                            <!-- col// -->
+                        </div>
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                <!-- card end// -->
+            </section>
+            <!-- content-main end// -->
+          
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+      
+        <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/admin/js/vendors/select2.min.js"></script>
+        <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+        <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+        <script src="/TOAST.js"></script>
+
+        <script>
+            document.getElementById('status-form').addEventListener('submit',(e)=>{
+                e.preventDefault()
+                const Status=document.getElementById('status').value
+                const OrderID=document.getElementById('OrdeID').value
+                
+                console.log(Status,OrdeID)
+
+                fetch('/admin/OrderStatus',{
+                    method:'PUT',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        Status,
+                        OrderID
+                    })
+                }).then(res=>res.json())
+                .then(data=>{
+                    if(data.success){
+                        location.reload()
+                    }else{
+                        alert(data.mesage)
+                    }
+                    // alert(data.message)
+                })
+
+            })
+      
+
+            document.addEventListener('DOMContentLoaded', () => {
+
+  const forms = document.querySelectorAll('.individual');
+  console.log('Number of forms found:', forms.length);
+
+  forms.forEach((form) => {
+    const select = form.querySelector('.ind');
+    const itemId = form.querySelector('.itemId').value;
+    const orderId = form.querySelector('.orderId').value;
+
+    select.addEventListener('change', (e) => {
+     
+      const selected = select.value;
+
+      fetch('/admin/productRes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemId, selected ,orderId}),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            showToast(data.message, 'success');
+          } else {
+            showToast(data.message, 'error');
+          }
+        })
+        .catch((error) => {
+          console.error('Fetch error:', error);
+          showToast('Something went wrong!', 'error');
+        });
+    });
+  });
+
+  const approveForm = document.getElementById('approve-form');
+  if (approveForm) {
+    console.log('Approve form exists! Attaching event listener.');
+
+    approveForm.addEventListener('change', (e) => {
+      e.preventDefault();
+
+      const response = document.getElementById('approval').value;
+      const orderId = document.getElementById('orderrrID').value;
+     
+
+      fetch('/admin/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ response, orderId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
+          } else {
+            showToast(data.message, 'error');
+          }
+        })
+        .catch((error) => {
+          console.error('Fetch error:', error);
+          showToast('Something went wrong!', 'error');
+        });
+    });
+  }
+});
+
+      </script>
+       <script>
+        // Initialize all Bootstrap popovers
+        document.addEventListener('DOMContentLoaded', function () {
+          const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+          popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl);
+          });
+        });
+      </script>
+    </body>
+</html>

@@ -1,7 +1,7 @@
 const passport=require('passport')
 const GoogleStrategy=require('passport-google-oauth20').Strategy
 
-const User=require('../model/userModel')
+const User=require('../model/User/userModel')
 // const env=require('dotenv').config()
 const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET}=require('../utils/env')
 passport.use(new GoogleStrategy({
@@ -21,7 +21,8 @@ passport.use(new GoogleStrategy({
                 firstName: profile.displayName,
                 email: profile.emails[0].value,
                 googleId: profile.id,
-                lastLogin:new Date()
+                lastLogin:new Date(),
+                isGoogle:true
             });
             await user.save();
             

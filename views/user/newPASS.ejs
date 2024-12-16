@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .reset-card {
+            max-width: 500px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn-orange {
+            background-color: #F37421;
+            border-color: #F37421;
+            color: white;
+        }
+        .btn-orange:hover {
+            background-color: #e06615;
+            border-color: #e06615;
+            color: white;
+        }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 1rem;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .password-requirements {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .requirement {
+            margin-bottom: 0.25rem;
+        }
+        .requirement i {
+            margin-right: 0.5rem;
+            font-size: 0.75rem;
+        }
+        .valid {
+            color: #198754;
+        }
+        .invalid {
+            color: #6c757d;
+        }
+    </style>
+    <link rel="stylesheet" href="/SHOW.css">
+</head>
+<body class="bg-light">
+    <%-include('../partials/block.ejs')%>
+    <div class="container">
+        <div class="card reset-card">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="/img/logo.png" alt="Fruitkha" class="logo">
+                    <h2 class="h4 mb-3">Create New Password</h2>
+                    <p class="text-muted">Please enter your new password below.</p>
+                </div>
+                
+                <form id="new-pass">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                            <i class="password-toggle fas fa-eye"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password">
+                            <i class="password-toggle fas fa-eye"></i>
+                        </div>
+                    </div>
+
+                    <div class="password-requirements mb-4">
+                        <p class="mb-2">Password must contain:</p>
+                        <div class="requirement"><i class="fas fa-circle"></i>At least 8 characters</div>
+                        <div class="requirement"><i class="fas fa-circle"></i>At least one uppercase letter</div>
+                        <div class="requirement"><i class="fas fa-circle"></i>At least one lowercase letter</div>
+                        <div class="requirement"><i class="fas fa-circle"></i>At least one number</div>
+                        <div class="requirement"><i class="fas fa-circle"></i>At least one special character</div>
+                        <!-- <div class="requirement"><i class="fas fa-circle"></i>New password and Confirm Password is not Match</div> -->
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-orange">Reset Password</button>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none" style="color: #F37421;">Back to Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<script src="/TOAST.js"></script>
+    <script>
+        // Toggle password visibility
+      
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+        document.getElementById('new-pass').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Password validation
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    const requirements = document.querySelectorAll('.requirement');
+    const passwordChecks = [
+        newPassword.length >= 8,
+        /[A-Z]/.test(newPassword),
+        /[a-z]/.test(newPassword),
+        /[0-9]/.test(newPassword),
+        /[^A-Za-z0-9]/.test(newPassword)
+    ];
+
+    let allValid = true;
+
+    // Validate password requirements
+    requirements.forEach((req, index) => {
+        const icon = req.querySelector('i');
+        if (passwordChecks[index]) {
+            req.classList.add('valid');
+            req.classList.remove('invalid');
+            icon.classList.remove('fa-circle');
+            icon.classList.add('fa-check-circle');
+        } else {
+            req.classList.remove('valid');
+            req.classList.add('invalid');
+            icon.classList.remove('fa-check-circle');
+            icon.classList.add('fa-circle');
+            allValid = false;
+        }
+    });
+
+   console.log(newPassword,confirmPassword)
+
+    if (newPassword !== confirmPassword) {
+       return alert('password is not match')
+    } 
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    console.log(token)
+
+    if (!token) {
+        alert('Invalid token. Please try again.');
+        return;
+    }
+   
+    if (allValid) {
+        // const token = localStorage.getItem('reset_token'); // get the token from storage or session
+        try {
+             fetch(`/rest-Password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                   
+                },
+                body: JSON.stringify({newPassword,token})
+            }).then(res=>res.json())
+         .then(data=>{
+            if(data.success){
+                showToast(data.message,'succes')
+                setTimeout(()=>{
+                    location.href='/login'
+                },1000)
+            }else{
+                showToast(data.message,'error')
+            }
+         })
+
+           
+        } catch (error) {
+            console.error('Error:', error);
+           
+            showToast('There was an error resetting the password.','error')
+        }
+    } else {
+        alert('Please meet all password requirements.');
+    }
+});
+
+    </script>
+</body>
+</html>

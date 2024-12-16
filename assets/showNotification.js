@@ -6,7 +6,13 @@ window.showToast = function (message, status = 'info') {
         clearTimeout(currentToastTimeout);
     }
 
-    // Create and configure the toast
+    // Remove any existing toast
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
+
+    // Create and configure the new toast
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${status}`;
@@ -31,12 +37,12 @@ window.showToast = function (message, status = 'info') {
     
     // Append and remove toast
     container.appendChild(toast);
-    currentToastTimeout = setTimeout(() => removeToast(toast), 4000); // Toast lasts for 5 seconds
+    currentToastTimeout = setTimeout(() => removeToast(toast), 4000); // Toast lasts for 4 seconds
 };
 
 function removeToast(toast) {
     if (toast) {
-        toast.style.opacity = 0.5; // Fade out
-        setTimeout(() => toast.remove(), 50); // Remove after fade-out
+        toast.style.opacity = 0; // Fade out
+        setTimeout(() => toast.remove(), 200); // Remove after fade-out
     }
 }

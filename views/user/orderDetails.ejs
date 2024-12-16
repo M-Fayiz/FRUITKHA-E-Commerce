@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .details-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+      font-weight: bold;
+      font-size: 18px;
+      color: #f37421;
+      margin-bottom: 10px;
+    }
+    .product {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .product img {
+      max-width: 80px;
+      border-radius: 8px;
+      margin-right: 15px;
+    }
+    .product-details p {
+      margin: 0;
+    }
+    .address, .delivery-method {
+      margin-bottom: 20px;
+    }
+    .btn-action {
+      margin-right: 10px;
+      border-radius: 20px;
+    }
+    .btn-cancel {
+      background-color: #f37421;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    }
+    .btn-return {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    }
+    .btn-back {
+      background-color: #f37421;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 20px;
+    }
+    th{
+        width: 150px;
+    }
+    /* Example CSS */
+.pending {
+  color: orange;
+ /* color: lightyellow; */
+}
+
+.shipped {
+  color: #0088ff;
+  background-color:#cfeeff ;
+  border-radius: 20px;
+  padding: 1px 4px 1px 4px;
+  /* color: lightblue; */
+}
+
+.on-delivery {
+  color: green;
+  /* color: lightgreen; */
+}
+
+.delivered {
+  color: darkgreen;
+  /* color: lightseagreen; */
+}
+
+.cancelled {
+  /* color: white; */
+ color: red;
+}
+
+.return {
+  color: darkorange;
+  /* background-color: lightcoral; */
+}
+
+  </style>
+  <link rel="stylesheet" href="/SHOW.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <!-- Order Details Container -->
+  <div class="details-container">
+    <h2 class="text-center mb-4">Order Details</h2>
+<%-include('../partials/block.ejs')%>
+    <!-- Order Summary -->
+    <div>
+      <p><strong>Order ID:</strong> <%=Order._id%></p>
+      <p><strong>Order Date:</strong> <%= new Date(Order.createdAt).toLocaleString('en-US', {
+        weekday: 'short', 
+        month: 'short',    
+        day: '2-digit',    
+        year: 'numeric',   
+        hour: 'numeric',   
+        minute: '2-digit', 
+        hour12: true      
+      }) %></p>
+      <p><strong>Expected Delivery:</strong> 
+        <%= new Date(new Date(Order.createdAt).getTime() + 24 * 60 * 60 * 1000).toLocaleString('en-US', {
+            weekday: 'short', 
+            month: 'short',    
+            day: '2-digit',    
+            year: 'numeric',   
+            hour: 'numeric',   
+            minute: '2-digit', 
+            hour12: true      
+        }) %>
+    </p>
+      <p><strong>Status:</strong> <span class="<%= 
+        Order.orderStatus === 'Pending' ? 'pending' : 
+        Order.orderStatus === 'Shipped' ? 'shipped' : 
+        Order.orderStatus === 'On Delivery' ? 'on-delivery' : 
+        Order.orderStatus === 'Delivered' ? 'delivered' : 
+        Order.orderStatus === 'Cancelled' ? 'cancelled' : 
+        Order.orderStatus === 'Return' ? 'return' : '' 
+        %>"><%=Order.orderStatus%></span> </p>
+   
+    </div>
+    <hr>
+
+    <!-- Product Details -->
+    <div>
+      <h4 class="section-title">Products</h4>
+     
+        <div class="product" style="display: flex;">
+           <table>
+            <thead style="height: 30px; background-color: #f4f4f4;">
+                <tr  >
+                    <th>Product details</th>
+                    <th></th>
+                    
+                    <th>Quality</th>
+                    <th>Price</th>
+                    <th>Sub Total</th>
+                    <th>Status</th>
+                </tr>
+        <tbody>
+         <%Order.Products.forEach(item=>{%>
+          <tr>
+
+           <td> <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" alt="Product Image"></td>
+       
+              
+                    <td>
+                        <div >
+                            <p><strong><%= item.product.productTitle %></strong></p>
+                            <p><%=item.product.description %></p>
+                            </div>                    
+                     </td>
+                       <td>                    <div>
+                                            <p>Quantity: <%= item.quantity %></p>
+                                        </div>
+                                    </td> 
+                                    <td>               
+                                            <p> <% if (item.product.Offer.OfferPrice) { %>
+                                            <div >
+                                            
+                                            <span><h4 style="color: green; margin: 5px 0; font-size: 14px;">Offer: <%= item.product.Offer.OfferPrice %> ₹</h4></span>
+                                            <p style="color : gray; margin: 5px 0; font-size: 12px;">
+                                                <span style="color: red;">Per Kg</span>
+                                                <del style="color: red;"><%= item.product.RegulerPrice %></del>₹
+                                            </p>
+                                            </div>
+                                            
+                                                <% } else { %>
+                                                    <p style="margin: 5px 0; font-size: 14px;">Per Kg <span style="font-weight: bold;"><%= item.product.RegulerPrice %></span>₹</p>
+                                                <% } %>
+                                               </p>
+                                            </td> 
+                                            <td>
+                                        <div>
+                                        <p>SubTotal :<%=item.TOTAL%></p>
+                                        </div>
+                                    </td>
+                                    <td class="<%= 
+                                            item.status === 'Pending' ? 'pending' : 
+                                            item.status === 'Shipped' ? 'shipped' : 
+                                            item.status === 'On Delivery' ? 'on-delivery' : 
+                                            item.status === 'Delivered' ? 'delivered' : 
+                                            item.status === 'Cancelled' ? 'cancelled' : 
+                                            item.status === 'Return' ? 'return' : '' 
+                                            %>">
+                                            <%= item.status %>
+                                            </td>
+
+                                     <td>
+                                        <div class="text-end"></div>
+                                        <% if (item.status === 'Delivered' && item.return.req === false && Order.orderStatus!=='Returned') { %>
+                                        
+                                          <button class="btn btn-outline-secondary" 
+                                            data-order-id="<%= Order._id %>"
+                                            data-product="<%= item.product.id %>"
+                                            onclick="returnItem(this)">Return</button>
+                                      <% } else if (item.status !== 'Cancelled' && item.return.req === false && Order.orderStatus !== 'Delivered') { %>
+                                        
+                                          <button 
+                                              class="btn btn-outline-danger"
+                                              data-id="<%= item.id %>"
+                                              data-order-id="<%= Order._id %>"
+                                              data-product="<%= item.product.id %>"
+                                              data-quantity="<%= item.quantity %>"
+                                              onclick="cancelFromButton(this)">
+                                              Cancel
+                                          </button>
+                                      <% } %>
+                                      
+                                        
+                                       
+                                
+                                    </div>
+                                  </td>
+           
+          </tr>
+          <%})%>
+            </tbody>
+
+           </table>
+          </div>
+     
+      
+      
+    </div>
+    <hr>
+ <div style="display: flex;justify-content: space-around;">
+    <!-- Delivery Address -->
+    <div>
+      <h4 class="section-title">Delivery Address</h4>
+      <div class="address">
+        <p><strong>Recipient Name:</strong> <%=Order.addressId.Name %></p>
+        <p><strong>Address:</strong> <%=Order.addressId.District %>, <%=Order.addressId.State %> <br><%=Order.addressId.PIN %>, <%=Order.addressId.place %>, <%=Order.addressId.mark %></p>
+        <p><strong>Contact:</strong> +91 <%=Order.UserID.phone%></p>
+      </div>
+    </div>
+    <hr>
+
+    <!-- Delivery Method -->
+    <div>
+     
+      <div class="delivery-method">
+        <p>SubTotal: <%=Order.subTotal%></p>
+        <p>Shipping : <%=Order.Shipping%></p>
+        <% if(Order.subTotal>0){%>
+        <p>Discount : <%=Order.Coupon.discountValue%></p>
+        <%}%>
+        <hr>
+        <h5>TOTAL Amount :<%=Order. Final_Amount%></h5> 
+        
+      </div>
+    </div>
+
+     <div>
+        <h4>Payment Method</h4>
+        <%if (Order.payment==='COD'){%>
+            <p>Cash On Deliery</p>
+        <%}else if(Order.payment==='razorpay'){%> 
+          <p>RazorPay</p>
+          <p><%=Order.paymentStatus%></p>
+        <%}else if(Order.payment==='wallet'){%>
+          <p>Wallet Payment</p>
+          <p>payment Status :<%=Order.paymentStatus%></p>
+        <%}%>
+     </div>
+ </div>
+    <!-- Back Button -->
+    <div class="text-end">
+      <a href="/orderList" class="btn btn-back">Back to Order List</a>
+    </div>
+  </div>
+  <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="" id="return-form">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnModalLabel">Reason for Return</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..."></textarea>
+            </div>
+            <input type="text" id="OrderId" hidden>
+            <input type="text" id="productId" hidden>
+        
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success6" id="submitReturn">Submit</button>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+  <script src="/TOAST.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+
+  ></script>
+  <script>
+function cancelFromButton(buttonElement) {
+  const itemId = buttonElement.getAttribute('data-id');
+  const orderId = buttonElement.getAttribute('data-order-id');
+  const productId = buttonElement.getAttribute('data-product');
+  const quantity = buttonElement.getAttribute('data-quantity');
+
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you want to cancel this product from the order? This action cannot be undone!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, cancel it!',
+    cancelButtonText: 'No, keep it',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await cancel(itemId, orderId, productId, quantity);
+    } else {
+      Swal.fire('Cancelled', 'Your product remains in the order.', 'info');
+    }
+  });
+}
+
+async function cancel(itemId, orderId, productId, quantity) {
+  console.log('In cancel function:', itemId, orderId, productId, quantity);
+
+  
+    const response = await fetch('/cancel-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ itemId, orderId, productId, quantity,status:'Cancelled' }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      Swal.fire('Cancelled!', 'Your product has been successfully canceled.', 'success');
+      setTimeout(()=>{
+        location.reload()
+      },600)
+    } else {
+      Swal.fire('Failed!', data.message || 'There was an issue canceling the product.', 'error');
+    }
+  
+}
+
+// return product \
+function returnItem(element){
+  // const itemId = buttonElement.getAttribute('data-id');
+  const orderId = element.getAttribute('data-order-id')
+  const productId = element.getAttribute('data-product')
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you want to cancel this product from the order? This action cannot be undone!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, cancel it!',
+    cancelButtonText: 'No, keep it',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+                // Using Bootstrap's JavaScript API to show the modal
+                document.getElementById('OrderId').value = orderId
+                document.getElementById('productId').value=productId
+                var myModal = new bootstrap.Modal(document.getElementById('returnModal'));
+                myModal.show();
+            } else {
+                Swal.fire('Cancelled', 'Your product remains in the order.', 'info');
+            }
+  })
+
+
+  document.getElementById('return-form').addEventListener('submit',(e)=>{
+    e.preventDefault()
+
+    const orderId=document.getElementById('OrderId').value
+    const productId=document.getElementById('productId').value
+  const Reason=document.getElementById('returnReason').value
+      console.log(orderId,productId,Reason)
+      fetch('/req-return',{
+        method:'post',
+        headers:{
+          'Content-type':'application/json'
+        },
+        body:JSON.stringify({orderId,productId,Reason})
+      }).then(res=>res.json())
+      .then(data=>{
+        if(data.success){
+          showToast(data.message,'info')
+          setTimeout(()=>{
+            location.reload()
+          },700)
+        }else{
+          alert(data.message)
+        }
+        
+      })
+  })
+
+}
+
+  </script>
+
+</body>
+</html>

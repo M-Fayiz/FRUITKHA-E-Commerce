@@ -8,6 +8,7 @@
 
 	<!-- title -->
 	<title>Single Product</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<%-include('../partials/toast.ejs')%>
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
@@ -33,7 +34,14 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 	<style>
-		
+	.wishlist-icon {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .wishlist-icon.active {
+      color: red; /* Fill the icon with red when activated */
+    }
         :root {
             --primary-color: #ff6b35;
             --text-color: #333;
@@ -189,6 +197,12 @@
     opacity: 0;
     display: none;
 }
+.red {
+  color: red;
+}
+#wishlistIcon1 {
+  font-size: 2rem; /* Adjust the size to whatever fits your needs */
+}
 
 #reviews-section[style*="display: block"] {
     opacity: 1;
@@ -197,7 +211,7 @@
 	</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/fontawesome.min.css" integrity="sha512-OYtfQLIh44db+qhIErkWKrmij09a8CNwItEH4yiRIY0gZhRj2sKNIIsRrvEPdqMbgzT1opjSAJXsteTfxuJjOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+<link rel="stylesheet" href="/toast.css">
 </head>
 <body>
 	
@@ -212,7 +226,7 @@
 	<!-- header -->
 	<%-include('../partials/Header.ejs')%>
 	<!-- end header -->
-
+	<div class="toast-container" id="toastContainer"></div>
 	<!-- search area -->
 	<div class="search-area">
 		<div class="container">
@@ -252,6 +266,13 @@
 		
 		<div class="product-gallery">
 			<div class="main-image">
+				<div id="stop" style="position: absolute; top: 10px; right: 10px; z-index: 2;">
+					<i 
+						id="wishlistIcon1" 
+						data-id="<%= item._id %>"  
+						class="bi <%= item.isWishList ? 'bi-heart-fill text-danger' : 'bi-heart' %>">
+					</i>
+				</div>				
 				<img id="mainImage" src="http://localhost:4000/images/<%=item.primaryImage%>" alt="Main product image">
 			</div>
 			<div class="thumbnail-container">
@@ -261,7 +282,7 @@
 						<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
 						<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px; padding-left: 8px;padding-right: 8px;">
 							<span style="color: rgb(255, 255, 255); font-weight: 600; font-size: 20px;">
-								<%= offer %>% OFF
+								<%= offer %>% OFF,
 							</span>
 						</div>
 					<% } %>
@@ -276,7 +297,7 @@
 		</div>
 
         <div class="product-info">
-			<div ><i class="fa-solid fa-heart " style="color: #ff1414;font-size: 40px;"></i></div>
+			
             <div class="category"><%=item.category %></div>
             <h1 class="product-title"><%=item.productTitle %></h1>
             <h2 class="" style="font-size: 20px;"><%=item.description %></h2>
@@ -284,7 +305,7 @@
            
             <div class="quantity">
                 <label>Quantity:</label>
-                <input type="number" value="1" min="1">
+                <input type="number" id="num" value="1" min="1">
                 <span>kg</span>
             </div>
 			<div class="average-rating" style="margin-bottom: 20px;">
@@ -302,8 +323,8 @@
 				<p style="margin: 5px 0; font-size: 25px; ">Per Kg <span style="font-weight: bold; color: #484848; font-size: 30px;"><%= item.RegulerPrice %>₹</span></p>
 			  <% } %>
 			</div>
-			<% if (item.Stock > 0) { %>
-				<a href="cart.html" class="cart-btn">
+			<% if (item.totalStock > 0) { %>
+				<a onclick="pass('<%=item.id%>','<%=item.productTitle %>','<%= item.RegulerPrice %>','<%= item.OfferPrice %>')" class="cart-btn">
 				  <i class="fas fa-shopping-cart"></i> Add to Cart
 				</a>
 			  <% } else { %>
@@ -313,15 +334,17 @@
 			  <% } %>
             <div class="product-meta">
                 <div class="meta-item">
+					<%if(cat){%>
                     Category: <span>Offer <%=cat.Offer%> %</span>
+					<%}%>
                 </div>
-				<% if (item.Stock > 10) { %> 
+				<% if (item.totalStock > 10) { %> 
 					<span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
-						In Stock: <%= item.Stock %> kg
+						In Stock: <%= item.totalStock %> kg
 					</span>
-				<% } else if (item.Stock > 0) { %> 
+				<% } else if (item.totalStock > 0) { %> 
 					<span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
-						Low Stock: <%= item.Stock %> kg
+						Low Stock: <%= item.totalStock %> kg
 					</span>
 				<% } else { %> 
 					<span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
@@ -439,16 +462,16 @@
 							<p style="margin: 5px 0;">Per Kg <%= item.RegulerPrice %>₹</p>
 						  <% } %>
 <!--  -->
-						  <% if (item.Stock > 10) { %> kg
+						  <% if (item.totalStock > 10) { %> kg
 							<div>
 							<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
-								In Stock: <%= item.Stock %> kg
+								In Stock: <%= item.totalStock %> kg
 							</span>
 						  </div>
 						<% } else if (item.Stock > 0) { %> 
 							<div >
 							<span  class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded ">
-								Low Stock: <%= item.Stock %> kg
+								Low Stock: <%= item.totalStock %> kg
 							</span>
 						</div>
 						<% } else { %> 
@@ -458,7 +481,15 @@
 							</span>
 						</div>
 						<% } %>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+						<% if (item.totalStock > 0) { %>
+							<a onclick="pass('<%=item.id%>','<%=item.productTitle %>','<%= item.RegulerPrice %>','<%= item.OfferPrice %>')" class="cart-btn">
+							  <i class="fas fa-shopping-cart"></i> Add to Cart
+							</a>
+						  <% } else { %>
+							<a href="#" class="cart-btn disabled" style="pointer-events: none; opacity: 0.5; background-color: rgb(255, 212, 212); color: rgb(255, 19, 19);">
+							  <i class="fas fa-shopping-cart"></i> Unavailable
+							</a>
+						  <% } %>
 					</div>
 				</div>
 				<%}%>
@@ -468,114 +499,19 @@
 	</div>
 	<!-- end more products -->
 
-	<!-- logo carousel -->
-	<div class="logo-carousel-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="logo-carousel-inner">
-						<div class="single-logo-item">
-							<img src="/img/company-logos/1.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/img/company-logos/2.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/img/company-logos/3.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/img/company-logos/4.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/img/company-logos/5.png" alt="">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end logo carousel -->
-
-	<!-- footer -->
-	<div class="footer-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box about-widget">
-						<h2 class="widget-title">About us</h2>
-						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Get in Touch</h2>
-						<ul>
-							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-							<li>support@fruitkha.com</li>
-							<li>+00 111 222 3333</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box pages">
-						<h2 class="widget-title">Pages</h2>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="services.html">Shop</a></li>
-							<li><a href="news.html">News</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box subscribe">
-						<h2 class="widget-title">Subscribe</h2>
-						<p>Subscribe to our mailing list to get the latest updates.</p>
-						<form action="index.html">
-							<input type="email" placeholder="Email">
-							<button type="submit"><i class="fas fa-paper-plane"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end footer -->
-	
-	<!-- copyright -->
-	<div class="copyright">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-md-12">
-					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>,  All Rights Reserved.<br>
-						Distributed By - <a href="https://themewagon.com/">Themewagon</a>
-					</p>
-				</div>
-				<div class="col-lg-6 text-right col-md-12">
-					<div class="social-icons">
-						<ul>
-							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<%-include('../partials/footer.ejs')%>
 	<!-- end copyright -->
-	
+	<script src="/showNotification.js"></script>
 	
 	<script>
 
-// Get references to the button and review section
+
+
+
 const reviewButton = document.getElementById('review-button');
 	const reviewsSection = document.getElementById('reviews-section');
 	
-	// Add click event listener to the button
+
 	reviewButton.addEventListener('click', () => {
 		if (reviewsSection.style.display === 'none') {
 			reviewsSection.style.display = 'block';
@@ -600,7 +536,7 @@ const reviewButton = document.getElementById('review-button');
 			thumbnail.classList.add('active');
 		}
 	
-		// Optional: Image zoom functionality
+		
 		const mainImage = document.getElementById('mainImage');
 		const mainImageContainer = document.querySelector('.main-image');
 	
@@ -616,6 +552,80 @@ const reviewButton = document.getElementById('review-button');
 		mainImageContainer.addEventListener('mouseleave', () => {
 			mainImage.style.transform = 'scale(1)';
 		});
+
+// pass product to cart
+
+		function pass(productId,name,Reguler,Offer){
+
+const quantity=document.getElementById('num').value
+console.log(quantity)
+			console.log('GET IN PASS DATA')
+               console.log(productId,name,Reguler,quantity)
+
+            	fetch('/addCart', {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					productId,
+					name,
+					Reguler,
+					Offer,
+					quantity
+				}),
+				})
+				.then((res) => res.json())
+				.then((data) => {
+					if(data.User==false){
+						location.href='/login'
+					}
+					if (data.success) {
+					alert(data.message);
+					location.href = '/cart';
+					} else {
+					alert(data.message);
+					}
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					alert('An error occurred. Please try again later.');
+				});
+
+		}
+
+
+		const wishlistIcon = document.getElementById('wishlistIcon1');
+
+wishlistIcon.addEventListener('click', () => {
+    const isInWishlist = wishlistIcon.classList.contains('bi-heart-fill') 
+    const val = wishlistIcon.getAttribute('data-id'); 
+
+    fetch('/toggleWishList', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ val, isInWishlist }), 
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+				showToast(data.message,'success'); 
+                wishlistIcon.classList.toggle('bi-heart');
+                wishlistIcon.classList.toggle('bi-heart-fill');
+                wishlistIcon.classList.toggle('text-danger');
+                
+            } else {
+                showToast(data.message,'error'); 
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToat('Something went wrong!','error');
+        });
+});
+
 	</script>
 	<!-- jquery -->
 	<script src="/js/jquery-1.11.3.min.js"></script>

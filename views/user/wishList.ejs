@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General container styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    /* margin: 3rem auto; */
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Centered title */
+.title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    color: #333;
+}
+
+/* List group styling */
+.list-group {
+    list-style: none;
+    padding: 0;
+}
+
+/* Individual item styling */
+.list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Image styling */
+.product-image {
+    border-radius: 8px;
+    margin-right: 1rem;
+    width: 150px;
+    height: auto;
+}
+
+/* Product details */
+.product-details {
+    flex-grow: 1;
+}
+
+.product-details h5 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.product-details .price {
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.product-details .description {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart {
+    background-color: #28a745;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.add-to-cart:hover {
+    background-color: #218838;
+}
+
+.remove {
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.remove:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .list-group-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .product-image {
+        margin: 0 0 1rem;
+        width: 100%;
+    }
+
+    .buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+}
+:root {
+            --primary-color: #F28123;
+            --sidebar-width: 280px;
+            --sidebar-bg: #fff;
+            --sidebar-hover: #f8f9fa;
+            --sidebar-active: #e8f0fe;
+            --sidebar-text: #333;
+        }
+        
+        body {
+            font-size: 16px;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .main-content {
+            margin-left: 30px;
+            padding: 40px;
+            background-color: #f8f9fa;
+         
+            min-height: calc(100vh - 80px);
+            transition: all 0.3s;
+        }
+        
+        .nav-link {
+            color: var(--sidebar-text);
+            padding: 16px 25px;
+            margin: 6px 0;
+            transition: all 0.3s;
+            border-radius: 0;
+            font-size: 16px;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            background-color: var(--sidebar-active);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .nav-link i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .content-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .content-card h5 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d97320;
+            border-color: #d97320;
+        }
+        
+        .form-label {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            font-size: 15px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .navbar {
+            padding: 15px 0;
+        }
+        
+        .navbar-brand img {
+            height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .content-card {
+                padding: 25px;
+            }
+        }
+        #place {
+    white-space: normal; /* Allows text wrapping */
+    overflow-y: auto;   /* Enables scrolling if content overflows */
+    max-height: 200px;  /* Limits the height of the dropdown */
+}
+
+    </style>
+    <link rel="stylesheet" href="/toast.css">
+</head>
+<body>
+    <%-include('../partials/profile_NAV.ejs')%>
+    <div class="d-flex">
+    <%-include('../partials/profileSIDEBAR.ejs')%>
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="container">
+        <h1 class="title">Your Wishlist</h1>
+        <div class="list-group">
+            <!-- Wishlist Item -->
+            <% if (!wish || !wish.Products || wish.Products.length === 0) { %>
+                <div><p><%= info %></p></div>
+            <% } else { %>
+                <% wish.Products.forEach(item => { %>
+                    <div class="list-group-item">
+                        <img src="http://localhost:4000/images/<%=item.product.primaryImage %>" class="product-image" alt="Product Image">
+                        <div class="product-details">
+                            <h5><%= item.product.productTitle %></h5>
+                            <div>
+                               
+                                   <% if (item.product.OfferPrice) { %>
+                                        <div>
+                                            <span><h4 style="color: green; margin: 5px 0; font-size: 14px;">Offer: <%= item.product.OfferPrice %> ₹</h4></span>
+                                            <p style="color: gray; margin: 5px 0; font-size: 12px;">
+                                                <span style="color: red;">Per Kg</span>
+                                                <del style="color: red;"><%= item.product.RegulerPrice %></del> ₹
+                                            </p>
+                                        </div>
+                                    <% } else { %>
+                                        <p style="margin: 5px 0; font-size: 14px;">Per Kg <span style="font-weight: bold;"><%= item.product.RegulerPrice %></span> ₹</p>
+                                    <% } %>
+                               
+                            </div>
+                            <p class="description"><%= item.product.description %>.</p><span><% if (item.product.Stock > 10) { %>
+                                <div>
+                                  <span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded ">
+                                    In Stock: <%= item.product.Stock %>
+                                  </span>
+                                </div>
+                              <% } else if (item.product.Stock > 0) { %>
+                                <div>
+                                  <span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
+                                    Low Stock: <%= item.product.Stock %>
+                                  </span>
+                                </div>
+                              <% } else { %>
+                                <div>
+                                  <span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
+                                    Out of Stock
+                                  </span>
+                                </div>
+                              <% } %></span>
+                        </div>
+                        <div class="buttons">
+                            <button class="btn add-to-cart">Add to Cart</button>
+                            <button class="btn remove" onclick="remove('<%= item.product._id %>','<%=item._id%>')" id="remove" >Remove</button>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+                    
+            
+           
+        </div>
+    </div>
+    </div>
+    <script src="/showNotification.js"></script>
+    <script>
+       
+        
+            function remove(productId, item) {
+    const remove = document.getElementById('remove');
+    
+    console.log(productId, item);
+    
+    fetch('/remove-wishList', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            productId,
+            item
+        })
+    })
+    .then(res => res.json()) 
+    .then(data => {
+        // alert(data.message);
+        if(data.success){
+            location.reload()
+        }else{
+            showToast(data.message,'error')
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+            
+        
+       
+    </script>
+</body>
+</html>

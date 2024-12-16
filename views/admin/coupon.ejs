@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS for Theme -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #54c77c;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #45b36d;
+        }
+        .btn-danger {
+            background-color: #f25c5c;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #e04d4d;
+        }
+    </style>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/admin/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
+     <link rel="stylesheet" href="/toast.css">
+    <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+   
+    <div class="screen-overlay"></div>
+    <!-- aside -->
+     <%-include('../partials/sidebar.ejs')%>
+    <main class="main-wrap">
+      <!-- header -->
+       <%-include('../partials/adminHeader.ejs')%>
+       <div class="toast-container" id="toastContainer"></div>
+      <section class="content-main">
+        <div class="container my-5">
+          <h1 class="text-center mb-4">Coupon Management</h1>
+  
+          <!-- Add New Coupon Button -->
+          <div class="text-end mb-3">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCouponModal">
+                  <i class="bi bi-plus-circle"></i> Add New Coupon
+              </button>
+          </div>
+  
+          <!-- Coupon Table -->
+          <div class="card">
+              <div class="card-body">
+                  <div class="table-responsive">
+                      <table class="table table-striped table-hover align-middle">
+                          <thead class="table-light">
+                              <tr>
+                                  <th>Code</th>
+                                  <th>Type</th>
+                                  <th>Value</th>
+                                  <th>Start Date</th>
+                                  <th>End Date</th>
+                                  <th>Max Uses</th>
+                                  <th>Max Disc</th>
+                                  <th>Per User</th>
+                                  <th>Min Cart</th>
+                                  <th>Status</th>
+                                  <th>Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <!-- Example Row -->
+                            <%coupon.forEach(item=>{%>
+                              <tr>
+                                  <td><%=item.code%></td>
+                                  <td><%=item.Type%></td>
+                                  <td><%=item.Value%></td>
+                                  <td><%= new Date(item.startDate).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                  }) %></td>
+                                  
+                                  <td><%= new Date(item.endDate).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                  }) %></td>
+                                  <td><%=item.maxUses%></td>
+                                  <td><%=item.maxDiscount%></td>
+                                  <td><%=item.usedPerUser%></td>
+                                  <td><%=item.minCartValue%></td>
+                                  <td><span class="badge 
+                                    <% if (item.status === 'Active') { %> bg-success 
+                                    <% } else if (item.status === 'Expired') { %> bg-danger 
+                                    <% } else if (item.status === 'Disabled') { %> bg-secondary 
+                                    <% } %>">
+                                    <%= item.status %>
+                                </span></td>
+                                  <td>
+                                      <!-- <button class="btn btn-outline-primary btn-sm me-2">Edit</button> -->
+                                      <button class="btn btn-danger btn-sm" onclick="deleteCoupon('<%=item.id%>')"> <i class="bi bi-trash-fill"></i></button>
+                                      <!-- <button class="btn btn-outline-info btn-sm me-1" onclick="read('<%=item.Description%>')"> -->
+                                        <!-- <i class="bi bi-book"></i>
+
+
+                                      </button> -->
+                                                                            <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal"
+                                      onclick="editCoupon('<%=item._id%>','<%=item.code%>','<%=item.Type%>','<%=item.Value%>','<%=item.maxUses%>','<%=item.usedPerUser%>','<%=item.minCartValue%>','<%=item.startDate%>','<%=item.endDate%>','<%=item.maxDiscount%>')">
+                                      <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                  </td>
+                              </tr>
+                             <%})%>  
+                              <!-- Add dynamic rows here -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Add Coupon Modal -->
+     <!-- Add Coupon Modal -->
+<div class="modal fade" id="addCouponModal" tabindex="-1" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCouponModalLabel">Add New Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="coupon-form">
+            <div class="modal-body">
+                
+                    <!-- Coupon Code -->
+                    <div class="mb-3">
+                        <label for="couponCode" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="couponCode" placeholder="Enter coupon code" required>
+                    </div>
+                    <!-- Desciption -->
+                    <div class="mb-3">
+                        <label for="couponDesc" class="form-label">Coupon Code</label>
+                        <!-- <input type="text" class="form-control" id="couponDesc" placeholder="Enter coupon code" required> -->
+                        <textarea class="form-control" id="couponDesc" placeholder="Enter coupon code" required></textarea>
+                    </div>
+
+                    <!-- Coupon Type -->
+                    <div class="mb-3">
+                        <label for="couponType" class="form-label">Type</label>
+                        <select class="form-select" id="couponType" required>
+                            <option value="">Select Type</option>
+                            <option value="Percentage">Percentage</option>
+                            <option value="Fixed">Fixed</option>
+                        </select>
+                    </div>
+
+                    <!-- Coupon Value -->
+                    <div class="mb-3" id="couponValueContainer">
+                        <label for="couponValue" class="form-label">Value</label>
+                        <input type="number" class="form-control" id="couponValue" min="1" max="100" placeholder="Enter value" >
+                    </div>
+                    <div class="mb-3" id="maxContainer" style="display: none;">
+                        <label for="Max Discount" class="form-label">Max Discount</label>
+                        <input type="number" class="form-control" id="maxDiscount" min="1"  placeholder="Enter value" >
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" required>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="endDate" required>
+                    </div>
+
+                    <!-- Max Uses -->
+                    <div class="mb-3">
+                        <label for="maxUses" class="form-label">Max Uses</label>
+                        <input type="number" class="form-control" id="maxUses" placeholder="Enter max uses (default 0)">
+                    </div>
+
+                    <!-- Used Per User -->
+                    <div class="mb-3">
+                        <label for="usedPerUser" class="form-label">Used Per User</label>
+                        <input type="number" class="form-control" id="usedPerUser" placeholder="Enter limit per user (default 1)">
+                    </div>
+
+                    
+
+                    <!-- Min Cart Value -->
+                    <div class="mb-3">
+                        <label for="minCartValue" class="form-label">Min Cart Value</label>
+                        <input type="number" class="form-control" id="minCartValue" placeholder="Enter minimum cart value">
+                    </div>
+
+                    
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Coupon</button>
+            </div>
+           </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit  Coupon -->
+ <!-- Edit Coupon Modal -->
+<div class="modal fade" id="editCouponModal" tabindex="-1" aria-labelledby="editCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCouponModalLabel">Edit Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="edit-coupon-form">
+                <div class="modal-body">
+                    <!-- id -->
+                     <input type="text" id="editCouponId" hidden>
+                    <!-- Coupon Code -->
+                    <div class="mb-3">
+                        <label for="editCouponCode" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="editCouponCode" placeholder="Enter coupon code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="couponDesc" class="form-label">Coupon Desciption</label>
+                        <!-- <input type="text" class="form-control" id="couponDesc" placeholder="Enter coupon code" required> -->
+                        <textarea class="form-control" id="EditcouponDesc" placeholder="Enter coupon Description" ></textarea>
+                    </div>
+                    <!-- Coupon Type -->
+                    <div class="mb-3">
+                        <label for="editCouponType" class="form-label">Type</label>
+                        <select class="form-select" id="editCouponType" required>
+                            <option value="">Select Type</option>
+                            <option value="Percentage">Percentage</option>
+                            <option value="Fixed">Fixed</option>
+                            <!-- <option value="Shipping_Offer">shipping Offer</option> -->
+                        </select>
+                    </div>
+                    
+                    <!-- Coupon Value -->
+                    <div class="mb-3" id="editCouponValueContainer">
+                        <label for="editCouponValue" class="form-label">Value</label>
+                        <input type="number" class="form-control" id="editCouponValue" min="1" max="100" placeholder="Enter value">
+                    </div>
+                    <div class="mb-3" id="editMax" style="display: none;">
+                        <label for="Max Discount" class="form-label">Max Discount</label>
+                        <input type="number" class="form-control" id="couponMaxDiscoun" min="1"  placeholder="Enter value" >
+                    </div>
+                    <!-- Start Date -->
+                    <div class="mb-3">
+                        <label for="editStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="editStartDate" required>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="mb-3">
+                        <label for="editEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="editEndDate" required>
+                    </div>
+
+                    <!-- Max Uses -->
+                    <div class="mb-3">
+                        <label for="editMaxUses" class="form-label">Max Uses</label>
+                        <input type="number" class="form-control" id="editMaxUses" placeholder="Enter max uses (default 0)">
+                    </div>
+
+                    <!-- Used Per User -->
+                    <div class="mb-3">
+                        <label for="editUsedPerUser" class="form-label">Used Per User</label>
+                        <input type="number" class="form-control" id="editUsedPerUser" placeholder="Enter limit per user (default 1)">
+                    </div>
+
+                    <!-- Min Cart Value -->
+                    <div class="mb-3">
+                        <label for="editMinCartValue" class="form-label">Min Cart Value</label>
+                        <input type="number" class="form-control" id="editMinCartValue" placeholder="Enter minimum cart value">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Coupon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script src="/showNotification.js"></script>
+      <!-- Bootstrap Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      </section>
+      <!-- content-main end// -->
+      
+    </main>
+
+    <script>
+     document.addEventListener("DOMContentLoaded", () => {
+
+    const start = document.getElementById("startDate");
+    const today = new Date().toISOString().split("T")[0];
+    start.setAttribute("min", today);
+
+    const couponValueContainer = document.getElementById("couponValueContainer");
+    const couponType = document.getElementById("couponType");
+    const couponValue = document.getElementById("couponValue");
+    const maxContainer=document.getElementById('maxContainer')
+    couponType.addEventListener("change", () => {
+        const selectedType = couponType.value;
+
+        couponValue.value = "";
+        couponValue.removeAttribute("min");
+        couponValue.removeAttribute("max");
+        couponValueContainer.style.display = "block";
+
+        if (selectedType === "Percentage") {
+            couponValue.setAttribute("min", "1");
+            couponValue.setAttribute("max", "100");
+            couponValue.setAttribute("placeholder", "Enter a percentage (1-100)");
+            maxContainer.style.display='block'
+        } else if (selectedType === "Fixed") {
+            couponValue.setAttribute("min", "1");
+            couponValue.removeAttribute("max");
+            couponValue.setAttribute("placeholder", "Enter a fixed amount");
+        } else if (selectedType === "Shipping_Offer") {
+            couponValueContainer.style.display = "none";
+        }
+    });
+
+    document.getElementById("coupon-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const couponCode = document.getElementById("couponCode").value.trim();
+        const couponType = document.getElementById("couponType").value;
+        const couponValue = document.getElementById("couponValue").value;
+        const startDate = start.value;
+        const endDate = document.getElementById("endDate").value;
+        const maxDiscount=document.getElementById('maxDiscount').value
+        const maxUses = document.getElementById("maxUses").value;
+        const usedPerUser = document.getElementById("usedPerUser").value;
+        const minCartValue = document.getElementById("minCartValue").value;
+        const description=document.getElementById('couponDesc').value
+
+        if (/\s/.test(couponCode)) {
+            return showToast("Coupon code should not contain spaces and must be a single word.", "error");
+        }
+
+        if (!couponCode || !couponType || !startDate || !endDate || !maxUses || !usedPerUser || !minCartValue) {
+            return showToast("Please fill in all the required fields.", "error");
+        }
+
+        if (endDate < startDate) {
+            return showToast("The end date should be greater than the start date.", "error");
+        }
+
+        try {
+            const response = await fetch("/admin/addCoupon", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    couponCode,
+                    description,
+                    couponType,
+                    couponValue,
+                    startDate,
+                    endDate,
+                    maxUses,
+                    usedPerUser,
+                    minCartValue,
+                    maxDiscount
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                if(data.success){
+                    showToast(data.message || "Coupon added successfully!", "success")
+                    location.reload()
+                }else{
+                    showToast(data.message || "Coupon added successfully!", "error")
+                }
+                
+            } else {
+                showToast(data.message || "Failed to add coupon.", "error");
+            }
+        } catch (error) {
+            showToast("An error occurred while submitting the form.", "error");
+        }
+    });
+});
+
+function deleteCoupon(couponId){
+     fetch('/admin/removeCoupon',{
+        method:'post',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({couponId})
+     }).then(res=>res.json())
+     .then(data=>{
+        showToast(data.message,'success')
+        setTimeout(()=>{
+            location.reload()
+        },400)
+     })
+}
+
+    </script>
+
+    <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin/js/vendors/select2.min.js"></script>
+    <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/admin/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="/admin/js/custom-chart.js" type="text/javascript"></script>
+    <script>
+   document.addEventListener("DOMContentLoaded", () => {
+    const editStartDate = document.getElementById("editStartDate");
+    const today = new Date().toISOString().split("T")[0];
+    editStartDate.setAttribute("min", today);
+
+    const editCouponValueContainer = document.getElementById("editCouponValueContainer");
+    const editCouponType = document.getElementById("editCouponType");
+    const editCouponValue = document.getElementById("editCouponValue");
+    const editMax=document.getElementById('editMax')
+    const handleTypeChange = () => {
+        const selectedType = editCouponType.value;
+
+        editCouponValue.value = "";
+        editCouponValue.removeAttribute("min");
+        editCouponValue.removeAttribute("max");
+        editCouponValueContainer.style.display = "block";
+
+        if (selectedType === "Percentage") {
+            editCouponValue.setAttribute("min", "1");
+            editCouponValue.setAttribute("max", "100");
+            editCouponValue.setAttribute("placeholder", "Enter a percentage (1-100)");
+            editMax.style.display='block'
+        } else if (selectedType === "Fixed") {
+            editCouponValue.setAttribute("min", "1");
+            editCouponValue.removeAttribute("max");
+            editCouponValue.setAttribute("placeholder", "Enter a fixed amount")
+            editMax.style.display='none'
+        } else if (selectedType === "Shipping_Offer") {
+            editCouponValueContainer.style.display = "none";
+        }
+    };
+
+    editCouponType.addEventListener("change", handleTypeChange);
+
+    document.getElementById("edit-coupon-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById("editCouponId").value; 
+        const editCouponCode = document.getElementById("editCouponCode").value.trim()
+        const editCouponType = document.getElementById("editCouponType").value
+        const EditcouponDesc = document.getElementById("EditcouponDesc").value
+        const editCouponValue = document.getElementById("editCouponValue").value
+        const startDate = editStartDate.value
+        const editEndDate = document.getElementById("editEndDate").value
+        const editMaxUses = document.getElementById("editMaxUses").value
+        const editUsedPerUser = document.getElementById("editUsedPerUser").value
+        const editMinCartValue = document.getElementById("editMinCartValue").value
+        const couponMaxDiscoun=document.getElementById('couponMaxDiscoun').value
+
+        if (/\s/.test(editCouponCode)) {
+            return alert("Coupon code should not contain spaces and must be a single word.")
+        }
+
+        if (editEndDate < startDate) {
+            return alert("The end date should be greater than the start date.")
+        }
+
+        try {
+            const response = await fetch('/admin/editCoupon', {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id,
+                    code: editCouponCode,
+                    Description: EditcouponDesc,
+                    type: editCouponType,
+                    value: editCouponValue,
+                    startDate,
+                    endDate: editEndDate,
+                    maxUses: editMaxUses,
+                    usedPerUser: editUsedPerUser,
+                    minCartValue: editMinCartValue,
+                    maxDiscount:couponMaxDiscoun
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // alert(data.message)
+                showToast(data.message ,'success')
+                setTimeout(()=>{
+                    location.reload()
+                })
+            } else {
+                // alert(data.message)
+                showToast(data.message ,'error')
+            }
+        } catch (error) {
+            console.log(error.message)
+            showToast("An error occurred while updating the coupon.",'error');
+
+        }
+    });
+});
+
+ function editCoupon(id, code, Type, Value, maxUses, usedPerUser, minCartValue, startDate, endDate,maxDiscount) {
+    console.log(id, code, Type, Value, maxUses, usedPerUser, minCartValue, startDate, endDate);
+   const END= new Date(endDate).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit', year: 'numeric' })
+   const START= new Date(startDate).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit', year: 'numeric' })
+                                    
+                    console.log(END,START)                
+                                   
+                                 
+    document.getElementById("editCouponId").value = id; 
+    document.getElementById("editCouponCode").value = code;
+    const editCouponType = document.getElementById("editCouponType");
+    const editCouponValue = document.getElementById("editCouponValue");
+    const editStartDate = document.getElementById("editStartDate");
+
+    editCouponType.value = Type;
+    editCouponValue.value = Value;
+    editStartDate.value = START;
+    document.getAnimations('couponMaxDiscoun').value=maxDiscount
+    document.getElementById("editEndDate").value = END;
+    document.getElementById("editMaxUses").value = maxUses;
+    document.getElementById("editUsedPerUser").value = usedPerUser;
+    document.getElementById("editMinCartValue").value = minCartValue;
+
+    
+    const handleTypeChange = () => {
+        const selectedType = editCouponType.value;
+        editCouponValue.removeAttribute("min");
+        editCouponValue.removeAttribute("max");
+
+        if (selectedType === "Percentage") {
+            editCouponValue.setAttribute("min", "1");
+            editCouponValue.setAttribute("max", "100");
+            editCouponValue.setAttribute("placeholder", "Enter a percentage (1-100)");
+        } else if (selectedType === "Fixed") {
+            editCouponValue.setAttribute("min", "1");
+            editCouponValue.setAttribute("placeholder", "Enter a fixed amount");
+        } else if (selectedType === "Shipping_Offer") {
+            document.getElementById("editCouponValueContainer").style.display = "none";
+        }
+    };
+
+    handleTypeChange();
+}
+
+
+
+   function read(id){
+
+   }
+    </script>
+  </body>
+</html>
