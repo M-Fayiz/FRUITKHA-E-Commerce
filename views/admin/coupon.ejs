@@ -84,6 +84,7 @@
                                   <th>Start Date</th>
                                   <th>End Date</th>
                                   <th>Max Uses</th>
+                                  <th>Max Disc</th>
                                   <th>Per User</th>
                                   <th>Min Cart</th>
                                   <th>Status</th>
@@ -109,6 +110,7 @@
                                     year: 'numeric'
                                   }) %></td>
                                   <td><%=item.maxUses%></td>
+                                  <td><%=item.maxDiscount%></td>
                                   <td><%=item.usedPerUser%></td>
                                   <td><%=item.minCartValue%></td>
                                   <td><span class="badge 
@@ -120,10 +122,14 @@
                                 </span></td>
                                   <td>
                                       <!-- <button class="btn btn-outline-primary btn-sm me-2">Edit</button> -->
-                                      <button class="btn btn-danger btn-sm"> <i class="bi bi-trash-fill"></i></button>
-                                      <button class="btn btn-outline-warning btn-sm me-1"><i class="bi bi-slash-circle-fill"></i></button>
-                                      <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal"
-                                      onclick="editCoupon('<%=item._id%>','<%=item.code%>','<%=item.Type%>','<%=item.Value%>','<%=item.maxUses%>','<%=item.usedPerUser%>','<%=item.minCartValue%>','<%=item.startDate%>','<%=item.endDate%>')">
+                                      <button class="btn btn-danger btn-sm" onclick="deleteCoupon('<%=item.id%>')"> <i class="bi bi-trash-fill"></i></button>
+                                      <!-- <button class="btn btn-outline-info btn-sm me-1" onclick="read('<%=item.Description%>')"> -->
+                                        <!-- <i class="bi bi-book"></i>
+
+
+                                      </button> -->
+                                                                            <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCouponModal"
+                                      onclick="editCoupon('<%=item._id%>','<%=item.code%>','<%=item.Type%>','<%=item.Value%>','<%=item.maxUses%>','<%=item.usedPerUser%>','<%=item.minCartValue%>','<%=item.startDate%>','<%=item.endDate%>','<%=item.maxDiscount%>')">
                                       <i class="bi bi-pencil-fill"></i>
                                     </button>
                                   </td>
@@ -168,7 +174,6 @@
                             <option value="">Select Type</option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
-                            <option value="Shipping_Offer">Shipping Offer</option>
                         </select>
                     </div>
 
@@ -176,6 +181,10 @@
                     <div class="mb-3" id="couponValueContainer">
                         <label for="couponValue" class="form-label">Value</label>
                         <input type="number" class="form-control" id="couponValue" min="1" max="100" placeholder="Enter value" >
+                    </div>
+                    <div class="mb-3" id="maxContainer" style="display: none;">
+                        <label for="Max Discount" class="form-label">Max Discount</label>
+                        <input type="number" class="form-control" id="maxDiscount" min="1"  placeholder="Enter value" >
                     </div>
 
                     <!-- Start Date -->
@@ -202,25 +211,7 @@
                         <input type="number" class="form-control" id="usedPerUser" placeholder="Enter limit per user (default 1)">
                     </div>
 
-                    <!-- Applicable Categories -->
-                    <!-- <div class="mb-3">
-                        <label for="applicableCategory" class="form-label">Applicable Categories</label>
-                        <select class="form-select" id="applicableCategory" multiple>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Home Appliances">Home Appliances</option>
-                            <option value="Grocery">Grocery</option> -->
-                            <!-- Add more categories dynamically -->
-                        <!-- </select>
-                        <small class="form-text text-muted">Hold Ctrl or Cmd to select multiple categories.</small>
-                    </div> -->
-
-                    <!-- Excluded Products -->
-                    <!-- <div class="mb-3">
-                        <label for="excludedProduct" class="form-label">Excluded Products</label>
-                        <textarea class="form-control" id="excludedProduct" rows="3" placeholder="Enter product names (comma-separated)"></textarea>
-                        <small class="form-text text-muted">Enter product names separated by commas.</small>
-                    </div> -->
+                    
 
                     <!-- Min Cart Value -->
                     <div class="mb-3">
@@ -228,15 +219,7 @@
                         <input type="number" class="form-control" id="minCartValue" placeholder="Enter minimum cart value">
                     </div>
 
-                    <!-- Status -->
-                    <!-- <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status">
-                            <option value="active">Active</option>
-                            <option value="expired">Expired</option>
-                            <option value="disabled">Disabled</option>
-                        </select>
-                    </div> -->
+                    
                 
             </div>
             <div class="modal-footer">
@@ -278,16 +261,19 @@
                             <option value="">Select Type</option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
-                            <option value="Shipping_Offer">shipping Offer</option>
+                            <!-- <option value="Shipping_Offer">shipping Offer</option> -->
                         </select>
                     </div>
-                   
+                    
                     <!-- Coupon Value -->
                     <div class="mb-3" id="editCouponValueContainer">
                         <label for="editCouponValue" class="form-label">Value</label>
                         <input type="number" class="form-control" id="editCouponValue" min="1" max="100" placeholder="Enter value">
                     </div>
-
+                    <div class="mb-3" id="editMax" style="display: none;">
+                        <label for="Max Discount" class="form-label">Max Discount</label>
+                        <input type="number" class="form-control" id="couponMaxDiscoun" min="1"  placeholder="Enter value" >
+                    </div>
                     <!-- Start Date -->
                     <div class="mb-3">
                         <label for="editStartDate" class="form-label">Start Date</label>
@@ -337,6 +323,7 @@
 
     <script>
      document.addEventListener("DOMContentLoaded", () => {
+
     const start = document.getElementById("startDate");
     const today = new Date().toISOString().split("T")[0];
     start.setAttribute("min", today);
@@ -344,7 +331,7 @@
     const couponValueContainer = document.getElementById("couponValueContainer");
     const couponType = document.getElementById("couponType");
     const couponValue = document.getElementById("couponValue");
-
+    const maxContainer=document.getElementById('maxContainer')
     couponType.addEventListener("change", () => {
         const selectedType = couponType.value;
 
@@ -357,6 +344,7 @@
             couponValue.setAttribute("min", "1");
             couponValue.setAttribute("max", "100");
             couponValue.setAttribute("placeholder", "Enter a percentage (1-100)");
+            maxContainer.style.display='block'
         } else if (selectedType === "Fixed") {
             couponValue.setAttribute("min", "1");
             couponValue.removeAttribute("max");
@@ -366,7 +354,6 @@
         }
     });
 
-    // Form submission
     document.getElementById("coupon-form").addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -375,27 +362,24 @@
         const couponValue = document.getElementById("couponValue").value;
         const startDate = start.value;
         const endDate = document.getElementById("endDate").value;
+        const maxDiscount=document.getElementById('maxDiscount').value
         const maxUses = document.getElementById("maxUses").value;
         const usedPerUser = document.getElementById("usedPerUser").value;
         const minCartValue = document.getElementById("minCartValue").value;
         const description=document.getElementById('couponDesc').value
 
-        // Validation for coupon code (no spaces)
         if (/\s/.test(couponCode)) {
-            return alert("Coupon code should not contain spaces and must be a single word.", "error");
+            return showToast("Coupon code should not contain spaces and must be a single word.", "error");
         }
 
-        // Validation for required fields
         if (!couponCode || !couponType || !startDate || !endDate || !maxUses || !usedPerUser || !minCartValue) {
             return showToast("Please fill in all the required fields.", "error");
         }
 
-        // Validate start and end dates
         if (endDate < startDate) {
             return showToast("The end date should be greater than the start date.", "error");
         }
 
-        // Send data to server
         try {
             const response = await fetch("/admin/addCoupon", {
                 method: "POST",
@@ -412,12 +396,19 @@
                     maxUses,
                     usedPerUser,
                     minCartValue,
+                    maxDiscount
                 }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                showToast(data.message || "Coupon added successfully!", "success");
+                if(data.success){
+                    showToast(data.message || "Coupon added successfully!", "success")
+                    location.reload()
+                }else{
+                    showToast(data.message || "Coupon added successfully!", "error")
+                }
+                
             } else {
                 showToast(data.message || "Failed to add coupon.", "error");
             }
@@ -427,6 +418,21 @@
     });
 });
 
+function deleteCoupon(couponId){
+     fetch('/admin/removeCoupon',{
+        method:'post',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({couponId})
+     }).then(res=>res.json())
+     .then(data=>{
+        showToast(data.message,'success')
+        setTimeout(()=>{
+            location.reload()
+        },400)
+     })
+}
 
     </script>
 
@@ -440,7 +446,7 @@
     <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
     <script src="/admin/js/custom-chart.js" type="text/javascript"></script>
     <script>
-document.addEventListener("DOMContentLoaded", () => {
+   document.addEventListener("DOMContentLoaded", () => {
     const editStartDate = document.getElementById("editStartDate");
     const today = new Date().toISOString().split("T")[0];
     editStartDate.setAttribute("min", today);
@@ -448,7 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const editCouponValueContainer = document.getElementById("editCouponValueContainer");
     const editCouponType = document.getElementById("editCouponType");
     const editCouponValue = document.getElementById("editCouponValue");
-
+    const editMax=document.getElementById('editMax')
     const handleTypeChange = () => {
         const selectedType = editCouponType.value;
 
@@ -461,10 +467,12 @@ document.addEventListener("DOMContentLoaded", () => {
             editCouponValue.setAttribute("min", "1");
             editCouponValue.setAttribute("max", "100");
             editCouponValue.setAttribute("placeholder", "Enter a percentage (1-100)");
+            editMax.style.display='block'
         } else if (selectedType === "Fixed") {
             editCouponValue.setAttribute("min", "1");
             editCouponValue.removeAttribute("max");
-            editCouponValue.setAttribute("placeholder", "Enter a fixed amount");
+            editCouponValue.setAttribute("placeholder", "Enter a fixed amount")
+            editMax.style.display='none'
         } else if (selectedType === "Shipping_Offer") {
             editCouponValueContainer.style.display = "none";
         }
@@ -476,22 +484,23 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const id = document.getElementById("editCouponId").value; 
-        const editCouponCode = document.getElementById("editCouponCode").value.trim();
-        const editCouponType = document.getElementById("editCouponType").value;
-        const EditcouponDesc = document.getElementById("EditcouponDesc").value;
-        const editCouponValue = document.getElementById("editCouponValue").value;
-        const startDate = editStartDate.value;
-        const editEndDate = document.getElementById("editEndDate").value;
-        const editMaxUses = document.getElementById("editMaxUses").value;
-        const editUsedPerUser = document.getElementById("editUsedPerUser").value;
-        const editMinCartValue = document.getElementById("editMinCartValue").value;
+        const editCouponCode = document.getElementById("editCouponCode").value.trim()
+        const editCouponType = document.getElementById("editCouponType").value
+        const EditcouponDesc = document.getElementById("EditcouponDesc").value
+        const editCouponValue = document.getElementById("editCouponValue").value
+        const startDate = editStartDate.value
+        const editEndDate = document.getElementById("editEndDate").value
+        const editMaxUses = document.getElementById("editMaxUses").value
+        const editUsedPerUser = document.getElementById("editUsedPerUser").value
+        const editMinCartValue = document.getElementById("editMinCartValue").value
+        const couponMaxDiscoun=document.getElementById('couponMaxDiscoun').value
 
         if (/\s/.test(editCouponCode)) {
-            return alert("Coupon code should not contain spaces and must be a single word.");
+            return alert("Coupon code should not contain spaces and must be a single word.")
         }
 
         if (editEndDate < startDate) {
-            return alert("The end date should be greater than the start date.");
+            return alert("The end date should be greater than the start date.")
         }
 
         try {
@@ -511,6 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     maxUses: editMaxUses,
                     usedPerUser: editUsedPerUser,
                     minCartValue: editMinCartValue,
+                    maxDiscount:couponMaxDiscoun
                 }),
             });
 
@@ -533,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
- function editCoupon(id, code, Type, Value, maxUses, usedPerUser, minCartValue, startDate, endDate) {
+ function editCoupon(id, code, Type, Value, maxUses, usedPerUser, minCartValue, startDate, endDate,maxDiscount) {
     console.log(id, code, Type, Value, maxUses, usedPerUser, minCartValue, startDate, endDate);
    const END= new Date(endDate).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit', year: 'numeric' })
    const START= new Date(startDate).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit', year: 'numeric' })
@@ -550,6 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
     editCouponType.value = Type;
     editCouponValue.value = Value;
     editStartDate.value = START;
+    document.getAnimations('couponMaxDiscoun').value=maxDiscount
     document.getElementById("editEndDate").value = END;
     document.getElementById("editMaxUses").value = maxUses;
     document.getElementById("editUsedPerUser").value = usedPerUser;
@@ -577,6 +588,10 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 
+
+   function read(id){
+
+   }
     </script>
   </body>
 </html>

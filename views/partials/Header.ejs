@@ -25,18 +25,235 @@
                             </li>
                             <li>
                                 <div class="header-icons">
+                                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
                                     <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                                    
                                     <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                                    <a href="/wishList">
+                                        <i class="bi bi-heart-fill " style="color: #ffffff;"></i> 
+
+                                    </a>
                                     <% if (user) { %>
+                                        
                                         <a class="profile" href="/profile/<%= user %>">
                                           <i class="fa-solid fa-user" style="color: #ffffff;"></i>
                                         </a>
+                                       
                                       <% } else { %>
                                         <span><a href="/login" style="color: #ffffff;">Login</a></span>
                                       <% } %>
                                     <!-- <a class="user-account" href="account.html"><i class="bi bi-person"></i></a> -->
                                     
-                                        <div></div>
+                                        <div>
+                                            <style>
+                                                /* General Reset */
+                                            body {
+                                              margin: 0;
+                                              font-family: Arial, sans-serif;
+                                              background-color: #f5f5f5;
+                                            }
+                                            
+                                            /* Notification Icon */
+                                            .notification-icon {
+                                              position: fixed;
+                                              top: 20px;
+                                              right: 20px;
+                                              background: #ff5722;
+                                              color: #fff;
+                                              width: 50px;
+                                              height: 50px;
+                                              border-radius: 50%;
+                                              display: flex;
+                                              justify-content: center;
+                                              align-items: center;
+                                              cursor: pointer;
+                                              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            }
+                                            
+                                            .notification-icon:hover {
+                                              background: #e64a19;
+                                            }
+                                            
+                                            .notification-count {
+                                              position: absolute;
+                                              top: 5px;
+                                              right: 5px;
+                                              background: #fff;
+                                              color: #ff5722;
+                                              font-size: 12px;
+                                              font-weight: bold;
+                                              width: 20px;
+                                              height: 20px;
+                                              border-radius: 50%;
+                                              display: flex;
+                                              justify-content: center;
+                                              align-items: center;
+                                            }
+                                            
+                                            /* Sidebar */
+                                            .sidebar {
+                                              position: fixed;
+                                              top: 0;
+                                              right: -300px; /* Hidden initially */
+                                              width: 300px;
+                                              height: 100%;
+                                              background: #fff;
+                                              box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+                                              transition: right 0.3s ease;
+                                              z-index: 1000;
+                                              display: flex;
+                                              flex-direction: column;
+                                            }
+                                            
+                                            .sidebar.active {
+                                              right: 0; /* Show the sidebar */
+                                            }
+                                            
+                                            .sidebar-header {
+                                              display: flex;
+                                              justify-content: space-between;
+                                              align-items: center;
+                                              padding: 15px;
+                                              background: #146d97;
+                                              color:    #fff;
+                                            }
+                                            
+                                            .sidebar-header button {
+                                              background: transparent;
+                                              border: none;
+                                              color: #fff;
+                                              font-size: 0px;
+                                              cursor: pointer;
+                                            }
+                                            
+                                            .sidebar-content {
+                                              flex: 1;
+                                              overflow-y: auto;
+                                              padding: 15px;
+                                            }
+                                            
+                                            .notification-item {
+                                              background: #f9f9f9;
+                                              margin-bottom: 10px;
+                                              padding: 10px;
+                                              border-radius: 5px;
+                                              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                            }
+                                            
+                                            .notification-item h4 {
+                                              margin: 0 0 5px;
+                                            }
+                                            
+                                            .notification-item p {
+                                              margin: 0 0 10px;
+                                              font-size: 14px;
+                                              color: #555;
+                                            }
+                                            
+                                            .notification-time {
+                                              font-size: 12px;
+                                              color: #999;
+                                            }
+                                            .close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+                                            .notification-item {
+  background-color: #fff;
+  border-left: 5px solid; /* Status-specific color */
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Success Notifications */
+.notification-item.success {
+  border-left-color: #4caf50; /* Green */
+}
+
+.notification-item.success:hover {
+  background-color: #e8f5e9; /* Light Green */
+}
+
+/* Error Notifications */
+.notification-item.error {
+  border-left-color: #f44336; /* Red */
+}
+
+.notification-item.error:hover {
+  background-color: #fdecea; /* Light Red */
+}
+
+/* Info Notifications */
+.notification-item.info {
+  border-left-color: #2196f3; /* Blue */
+}
+
+.notification-item.info:hover {
+  background-color: #e3f2fd; /* Light Blue */
+}
+
+/* Typography and Spacing */
+.notification-item h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.notification-item p {
+  margin: 5px 0 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.notification-item .notification-time {
+  font-size: 12px;
+  color: #999;
+}
+                                            
+                                              </style>
+                                               <div class="notification-icon" onclick="toggleSidebaR()">
+                                                <span>&#128276;</span> <!-- Unicode for Bell Icon -->
+                                              </div>
+                                              
+                                              <div id="notification-sidebar" class="sidebar">
+                                                <div class="sidebar-header">
+                                                  <h4>Notifications</h4>
+                                                  <button class="close-btn" onclick="toggleSidebaR()">&#10006;</button> 
+                                                  <!-- Close Icon -->
+                                                </div>
+                                                <div class="sidebar-content">
+                                                    <!-- <% if (NOtify && Array.isArray(NOtify.notification) && NOtify.notification.length > 0) { %> -->
+                                                    <% NOtify.notification
+                                                    .sort((a, b) => b.createdAt - a.createdAt) 
+                                                    .forEach(item => { %>
+                                                  <div class="notification-item <%= item.status %>">
+                                                    <p><%= item.message %></p>
+                                                  </div>
+                                                <% }); %>
+                                                      <!-- <% } else { %>
+                                                        <p>No notifications available</p>
+                                                      <% } %>
+                                                       -->
+                                                </div>
+                                                
+                                              </div>
+                                              <script>
+                                                // Function to toggle the sidebar
+                                    function toggleSidebaR() {
+                                    const sidebar = document.getElementById('notification-sidebar');
+                                    sidebar.classList.toggle('active'); // Add or remove the 'active' class
+                                    }
+
+                                              </script>
+                                        </div>
                                 </div>
                             </li>
                             
@@ -178,7 +395,7 @@
                             <div class="coupon-item" style="display: flex;flex-direction: column; justify-content: center; align-items: center;">
                                 <h6 class="coupon-code text-center"><%=item.code%></h6>
                                 <p class="text-center"><%=item.Description%></p>
-                               <p>- - - - - - - - - - - - - - - - - </p>
+                                
                                 <p>For Minimum purchase <%=item.minCartValue%>₹</p>
                                 <!-- <button class="btn btn-apply">Apply</button> -->
                             </div>
@@ -186,18 +403,7 @@
                        
                 
                         <!-- Coupon 2 -->
-                        <div class="coupon-item">
-                            <h6 class="coupon-code text-center">FREESHIP</h6>
-                            <p class="text-center">Free shipping on orders over $75</p>
-                            <button class="btn btn-apply">Apply</button>
-                        </div>
-                
-                        <!-- Coupon 3 -->
-                        <div class="coupon-item">
-                            <h6 class="coupon-code text-center">THANKS10</h6>
-                            <p class="text-center">Get 10% off on your next purchase</p>
-                            <button class="btn btn-apply">Apply</button>
-                        </div>
+                       
                     </div>
                 
                     <!-- Bootstrap 5 JS and dependencies -->

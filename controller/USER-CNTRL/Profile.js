@@ -1,14 +1,11 @@
 const USER= require('../../model/User/userModel')
 const bcrypt=require('bcrypt')
-const jwt=require('jsonwebtoken')
+
 const {sendForgotPasswordMail}=require('../../utils/mail_sender')
 const secret=require('../../utils/env')
-const mongoose=require('mongoose');
 const TOKEN=require('../../model/User/token')
 const crypto = require('crypto');
-// const { log } = require('console')
-const ORDER=require('../../model/ADMIN/Order-schema')
-const PRODUCT=require('../../model/ADMIN/product')
+
 // Generate a random token
 
 
@@ -202,160 +199,14 @@ const newpass=(req,res)=>{
 }
 
 
-const orderList=async(req,res)=>{
-    
-        const User = req.session.user;
-console.log(User,'uhuuer')
-        if (!User) {
-          return res.render('user/orderList', { info: "You are not logged in" })
-        }
-        
-        try {
-         
-          const orders = await ORDER.find({ UserID: User }).populate('Products.product')
-        
-          if (!orders ) {
-           res.render('user/orderList', { info: "You have no orders yet", orders: [] })
-          }
-        
-       
-          res.render('user/orderList', { orders ,user:req.session.user})
-        } catch (error) {
-          console.error(error.message);
-          res.status(500).send("Server Error")
-        }
-        
-    
-    
-}
-
-const orderDetails=async(req,res)=>{
-    console.log('ORDER DETAILS')
-    const orderId=req.params.id
-    console.log(orderId,'id')
-    try {
-       
-   
-        const Order=await ORDER.findOne({_id:orderId}).populate('Products.product').populate('UserID')
-        
-        res.render('user/orderDetails',{Order,user:req.session.user})
-    } catch (error) {
-      console.log(error.message)  
-    }
-}
 
 
-const cancelorder = async (req, res) => {
-  console.log("GET IN CANCEL ORDER");
-  const { productID, Orderid, product, quantity } = req.body;
-  console.log(productID, 'order id:', Orderid);
-  const User = req.session.user;
-
-  if (!User) {
-    return res.status(400).json({ success: false, message: 'User is not logged in' });
-  }
-
-  try {
-    
-    const order = await ORDER.findOneAndUpdate(
-      { _id: Orderid, 'Products._id': productID },
-      { $set: { 'Products.$.status': 'Cancelled' } }, 
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order or product not found' });
-    }
 
 
-    const productDetails = await PRODUCT.findById(product);
-    console.log(productDetails, 'product');
-
-    if (!productDetails) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
- 
- console.log(order,'order')
-    productDetails.Stock += Number(quantity);
-    await productDetails.save();
-    
-    const cancelled =order.Products.every(p=>p.status==='Cancelled')
-    if(cancelled){
-      order.status='Cancelled'
-      order.Shippinf=0
-    }else{
-      order.subTotal = order.Products.reduce((total, p) => {
-        if (p.status !== 'Cancelled') {
-          total += p.TOTAL;
-        }
-        return total;
-      }, 0);
-      console.log( order.subTotal,'sub')
-      order.GRND_TOTAL = order.subTotal + order.Shipping;
-    }
-    
-   
 
 
-    await order.save();
-
-    return res.status(200).json({
-      success: true,
-      message: 'Product has been successfully cancelled',
-      order: order,
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: 'An error occurred while canceling the product',
-    });
-  }
-};
-
-const CANCEL = async (req, res) => {
-  console.log('GET IN CANCEL ORDER');
-  const { orderId } = req.body;
-
-  try {
-    const order = await ORDER.findOne({ _id: orderId });
-
-    if (!order) {
-      return res.status(400).json({ success: false, message: 'Order not found' });
-    }
-    console.log(order,'--=-=-=-=')
-
-    order.status = 'Cancelled';
-    console.log(order.status)
-
-    if (Array.isArray(order.Products)) {
-      for (const p of order.Products) {
-        p.status = 'Cancelled';
-
-       
-        const product = await PRODUCT.findOne({ _id: p.productId });
-        if (product) {
-         
-          product.Stock += p.quantity; 
-          await product.save(); 
-        }
-      }
-    }
-    
-    order.Shipping=0
 
 
-    await order.save();
-
- 
-   return res.json({ success: true, message: 'Order cancelled' });
-  } catch (error) {
-    console.error(error.message);
-    
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-};
 
 module.exports={
     LoadProfile,
@@ -365,9 +216,6 @@ module.exports={
     forgotPAS,
     newpass,
     REST,
-    orderList,
-    orderDetails,
-    cancelorder,
-    CANCEL
+  
 
 }  

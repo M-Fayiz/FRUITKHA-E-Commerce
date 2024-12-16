@@ -134,10 +134,10 @@
 										</td>
 										<td class="product-price">
 											<div>
-												<% if (item.productId.OfferPrice) { %>
+												<% if (item.productId.Offer.OfferPrice) { %>
 												  <div >
 												  
-												   <span><h4 style="color: green; margin: 5px 0; font-size: 15px;">Offer: <%= item.productId.OfferPrice %> ₹</h4></span>
+												   <span><h4 style="color: green; margin: 5px 0; font-size: 15px;">Offer: <%= item.productId.Offer.OfferPrice%> ₹</h4></span>
 												   <p style="color: gray; margin: 5px 0;">
 													  <span style="color: red;">Per Kg</span>
 													  <del style="color: red;"><%= item.productId.RegulerPrice %></del>₹
@@ -151,7 +151,9 @@
 										</td>
 										<td class="product-quantity">
 											<div class="d-flex align-items-center mb-3">
-												<button type="button" class="btn btn-outline-secondary btn-sm  dec-button"  data-id="<%=item.productId.id %>" >-</button>
+												<% if( item.quantity !== 1){%>
+												<button type="button" class="btn btn-outline-secondary btn-sm  dec-button"    data-id="<%=item.productId.id %>" >-</button>
+												<%}%>
 												<input
 												  style="margin-top: 15px;"
 												  type="number"
@@ -166,7 +168,7 @@
 										</td>
 										<td class="product-total">
 											
-												Subtotal: <span id="subtotal-<%= item.productId.id %>"><%= item.quantity * item.productId.RegulerPrice %> ₹</span>
+												Subtotal: <span id="subtotal-<%= item.productId.id %>"><%= item.quantity * item.Price %> ₹</span>
 											
 										</td>
 										<td class="product-remove">

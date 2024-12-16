@@ -89,14 +89,34 @@
   color: darkorange;
   /* background-color: lightcoral; */
 }
+/* Custom Styling (Optional) */
+.modal-content {
+    border-radius: 8px;
+}
+
+textarea {
+    resize: none;
+}
+
+button {
+    border-radius: 5px;
+}
+
   </style>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/SHOW.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <!-- Header -->
   <%- include('../partials/profile_NAV.ejs') %>
   
     <!-- Sidebar -->
- 
+ <%-include('../partials/block.ejs')%>
     <div style="display: flex;">
       <%- include('../partials/profileSIDEBAR.ejs') %>
       <div class="page-container"></div>
@@ -110,7 +130,8 @@
     <% orders.forEach(order => { %>
       <!-- Order Card -->
       <div class="order-item">
-        <div>
+        
+       
         <h4 class="order-header">Order ID: <%= order._id %></h4>
         <p>Order Date: <%= new Date(order.createdAt).toLocaleString('en-US', {
             weekday: 'short', 
@@ -121,24 +142,43 @@
             minute: '2-digit', 
             hour12: true      
           }) %></p>
-         <p>Total: ₹<%= order.GRND_TOTAL %></p>
-         <p class="status "class="<%= 
-         order.status === 'Pending' ? 'pending' : 
-         order.status === 'Shipped' ? 'shipped' : 
-         order.status === 'On Delivery' ? 'on-delivery' : 
-         order.status === 'Delivered' ? 'delivered' : 
-         order.status === 'Cancelled' ? 'cancelled' : 
-         order.status === 'Return' ? 'return' : '' 
-         %>" >Status: <%= order.status %></p>
-         <% if(order.status!=='Cancelled' ){%>
-          <button type="button" data-id="<%= order._id %>"  onclick="cancel(this)" class="btn btn-outline-danger">Cancel</button>
-        <% }%>
+         <p>Total: ₹<%= order.Final_Amount %></p>
+         <p class="orderStatus "class="<%= 
+         order.orderStatus === 'Pending' ? 'pending' : 
+         order.orderStatus === 'Shipped' ? 'shipped' : 
+         order.orderStatus === 'On Delivery' ? 'on-delivery' : 
+         order.orderStatus === 'Delivered' ? 'delivered' : 
+         order.orderStatus === 'Cancelled' ? 'cancelled' : 
+         order.orderStatus === 'Return' ? 'return' : '' 
+         %>" >Status: <%= order.orderStatus %></p>
+         <div>
+          <% if(order.orderStatus !== 'Cancelled' && order.orderStatus !== 'Delivered' && order.orderStatus!=='Returned') { %>
+            <button type="button" data-id="<%= order._id %>" onclick="cancel(this)" class="btn btn-outline-danger">Cancel</button>
+        <% } else if (order.orderStatus === 'Shipped') { %>
+            <button type="button" data-id="<%= order._id %>" onclick="cancelRequst('<%= order._id %>')" class="btn btn-outline-danger">Request for Cancel</button>
+        <% } else if (order.orderStatus === 'Delivered') { %>
+            <% if (order.Return.req === false) { %>
+                <!-- Show Return button if no return request -->
+                <button type="button" data-id="<%= order._id %>" onclick="orderReturn(this)" class="btn btn-outline-danger">Return</button>
+            <% } else if (order.Return.req === true) { %>
+                <!-- Show message or Request for Return button if return is already requested -->
+                <button type="button" class="btn btn-outline-danger" disabled>Requested for Return</button>
+            <% }else if(order.orderStatus==='Returned'){%>
+                <p></p>
+            <%} %>
+        <% } %>
         
+        
+        <div class="text-end">
+          <a href="/orderDetails/<%=order.id%>" class="btn btn-outline-secondary btn-sm mt-3">View Details</a>
         </div>
-        <hr>
+        </div>
+       
+  
+        
         <!-- Product Details -->
         
-            <% order.Products.forEach(item => { %>
+            <!-- <% order.Products.forEach(item => { %>
               <div class="product" style="margin: 8px;">
                 <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" alt="Product Image">
                 <div class="product-details" style="display: flex;justify-content: space-around;">
@@ -150,39 +190,159 @@
                   </div>
                 </div>
               </div>
-            <% }) %>
+            <% }) %> -->
           
             
-        <hr>
+        
        
-        <div class="text-end">
-          <a href="/orderDetails/<%=order.id%>" class="btn btn-outline-secondary btn-sm mt-3">View Details</a>
-        </div>
+       
+      </div>
         <% }) %>
         <%}%>
-      </div>
+     
     </div>
   </div>
 </div>
+<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="" id="return-form">
+          <div class="modal-header">
+              <h5 class="modal-title" id="returnModalLabel">Reason for Return</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..."></textarea>
+          </div>
+          <input type="text" id="OrderId" hidden>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success6" id="submitReturn">Submit</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Include Bootstrap JS Bundle (includes Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/TOAST.js"></script>
 <script>
-  function cancel(element){
+
+function cancel(element) {
     const orderId = element.getAttribute('data-id')
     console.log(orderId)
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you want to cancel this product from the order? This action cannot be undone!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, cancel it!',
+    cancelButtonText: 'No, keep it',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await  cancelOrder(orderId)
+    } else {
+      Swal.fire('Cancelled', 'Your product remains in the order.', 'info');
+    }
+  });
+}
 
-    fetch('/oder-cancel',{
-      method:'post',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        orderId
-      })
-    }).then(res=>{
-      res.json()
-    }).then(data=>{
-      alert(data.message)
-    })
-  }
+  
+async function cancelOrder(orderId) {
+    console.log(orderId);
+
+    try {
+        const response = await fetch('/order-cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                orderId,
+            }),
+        });
+
+       
+        const data = await response.json();
+
+        
+
+        if (data.success) {
+            Swal.fire('Cancelled!', 'Your product has been successfully canceled.', 'success');
+            showToast(data.message, 'success')
+            setTimeout(()=>{
+              location.reload();
+            },400)
+            
+        } else {
+            showToast(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('An error occurred while canceling the order.', 'error');
+    }
+}
+
+//  RETURN ORDER 
+
+function orderReturn(element) {
+        const orderId = element.getAttribute('data-id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to cancel this product from the order? This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Using Bootstrap's JavaScript API to show the modal
+                document.getElementById('OrderId').value = orderId;
+                var myModal = new bootstrap.Modal(document.getElementById('returnModal'));
+                myModal.show();
+            } else {
+                Swal.fire('Cancelled', 'Your product remains in the order.', 'info');
+            }
+        });
+    }
+
+    // return form
+ document.getElementById('return-form').addEventListener('submit',e=>{
+  e.preventDefault()
+  const orderId=document.getElementById('OrderId').value
+  const Reason=document.getElementById('returnReason').value
+  // const orderId=element
+  fetch('/return-Order',{
+    method:'post',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({orderId,Reason})
+  }).then(res=>res.json())
+  .then(data=>{
+    if(data.success){
+      showToast(data.message,'info')
+      setTimeout(()=>{
+        location.reload()
+      },600)
+    }else{
+      showToast(data.message,'error')
+    }
+
+  })
+ })
+async function ORDERreturn(element){
+
+} 
+
 </script>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

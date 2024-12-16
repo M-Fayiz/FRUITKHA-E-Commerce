@@ -29,7 +29,8 @@ const addCoupon=async(req,res)=>{
          endDate,
          maxUses,
          usedPerUser,
-         minCartValue
+         minCartValue,
+         maxDiscount
     }=req.body
  
     const check=await COUPON.findOne({code:couponCode})
@@ -47,7 +48,8 @@ const addCoupon=async(req,res)=>{
         endDate: endDate,
         maxUses: maxUses,
         usedPerUser: usedPerUser,
-        minCartValue: minCartValue
+        minCartValue: minCartValue,
+        maxDiscount:maxDiscount
     })
    const data=await result.save()
    if(data){
@@ -77,9 +79,11 @@ const editCoupon = async (req, res) => {
             maxUses,
             usedPerUser,
             minCartValue,
+            maxDiscount
+            
         } = req.body;
 
-        console.log("Request Body:", req.body);
+       
 
         // Find the coupon by ID
         const coupon = await COUPON.findByIdAndUpdate( id ,{
@@ -93,8 +97,10 @@ const editCoupon = async (req, res) => {
             maxUses,
             usedPerUser,
             minCartValue,
+            maxDiscount,
+            status:'Active'
         },{new:true});
-        console.log(coupon,'coupon');
+     
         
         if (!coupon) {
             return res.status(404).json({ success: false, message: "Coupon Not Found" });
@@ -131,9 +137,9 @@ const couponValidate = async (req, res) => {
       if (result.status !== "Active") {
         return res.status(400).json({ success: false, message: "Coupon is not active." });
       }
-  
+      
       const now = new Date();
-      if (now < result.startDate || now > result.endDate) {
+      if (now < result.startDate ||now > result.endDate) {
         return res.status(400).json({ success: false, message: "This coupon is expired or not active yet." });
       }
   
@@ -180,6 +186,9 @@ const couponValidate = async (req, res) => {
       let discount = 0;
       if (result.Type === "Percentage") {
         discount = (TOTAL * result.Value) / 100;
+        if (result.maxDiscount && discount > result.maxDiscount) {
+          discount = result.maxDiscount;
+       }
       } else if (result.Type === "Fixed") {
         discount = result.Value;
       } else if (result.Type === "shipping_Offer") {
@@ -194,7 +203,7 @@ const couponValidate = async (req, res) => {
       };
       cart.subTotal = TOTAL - discount + cart.Shipping;
   
-      result.uses += 1;
+      result.Uses += 1;
       if (result.maxUses > 0 && result.uses >= result.maxUses) {
         result.status = "Expired";
       }
@@ -255,12 +264,24 @@ const remove = async (req, res) => {
     }
 };
   
-
+const deletCoupon=async(req,res)=>{
+  console.log('GET IN DELET XOUPON')
+   const {couponId}=req.body
+      try {
+        const result=await COUPON.findByIdAndDelete(couponId)
+        if(result){
+          return res.status(200).json({success:true,message:'coupon Deleted'})
+        }
+      } catch (error) {
+        console.log(error.message)
+      }
+}
 
 module.exports={
     coupon,
     addCoupon,
     editCoupon,
     couponValidate,
-    remove
+    remove,
+    deletCoupon
 }

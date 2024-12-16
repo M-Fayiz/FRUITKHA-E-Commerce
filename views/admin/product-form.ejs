@@ -274,9 +274,9 @@
         formData.append('title', title);
         formData.append('description', document.getElementById('description').value.trim());
         formData.append('regularPrice', document.getElementById('regularPrice').value.trim());
-        formData.append('expiry',);
+        formData.append('expiryDate',expiryTimestamp);
         formData.append('category', document.getElementById('category').value.trim());
-        formData.append('Stock', document.getElementById('stock').value.trim());
+        formData.append('quantity', document.getElementById('stock').value.trim());
 
         imageInputs.forEach((input, index) => {
             const file = input.files[0];

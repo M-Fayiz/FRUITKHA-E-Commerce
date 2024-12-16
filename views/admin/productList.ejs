@@ -100,13 +100,13 @@
                                             <span class="text-emerald-500 font-medium">₹<%= item.RegulerPrice %></span>
                                             <span class="text-sm text-gray-400 line-through"></span>
                                         </div>
-                                        <% if (item.Stock > 10) { %>
+                                        <% if (item.totalStock > 10) { %>
                                             <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
-                                                In Stock: <%= item.Stock %>
+                                                In Stock: <%= item.totalStock %>
                                             </span>
-                                        <% } else if (item.Stock > 0) { %> 
+                                        <% } else if (item.totalStock > 0) { %> 
                                             <span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
-                                                Low Stock: <%= item.Stock %>
+                                                Low Stock: <%= item.totalStock %>
                                             </span>
                                         <% } else { %> 
                                             <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
@@ -144,7 +144,7 @@
                                 <div class="flex gap-2">
                                     <!-- Previous Button -->
                                     <% if (currentPage > 1) { %>
-                                        <a href="/admin/productList?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                        <a href="/admin/order?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
                                             Previous
                                         </a>
                                     <% } %>
@@ -162,14 +162,14 @@
                                     %>
                         
                                     <% for (let i = startPage; i <= endPage; i++) { %>
-                                        <a href="/admin/productList?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                                        <a href="/admin/order?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
                                             <%= i %>
                                         </a>
                                     <% } %>
                         
                                     <!-- Next Button -->
                                     <% if (currentPage < totalPages) { %>
-                                        <a href="/admin/productList?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                        <a href="/admin/order?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
                                             Next
                                         </a>
                                     <% } %>

@@ -12,11 +12,12 @@ const addProduct = async (req, res) => {
     console.log(req.files);
     
     try {
-        const { title, description, regularPrice, expiry, Stock, category, subCategories } = req.body;
-        
+        const { title, description, regularPrice, expiryDate, quantity, category, subCategories } = req.body;
+     console.log(regularPrice)
+        const batch_id = `batch_${new Date().getTime()}`;
         // const OFFER=regularPrice*(1-offerPrice/100)
         console.log(title);
-        
+       
         const test = await PRODUCT.findOne({
             productTitle: { $regex: new RegExp('^' + title + '$', 'i') }  
           });
@@ -34,7 +35,8 @@ const addProduct = async (req, res) => {
             return res.json({ success: false, message: "Upload at least one image" }); // Added return statement
         }
 
-        const image = Array.isArray(req.files) ? req.files.map((file) => file.filename) : [];
+        const image = req.files ? (Array.isArray(req.files) ? req.files.map((file) => file.filename) : [req.files.filename]) : [];
+
         console.log(image);
         console.log('files', req.files);
 
@@ -45,13 +47,15 @@ const addProduct = async (req, res) => {
             productTitle: title,
             description: description,
             RegulerPrice: regularPrice, 
-            ExpirAt: expiry,
-            Stock: Stock, 
+            // ExpirAt: expiry,
+            Stock: [{ batchId: batch_id, quantity, expiryDate }],
             Category: category,
             primaryImage: primaryImage,
-            additionalImage: additionalImage, 
+            additonalImage: additionalImage, 
             subCategory: subCategories
         });
+        const totalStock = DATA.Stock.reduce((acc, batch) => acc + batch.quantity, 0);
+        DATA.totalStock = totalStock;
 
         await DATA.save();
 
@@ -266,7 +270,6 @@ const productList=async(req,res)=>{
         
     }
 }
-
 
 module.exports={
     prductList,

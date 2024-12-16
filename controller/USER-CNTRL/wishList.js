@@ -5,18 +5,32 @@ const WISHLIST = require('../../model/User/wishList');
 const wishList = async (req, res) => {
     try {
         const wish = await WISHLIST.findOne({ UserId: req.session.user }).populate('Products.product');
-      
-        if (!wish) {
-            
-            return res.render('user/wishList', { CURRENTpage: 'wishList', user: req.session.user, wish: { Products: [] }, info: 'No Items In Your Wish List' });
-        }
         
-        res.render('user/wishList', { CURRENTpage: 'wishList', user: req.session.user, wish, info: '' });
+        // Check if 'wish' exists before accessing 'Products'
+        if (!wish) {
+            return res.render('user/wishList', {
+                CURRENTpage: 'wishList',
+                user: req.session.user,
+                wish: { Products: [] }, // Pass an empty array to avoid errors
+                info: 'No Items In Your Wish List',
+            });
+        }
+
+        // Safely access Products
+        const wSize = wish.Products.length;
+
+        res.render('user/wishList', {
+            CURRENTpage: 'wishList',
+            user: req.session.user,
+            wish,
+            info: '',
+        });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ success: false, message: 'Something went wrong' });
     }
 };
+
 
 
 
@@ -75,7 +89,7 @@ const toggleWishList = async (req, res) => {
     }
 };
 
-///  
+///      
 const remove_wishList = async (req, res) => {
     console.log("Get In Remove Wish");
 

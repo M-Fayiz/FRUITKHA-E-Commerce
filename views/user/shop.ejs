@@ -545,10 +545,17 @@
 							  <!-- Your current single-product-item HTML goes here -->
 							  <!-- Example of one product -->
 							  <div style="width: 300px;" class="product-image">
+								<div id="stop" style="position: absolute; top: 35px; right: 35px; z-index: 2;">
+									<i style="font-size: 20px;"
+										id="wishlistIcon1" 
+										
+										class="bi <%= item.isWishList ? 'bi-heart-fill text-danger' : 'bi-heart' %>" onclick="wishList('<%= item._id %>')">
+									</i>
+								</div>	
 								<a href="/product/<%= item._id %>">
 								  <img src="http://localhost:4000/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
-								  <% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
-									<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
+								  <% if (item.Offer.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
+									<% let offer = Math.round(((item.RegulerPrice - item.Offer.OfferPrice) / item.RegulerPrice) * 100); %>
 									<% if(offer>0){%> 
 									<div style="position: absolute; top: 25px; left: 25px; background-color: green; border-radius: 5px; padding: 8px;">
 									  <span style="color: rgb(255, 255, 255); font-weight: 600;">
@@ -564,12 +571,12 @@
 								<h3><%= item.productTitle %></h3>
 								<span>
 								<div style="display: flex; flex-direction: column;">
-								  <% if (item.OfferPrice) { %>
+								  <% if (item.Offer.OfferPrice>0) { %>
 									<div style="display: flex;justify-content: space-between;">
 									<p style="color: gray; margin: 5px 0;">
 									  <span>Per Kg</span>
 									  <del><%= item.RegulerPrice %></del>₹
-									</p><span><h3 style="color: green; margin: 5px 0;">Offer: <%= item.OfferPrice %> ₹</h3></span>
+									</p><span><h3 style="color: green; margin: 5px 0;">Offer: <%= item.Offer.OfferPrice %> ₹</h3></span>
 								  </div>
 								  	
 								  <% } else { %>
@@ -578,16 +585,16 @@
 								  <div>
 								 </span>
 									<!-- Stock Status -->
-									<% if (item.Stock > 10) { %>
+									<% if (item.totalStock > 10) { %>
 									  <div>
 										<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
-										  In Stock: <%= item.Stock %>
+										  In Stock: <%= item.totalStock %>
 										</span>
 									  </div>
-									<% } else if (item.Stock > 0) { %>
+									<% } else if (item.totalStock > 0) { %>
 									  <div>
 										<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
-										  Low Stock: <%= item.Stock %>
+										  Low Stock: <%= item.totalStock %>
 										</span>
 									  </div>
 									<% } else { %>
@@ -600,7 +607,7 @@
 								  </div>
 								</div>
 								<div style="display: flex; flex-direction: column; justify-content: center; padding: 3px;">
-									<% if (item.Stock > 0) { %>
+									<% if (item.totalStock > 0) { %>
 										<button class="cart-btn" onclick="pass('<%=item.id%>','<%=item.productTitle%>','<%=item.RegulerPrice%>','<%=item.OfferPrice%>')">
 										  <i class="fas fa-shopping-cart"></i> Add to Cart
 										</button>
@@ -870,6 +877,9 @@ function pass(productId,name,Reguler,Offer){
 		})
 	}).then(res=>res.json())
 	.then(data=>{
+		if(data.login==false){
+			location.href='/login'
+		}
 		if(data.success){
 			showToast(data.message,'success')
 		}else{
@@ -879,6 +889,42 @@ function pass(productId,name,Reguler,Offer){
 	})
 }
 
+
+function wishList(val){
+
+	const wishlistIcon = document.getElementById('wishlistIcon1');
+
+
+	console.log('po')
+    const isInWishlist = wishlistIcon.classList.contains('bi-heart-fill') 
+    // const val = wishlistIcon.getAttribute('data-id'); 
+
+    fetch('/toggleWishList', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ val, isInWishlist }), 
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+				showToast(data.message,'success'); 
+                wishlistIcon.classList.toggle('bi-heart');
+                wishlistIcon.classList.toggle('bi-heart-fill');
+                wishlistIcon.classList.toggle('text-danger');
+                location.reload()
+            } else {
+                showToast(data.message,'error'); 
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToat('Something went wrong!','error');
+        });
+
+
+}
 
 
 

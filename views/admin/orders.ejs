@@ -111,20 +111,48 @@
                     </div>
                     
                 </div>
-                <!-- <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div> -->
+                <div class="border-t border-gray-100 p-4">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-gray-500">
+                            <!-- Showing <%= (currentPage - 1) * 6 + 1 %> to <%= Math.min(currentPage * 6, totalOrders) %> of <%= totalOrders %> products -->
+                        </p>
+                        <div class="flex gap-2">
+                            <!-- Previous Button -->
+                            <% if (currentPage > 1) { %>
+                                <a href="/admin/order?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Previous
+                                </a>
+                            <% } %>
+                
+                            
+                            <% 
+                                const maxButtons = 3;
+                                let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                                let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+                
+                               
+                                if (endPage - startPage + 1 < maxButtons) {
+                                    startPage = Math.max(1, endPage - maxButtons + 1);
+                                }
+                            %>
+                
+                            <% for (let i = startPage; i <= endPage; i++) { %>
+                                <a href="/admin/order?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                                    <%= i %>
+                                </a>
+                            <% } %>
+                
+                      
+                            <% if (currentPage < totalPages) { %>
+                                <a href="/admin/order?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                    Next
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                
+                
             </section>
             <!-- content-main end// -->
             

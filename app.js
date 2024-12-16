@@ -1,12 +1,13 @@
+require('dotenv').config()
 const express=require('express')
 const app=express()
 const session=require('express-session')
 let MongoStore = require('connect-mongo')
 const path=require('path')
-const env=require('dotenv').config()
+
 
 const passport=require('./config/passport')
-const startExpired=require('./utils/service/cron')
+const {startExpired,StockExpire,manageExpiration}=require('./utils/service/cron')
 // const morgan=require('morgan')
 
 const {PORT}=require('./utils/env')
@@ -31,13 +32,6 @@ app.use(session({
 const nocache=require('nocache')
 app.use(nocache())
 
-// const sessionController=(req,res, next)=>{
-
-//     console.log(req.session,"session controller")
-//     next()
-// }
-// app.use(sessionController)
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
@@ -53,13 +47,13 @@ app.use(passport.session())
 const userRouter = require('./router/user')
 const adminRouter=require('./router/admin')
 
-
-
 app.use('/',userRouter)
 app.use('/admin',adminRouter)
 
 const connectDB = require('./config/db')
 startExpired()
+StockExpire();
+manageExpiration()
 app.listen(PORT,()=>{
     connectDB()
     console.log('_...,.,,., RUNNING......');

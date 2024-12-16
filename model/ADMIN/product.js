@@ -1,56 +1,75 @@
-const mongoose=require('mongoose')
-const {ObjectId}=mongoose.Schema.Types
-const productModel= new mongoose.Schema({
-    productTitle:{
-        type:String,
-        requited:true
-    },
-    description:{
-        type:String,
-        required:true
-    },
-    RegulerPrice:{
-        type:Number,
-        required:true
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
-    },
-    OfferPrice:{
-        type:Number,
-        required:false
-    },
-    Stock:{
-        type:Number,
-        required:true
-    },
-   primaryImage:{
-        type:String,
-        required:true
-    },
-    additonalImage:{
-         type:[String]
-    }
-    ,
-    Category:{
-        type:String,
-        required:false
-    },
-    offerId:{
-        type:ObjectId
+const stockSchema = new mongoose.Schema({
+  batchId: {
+    type: String, 
+    required: true,
+  },
+  quantity: {
+    type: Number, 
+    required: true,
+  },
+  expiryDate: {
+    type: Date, 
+    required: true,
+  },
+  isExpired: {
+    type: Boolean, 
+    default: false,
+  },
+});
 
+const productModel = new mongoose.Schema(
+  {
+    productTitle: {
+      type: String,
+      required: true,
     },
-    ExpirAt:{
-        type:Date,
-        
+    description: {
+      type: String,
+      required: true,
     },
-    isWishList:{
-        type:Boolean,
-        default:false
+    RegulerPrice: {
+      type: Number,
+      required: true,
     },
-    isList:{
-        type:Boolean,
-        default:true
-    }
+    Offer: {
+         OfferPrice:Number,
+         OfferId:ObjectId
+    },
+    Stock: [stockSchema], 
+    totalStock:{type:Number,default:0},
+    primaryImage: {
+      type: String,
+      required: true,
+    },
+    additonalImage: {
+      type: [String],
+    },
+    Category: {
+      type: String,
+      required: false,
+    },
+   
+    // expiresAt: {
+    //   type: Date, 
+    // },
+  
+    isList: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true }
+);
 
-},{timestamps:true})
+productModel.virtual("expiredQuantity").get(function () {
+    return this.Stock.reduce((acc, batch) => (batch.isExpired ? acc + batch.quantity : acc), 0);
+  });
 
-module.exports= mongoose.model('products',productModel)
+  
+  productModel.set("toJSON", { virtuals: true });
+  productModel.set("toObject", { virtuals: true });
+
+module.exports = mongoose.model('products', productModel);

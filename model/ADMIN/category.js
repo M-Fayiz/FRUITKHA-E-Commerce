@@ -15,8 +15,8 @@ const categorySchema = new mongoose.Schema({
         required: true
     },
     Offer: {
-        type: ObjectId, // Reference to another collection
-        ref: 'Offer',    // Specify the related collection (Optional but recommended)
+        type: ObjectId, 
+        ref: 'Offer',    
         required: false
     },
     isList: {

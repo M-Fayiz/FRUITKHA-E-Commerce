@@ -6,12 +6,15 @@ const USER=require('../model/User/userModel')
 const user_Contrl=require('../controller/USER-CNTRL/userCntrl')
 const passport = require('passport')
 const PROFILE=require('../controller/USER-CNTRL/Profile')
-
 const ADDRES=require('../controller/USER-CNTRL/AddresCNTRL')
 const CART=require('../controller/USER-CNTRL/CART')
 const CHECKOUT=require('../controller/USER-CNTRL/CHECK-OUT')
 const WISHLIST=require('../controller/USER-CNTRL/wishList')
 const COUPON=require('../controller/ADMIN/Coupon')
+const ORDER=require('../controller/ADMIN/order')
+const WALLET=require('../controller/USER-CNTRL/wallet')
+const userOrder=require('../controller/USER-CNTRL/userOrder')
+
 
 router.get('/signUp',Auth.userAuth,user_Contrl.loadSignUp)
 // router.post('/signup',user_Contrl.registration)
@@ -51,14 +54,6 @@ router.get('/login',Auth.userAuth,user_Contrl.getlogin)
 router.post('/verify_lagin',user_Contrl.Login)
 router.get('/logOut/:id',user_Contrl.logOut)
 
-
-// router.get('/reset',user_Contrl.Reset)
-// router.get('/email',user_Contrl.email)
-// router.post('/verify-mail',user_Contrl.verifyEmail)
-// router.post('/forgetPASS',user_Contrl.forgotpass)
-// router.post('/createOTP',user_Contrl.createOTP)
-// router.post('/forPassword',user_Contrl.forPassword)
-
 // - - GOOGLE AUTH - - GOOGLE AUTH - - GOOGLE AUTH - -
 router.get('/auth/google',Auth.userAuth,passport.authenticate('google',{scope:['profile','email']}))
 router.get('/auth/google/callback',Auth.userAuth,passport.authenticate('google',{failureRedirect:'/signUp'}),async(req,res)=>{
@@ -69,43 +64,52 @@ router.get('/auth/google/callback',Auth.userAuth,passport.authenticate('google',
     res.redirect('/')
 })
 
-
 router.get('/shop',user_Contrl.shop)
 
-// router.get('/singleProduct',user_Contrl.singleProduct)
-
 router.get('/product/:id',user_Contrl.productId)
-
 
 router.get('/search',user_Contrl.search)
 router.get('/ALL',user_Contrl.ALL)
 
 
-// $ |||| CART CART CART ||||||
+// $ | CART CART CART || CART CART CART |
 router.get('/cart',Auth.sessionAuth, CART.cart)
 router.post('/addCart',CART.addCart)
 router.post('/update-quantity',CART.updateCART)
 router.post('/removeCart',CART.removeCart)
 
-//\\\\\\\\\\  CHECK OUT ////////////
+// | CHECK OUT  | CHECK OUT  | CHECK OUT  | CHECK OUT  
 router.get('/checkout',Auth.sessionAuth,CHECKOUT.checkout)
 router.post('/placeOrder',CHECKOUT.placeOrder)
 
 
 // = =  = ORDER LIST - - -- -
-router.get('/orderList',Auth.sessionAuth,PROFILE.orderList)
-router.get('/orderDetails/:id',Auth.sessionAuth,PROFILE.orderDetails)
+router.get('/orderList',Auth.sessionAuth,userOrder.orderList)
+router.get('/orderDetails/:id',Auth.sessionAuth,userOrder.orderDetails)
 
-router.post('/cancel-order',PROFILE.cancelorder)
-router.post('/oder-cancel',PROFILE.CANCEL)
+// |  CANCEL   |  CANCEL   |  CANCEL   |
+router.post('/cancel-order',ORDER.handleProductAction)
+router.post('/order-cancel',userOrder.CANCELallORDER)
 
-// //  WISH LIST
+// |   RETURN   |   RETURN   |   RETURN   |
+router.post('/return-Order',userOrder.ReturnOrder)
+router.post('/req-return',userOrder.productReturn)
+
+//   WISH LIST
 router.get('/wishList',Auth.sessionAuth,WISHLIST.wishList)
 router.post('/toggleWishList',WISHLIST.toggleWishList)
 router.post('/remove-wishList',WISHLIST.remove_wishList)
 
-// - - COUPON VALID
+// | COUPON VALID  | COUPON VALID  | COUPON VALID  |
 router.post('/couponDetails',COUPON.couponValidate)
 router.post('/remove-coupon',COUPON.remove)
+
+//  |  Razor Pay  |  Razor Pay  |  Razor Pay  
+router.post('/create-order',CHECKOUT.razorPay)
+router.post('/verify-payment', CHECKOUT.verifyPayment)
+
+//  |  WALLET  |  WALLET  |  WALLET    WALLET  |
+
+router.get('/wallet',WALLET.wallet)
 
 module.exports=router   

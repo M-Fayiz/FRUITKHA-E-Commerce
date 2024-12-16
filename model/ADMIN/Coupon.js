@@ -26,6 +26,7 @@ const CouponSchema=mongoose.Schema({
         type:Date,
         required:true
     },
+    maxDiscount:Number,
     maxUses:{
         type:Number,
         default:0
@@ -38,14 +39,7 @@ const CouponSchema=mongoose.Schema({
         type:Number,
         default:1
     },
-    applicableCategory:{
-        type:[String],
-        default:[]
-    },
-    excludedProduct:{
-        type:[String],
-        default:[]
-    },
+    
     minCartValue:{
         type:Number,
         default:0

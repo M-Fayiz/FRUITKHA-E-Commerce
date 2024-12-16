@@ -159,13 +159,13 @@
 </head>
 <body>
 	
-	<!--PreLoader-->
-    <div class="loader">
+	<!-- PreLoader-->
+    <!-- <div class="loader">
         <div class="loader-inner">
             <div class="circle"></div>
         </div>
-    </div>
-    <!--PreLoader Ends-->
+    </div> -->
+    <!--PreLoader Ends -->
 	
 	<!-- header -->
 	<%-include('../partials/Header.ejs')%>
@@ -268,25 +268,35 @@
 							<h3 class="mb-4" style="font-weight: 500;">Select Payment Method</h3>
 		
 							<!-- Razorpay Payment Option -->
-							<div class="payment-method" style="border:solid #ccc; border-radius: 10px; padding: 5px;">
+							<div class="payment-method" style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
 								<input type="radio" name="paymentMethod" id="razorpay" value="razorpay" >
 								<label for="razorpay">
 									
 									<div>
-										<h5>Razorpay Online Payment</h5>
+										<h5 style="color: #3f3f3f;font-weight: 500;">Razorpay Online Payment</h5>
 										<p class="text-muted">Pay securely using credit/debit cards, net banking, UPI, and wallets</p>
 									</div>
 								</label>
 							</div>
 		
 							<!-- Cash on Delivery Option -->
-							<div class="payment-method"  style="border:solid #ccc; border-radius: 10px; padding: 5px; margin-top: 8px;">
+							<div class="payment-method"  style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
 								<input type="radio" name="paymentMethod" id="cod" value="COD">
 								<label for="cod">
 									
 									<div>
-										<h5>Cash on Delivery (COD)</h5>
+										<h5 style="color: #3e3e3e;font-weight: 500;">Cash on Delivery (COD)</h5>
 										<p class="text-muted">Pay in cash when your order is delivered</p>
+									</div>
+								</label>
+							</div>
+							<div class="payment-method"  style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
+								<input type="radio" name="paymentMethod" id="WALLET" value="wallet">
+								<label for="cod">
+									
+									<div>
+										<h5 style="color: #3e3e3e;font-weight: 500;">Wallet</h5>
+										<p class="text-muted">Pay from Your Cart Balance</p>
 									</div>
 								</label>
 							</div>
@@ -349,7 +359,7 @@
 							  <p id="result" style="color: red;"></p>
 						    </fieldset>
 						  </div>
-						<button type="submit" style="background-color:#FF6600 ;color: white;" class="coupon">Place Order</button>
+						<button type="submit" data-amount="<%=(cart.subTotal + cart.Shipping-cart.Discount.discount_amount)%>" style="background-color:#FF6600 ;color: white;" id="place" class="coupon">Place Order</button>
 					</div>
 				</div>
 			</div>
@@ -408,6 +418,8 @@
 		  </div>
 		</div>
 	  </div>
+
+	  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<!-- logo carousel -->
 	<%-include('../partials/footer.ejs')%>
 	<!-- jquery -->
@@ -506,58 +518,141 @@ document.getElementById('remove')?.addEventListener('click', () => {
 
 		document.getElementById('order-form').addEventListener('submit', async (e) => {
   e.preventDefault(); 
+
   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+  const place = document.getElementById('place');
+  const Amount = place.getAttribute('data-amount');  
 
-
-    if (!selectedAddress || !paymentMethod) {
+  if (!selectedAddress || !paymentMethod) {
     let errorMessage = "Please select:";
     if (!selectedAddress) errorMessage += " a shipping address";
     if (!selectedAddress && !paymentMethod) errorMessage += " and";
     if (!paymentMethod) errorMessage += " a payment method";
 
-    showToast(errorMessage,'info'); 
+    showToast(errorMessage, 'info'); 
     return; 
   }
 
-  const form = e.target;
-  const formData = new FormData(form);
-  const formObject = Object.fromEntries(formData.entries());
+ 
+  if (paymentMethod.value === 'razorpay') {
+    const amount = parseInt(Amount);
 
-
-  try {
-    const response = await fetch('/placeOrder', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formObject),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error placing order');
-    }
-
-    const data = await response.json();
-    if(data.success){
-		showOrderSuccess()
-		setTimeout(()=>{
-			
-			window.location.href = '/shop'; 
-		},1000)
-		
-	}else{
-		Swal.fire('Error', 'There was an issue placing your order. Please try again later.', 'error');
-	}
-    console.log(data);
-
-    
+    try {
    
+      const response = await fetch('/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount }),
+      });
 
-  } catch (error) {
-    alert('Failed to place the order: ' + error.message);
+      if (!response.ok) throw new Error('Failed to create order');
+
+      const { order } = await response.json();
+      if (!order || !order.id) throw new Error('Invalid order response from server');
+
+     
+      const options = {
+        key: 'rzp_test_rYOACsUGVDxGZE',
+        amount: order.amount,
+        currency: order.currency,
+        name: 'FRUITKHA',
+        description: 'Please pay your order payment',
+        image: '/img/logo.png',
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+         
+            const verifyResponse = await fetch('/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyResult = await verifyResponse.json();
+            if (verifyResult.success) {
+    
+              const formData = {
+                selectedAddress: selectedAddress.value,
+                paymentMethod: 'razorpay', 
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              };
+
+              const orderResponse = await fetch('/placeOrder', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+              });
+
+              if (orderResponse.ok) {
+                const orderData = await orderResponse.json();
+                if (orderData.success) {
+                  showOrderSuccess();
+                  setTimeout(() => window.location.href = '/shop', 1000);
+                } else {
+                  Swal.fire('Error', 'There was an issue placing your order. Please try again later.', 'error');
+                }
+              } else {
+                throw new Error('Error placing order');
+              }
+            } else {
+              alert('Payment verification failed!');
+            }
+          } catch (error) {
+            alert('Error verifying payment: ' + error.message);
+          }
+        },
+        theme: { color: '#F37254' },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', (response) => {
+        alert('Payment failed!');
+        console.error(response.error);
+      });
+
+      rzp.open();
+    } catch (error) {
+      alert('Error processing payment: ' + error.message);
+    }
+  } else {
+    
+    
+    const form = e.target;
+    const formData = new FormData(form);
+    const formObject = Object.fromEntries(formData.entries());
+
+    try {
+      fetch('/placeOrder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formObject),
+      }).then(res=>res.json())
+      .then(data=>{
+        if(data.success){
+          showOrderSuccess();
+          setTimeout(() => window.location.href = '/shop', 1000);
+        }else{
+          // showToast(data.message,'error')
+          Swal.fire('Error', data.message, 'error')
+        }
+      })
+    } catch (error) {
+      alert('Failed to place the order: ' + error.message);
+    }
   }
 });
+
 function showOrderSuccess() {
   Swal.fire({
     title: 'Order Placed Successfully!',
@@ -657,8 +752,8 @@ function editAddress(Name, adName, State, District, Place, Pincode, mark, user) 
         }
     });
 }
-
   
+
 	</script>
 
 </body>
