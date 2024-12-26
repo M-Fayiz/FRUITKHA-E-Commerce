@@ -37,20 +37,14 @@ const addQuantity=async(req,res)=>{
             quantity,
             expiryDate,
         });
-        //   const stockEntry = product.Stock.find((entry) => entry.expiryDate.toISOString() === new Date(expiryDate).toISOString());
-  
-        //   if (stockEntry) {
-        //       // If the expiry date already exists, just update the quantity
-        //       stockEntry.quantity += quantity;
-        //   } else {
-              // Otherwise, add a new stock entry
-             
+        // for (let i = product.Stock.length - 1; i >= 0; i--) {
+        //     if (product.Stock[i].isExpired) {
+        //       product.Stock.splice(i, 1); 
+        //     }
         //   }
-  
-          // Update the total stock
           product.totalStock += Number(quantity);
   
-          // Save the updated product
+          
           await product.save();
       res.status(200).json({success:true,messagee:'Stock Added'})
 

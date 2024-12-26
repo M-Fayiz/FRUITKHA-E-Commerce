@@ -3,7 +3,7 @@ const bcrypt=require('bcrypt')
 const USER=require('../../model/User/userModel')
 
 const category=require('../../model/ADMIN/category');
-const { response, json } = require('express');
+const ORDER=require('../../model/ADMIN/Order-schema')
 
 const PRODUCT=require('../../model/ADMIN/product')
 
@@ -19,17 +19,16 @@ const PRODUCT=require('../../model/ADMIN/product')
 
 const verifyLogin=async(req,res)=>{
     
-    console.log('entered');
     
     try {
         const {email,password}=req.body
-        console.log(req.body.email);
+       
         
        const temp=await securePassword(password)
-       console.log(temp);
+      
 
        const admin= await adminModel.findOne({email}) 
-       console.log('admin',admin);
+      
        
        if(!admin){
          return  res.json({success:false,message:"InValid Email"})
@@ -52,16 +51,16 @@ const verifyLogin=async(req,res)=>{
 
 const toogleUserStatus=async(req,res)=>{
     try {
-        console.log("eorking")
+      
         const {userId, condition} = req.body;
-        console.log(condition)
+      
         
         USER.findByIdAndUpdate(userId,{isActive:condition})
         .then(response=>{
             console.log(response)
             res.json({success: true, message:"succesfully Updated", response:response})
         })
-        console.log('user list id found')
+      
     } catch (error) {
         res.json({success:false,message:error.message})
     }
@@ -78,19 +77,12 @@ const addCategory = async (req, res) => {
               });
 
                   if(test){
-                    console.log('found matched catgry');
+                    
                     
                       return res.json({success:false,message:'Category Exist with This Title'})
                   }
-                  
-                  
-              
-            console.log('Category add');
-            console.log('Title:', title, 'Description:', discription);
             
-     
-            const image = req.file ? req.file.filename : null;
-            console.log('Uploaded Image:', image);
+       
     
             if (!image || !title) {
                 return res.status(400).json({ success: false, message: "Please add both an image and a title." });
@@ -226,18 +218,56 @@ const clearOffer=async(req,res)=>{
 
 
 
-
-
-
 // RENDERING.............///////
 // RENDERING.............///////
 
 const LoadLogin=(req,res)=>{
-    res.render('admin/page-account-login')
+    try {
+        
+        res.render('admin/page-account-login')
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({success:false,message:'Internal Error please try later'})
+    }
+    
 }
 
-const LoadHome=(req,res)=>{
-    res.render('admin/index')
+const LoadHome=async(req,res)=>{
+    try {
+        const orders=await ORDER.find({}).populate('UserID').limit(8)
+        
+        const dash = await ORDER.aggregate([
+         
+            // {
+            //   $match: {
+            //     orderStatus: { $nin: ["Cancelled", "Returned"] } 
+            //   }
+            // },
+          
+            {
+              $group: {
+                _id: null,
+                revenue: { $sum: '$Final_Amount' }, 
+                totalOrder: { $sum: 1 },           
+                discount: { $sum: '$Coupon.discountValue' } 
+              }
+            }
+          ])
+       const data=dash[0]
+    //   const  data={
+    //         metrics: report[0] || {
+    //             totalOrders: 0,
+    //             totalOrderAmount: 0,
+    //             totalDiscounts: 0,
+    //         },
+    //     }
+    
+    res.render('admin/index',{CURRENTpage:'home',orders,data})
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({success:false,message:'Internal Error please try later'})
+    }
+    
 }
 
 const LoadCategory=async(req,res)=>{
@@ -254,14 +284,14 @@ try {
 }
 
 
-const Load_manage=async(req,res)=>{
+const Load_User=async(req,res)=>{
     try {
         const page = parseInt(req.query.page) || 1; 
         const limit = 5; 
         const skip = (page - 1) * limit;
 
   const Block=req.query.Block
-  console.log(Block);
+
   
 let query={}
   if(Block){
@@ -301,16 +331,12 @@ module.exports={
     verifyLogin,
     LoadLogin,
     LoadHome,
-    Load_manage,
+    Load_User,
     toogleUserStatus,
     addCategory,
     LoadCategory,
     clearOffer,
     categoryStatus,
     EditCategory,
- 
-    
-    
-   
    
 }

@@ -43,7 +43,7 @@ router.get('/rest-Password',PROFILE.newpass)
 router.post('/rest-Password',PROFILE.REST)
 
 // ### ADDRES-- ADDRES-- ADDRES
-router.get('/address',Auth.sessionAuth,ADDRES.address)
+router.get('/address',Auth.blockUser,Auth.sessionAuth,ADDRES.address)
 router.post('/addADRS',ADDRES.addAddres)
 router.delete('/delete-Adres',ADDRES.rm_adres)
 router.patch('/editADRS',ADDRES.editAdddres)
@@ -64,7 +64,7 @@ router.get('/auth/google/callback',Auth.userAuth,passport.authenticate('google',
     res.redirect('/')
 })
 
-router.get('/shop',user_Contrl.shop)
+router.get('/shop',Auth.blockUser,user_Contrl.shop)
 
 router.get('/product/:id',user_Contrl.productId)
 
@@ -73,21 +73,22 @@ router.get('/ALL',user_Contrl.ALL)
 
 
 // $ | CART CART CART || CART CART CART |
-router.get('/cart',Auth.sessionAuth, CART.cart)
+router.get('/cart',Auth.blockUser,Auth.sessionAuth, CART.cart)
 router.post('/addCart',CART.addCart)
 router.post('/update-quantity',CART.updateCART)
 router.post('/removeCart',CART.removeCart)
 
 // | CHECK OUT  | CHECK OUT  | CHECK OUT  | CHECK OUT  
-router.get('/checkout',Auth.sessionAuth,CHECKOUT.checkout)
+router.get('/checkout',Auth.blockUser,Auth.sessionAuth,CHECKOUT.checkout)
 router.post('/placeOrder',CHECKOUT.placeOrder)
-
+router.get('/success/:id',CHECKOUT.success)
+router.get('/invoice/:id',CHECKOUT.invoice)
 
 // = =  = ORDER LIST - - -- -
-router.get('/orderList',Auth.sessionAuth,userOrder.orderList)
+router.get('/orderList',Auth.blockUser,Auth.sessionAuth,userOrder.orderList)
 router.get('/orderDetails/:id',Auth.sessionAuth,userOrder.orderDetails)
 
-// |  CANCEL   |  CANCEL   |  CANCEL   |
+// |  CANCEL    |  CANCEL    |  CANCEL    |
 router.post('/cancel-order',ORDER.handleProductAction)
 router.post('/order-cancel',userOrder.CANCELallORDER)
 
@@ -96,7 +97,7 @@ router.post('/return-Order',userOrder.ReturnOrder)
 router.post('/req-return',userOrder.productReturn)
 
 //   WISH LIST
-router.get('/wishList',Auth.sessionAuth,WISHLIST.wishList)
+router.get('/wishList',Auth.blockUser,Auth.sessionAuth,WISHLIST.wishList)
 router.post('/toggleWishList',WISHLIST.toggleWishList)
 router.post('/remove-wishList',WISHLIST.remove_wishList)
 
@@ -107,9 +108,10 @@ router.post('/remove-coupon',COUPON.remove)
 //  |  Razor Pay  |  Razor Pay  |  Razor Pay  
 router.post('/create-order',CHECKOUT.razorPay)
 router.post('/verify-payment', CHECKOUT.verifyPayment)
+router.post('/retry-payment',CHECKOUT.retryPayment)
+// router.post('/verifyRetry',CHECKOUT.verifyRetry)
 
 //  |  WALLET  |  WALLET  |  WALLET    WALLET  |
-
 router.get('/wallet',WALLET.wallet)
 
 module.exports=router   

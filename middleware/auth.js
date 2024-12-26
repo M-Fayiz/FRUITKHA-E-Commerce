@@ -13,7 +13,6 @@ const userAuth=(req,res,next)=>{
 
 const blockUser=async(req,res,next)=>{
     try {
-  
 
      if(req.session.user){
          const user=await USER.findById(req.session.user)

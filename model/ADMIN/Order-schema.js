@@ -16,7 +16,6 @@ const orderSchema = new mongoose.Schema(
           ref: 'products',
           required: true,
         },
-        Name: String,
         quantity: {
           type: Number,
           min: 1,
@@ -42,26 +41,23 @@ const orderSchema = new mongoose.Schema(
           }
          
         },
-        cancel:{
-          req:{type:Boolean,default:false},
-          reason:String,
-          adminStatus:{
-            type:Boolean,
-            default:false
-          }
+        // cancel:{
+        //   req:{type:Boolean,default:false},
+        //   reason:String,
+        //   adminStatus:{
+        //     type:Boolean,
+        //     default:false
+        //   }
           
-        },
+        // },
+        discountValue:{type:Number},
         refundAmound:{type:Number,default:0},
         status: {
           type: String,
           enum: ['Pending'  , 'Shipped','Out for Delivery', 'Delivered','Cancelled', 'Returned'],
           default: 'Pending',
         },
-        deliveryDate:{type:Date},
-        expiryDate: { 
-          type: Date,
-      
-        }
+       
       },
     ],
     subTotal: {
@@ -110,7 +106,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ['Pending', 'Completed', 'Refunded'],
+      enum: ['Pending', 'Completed', 'Refund','Failed'],
       default: 'Pending',
     },
     RazorPay:{
@@ -143,38 +139,6 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-orderSchema.methods.calculateRefundAndAdjustments = function (productToCancel) {
-  const initialSubTotal = this.subTotal;
-  const initialDiscount = this.Coupon.discountValue;
-
-
-  const productDiscountShare = Math.round((initialDiscount / initialSubTotal) * productToCancel.TOTAL);
-
-
-  const refundAmount = productToCancel.TOTAL - productDiscountShare;
-  const floor = Math.round(refundAmount);
-
-
-  this.subTotal = Math.round(this.subTotal - productToCancel.TOTAL);
-  this.Coupon.discountValue = Math.round(this.Coupon.discountValue - productDiscountShare);
-
-
-  this.subTotal = Math.max(0, this.subTotal);
-  this.Coupon.discountValue = Math.max(0, this.Coupon.discountValue);
-
-
-  this.Final_Amount = Math.round(this.subTotal + this.Shipping - this.Coupon.discountValue);
-
-  return {
-    success: true,
-    floor,
-    remainingSubTotal: this.subTotal,
-    remainingDiscount: this.Coupon.discountValue,
-    finalAmount: this.Final_Amount,
-  };
-};
-
 orderSchema.pre('save', function (next) {
   let subTotal = 0;
   this.Products.forEach((product) => {

@@ -163,8 +163,28 @@
         <a href="/wallet" class="nav-link">
             <i class="fas fa-wallet text-warnin"></i> Wallet
         </a>
-        <a href="/logOut/<%=user%>" class="nav-link text-danger">
+        <form action="" id="logOUT">
+            <%console.log(user._id)%>
+        <a href="/logOut/<%=user%>" id="data" class="nav-link text-danger">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
+       </form>
     </div>
 </div>
+ <script>
+    // document.getElementById('logOUT').addEventListener('click',(e)=>{
+    //     e.preventDefault()
+    //     const data=document.getElementById('data')
+    //     const userId=data.getAttribute('data-id')
+
+    //     fetch('/logOut',{
+    //         method:'post',
+    //         headers:{
+    //             'Content-Type':'application/json'
+    //         },
+    //         body:JSON.stringify({
+    //             "userId.id"
+    //         })
+    //     })
+    // })
+ </script>

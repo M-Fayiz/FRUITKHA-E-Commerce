@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(to bottom right, #f4f4f4, #d9f0fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .order-container {
+            background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #f7a278;
+            top: -20px;
+            left: calc(50% - 7.5px);
+            opacity: 0;
+            animation: confetti-fall 6s ease-in-out infinite;
+            transform: rotate(45deg);
+        }
+
+        .confetti:nth-child(2) {
+            left: calc(50% - 40px);
+            background-color: #f2d74e;
+            animation-delay: 0.5s;
+        }
+
+        .confetti:nth-child(3) {
+            left: calc(50% + 40px);
+            background-color: #9fd356;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(45deg);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(150vh) rotate(360deg);
+            }
+        }
+
+        .order-header {
+            text-align: center;
+            color: #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .order-header h2 {
+            margin: 0;
+            color: #4CAF50;
+            font-size: 2em;
+            animation: bounce 0.5s infinite;
+        }
+
+        .order-header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .order-details ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-details li {
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .order-details li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-total {
+            text-align: right;
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 1.4em;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .home-button {
+            display: block;
+            width: 45%;
+            padding: 15px;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            margin-top: 25px;
+            transition: background 0.4s ease, transform 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .home-button:hover {
+            background: linear-gradient(to right, #45a049, #4CAF50);
+            transform: scale(1.05);
+        }
+
+        .home-button:active {
+            transform: scale(0.98);
+        }
+        #kk{
+          background: #919191;
+          border: none;
+        }
+
+      
+
+    </style>
+</head>
+<body>
+    <div class="order-container">
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="order-header">
+            <h2>Your Order Placed</h2>
+            <p>Thank you for your purchase! Your order ID is <strong>#<%=order.id%></strong>.</p>
+        </div>
+        <hr>
+        <div style="display: flex;justify-content: space-between;">
+       <div style="padding-top: 10px; color: #3d3d3d;">
+        <p><strong>Payment Method:</strong> <%=order.payment%></p>
+        <p><strong>Payment Status:</strong> <%=order.paymentStatus%></p>
+       </div>
+        <div class="order-total" style="line-height: 12px;">
+           <p>Subtotal :<%=order.subTotal%></p>
+           <p>Shipping :<%=order.Shipping%></p>
+           <% if(order.Coupon.discountValue>0){%>
+            <p>Discount Value: <%=order.Coupon.discountValue %></p>
+            <%}%>
+           <p>Final Amount :<%=order.Final_Amount%></p>
+        </div>
+       </div>
+        <div style="display: flex; justify-content: space-between;">
+        <a href="/shop" class="home-button">Return to Home</a>
+        <%if(order.paymentStatus==='completed'){%>
+        <button onclick="download('<%=order.id%>')" class="home-button" id="kk">Invoice</button>
+        <%}%>
+      </div>
+    </div>
+    <script>
+
+async function download(orderId) {
+        try {
+            const response = await fetch(`/invoice/${orderId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `invoice_${orderId}.pdf`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading invoice:', error);
+        }
+    }
+
+    </script>
+</body>
+</html>

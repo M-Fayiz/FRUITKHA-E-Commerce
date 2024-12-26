@@ -22,7 +22,7 @@ const startExpired = () => {
 
 const StockExpire = () => {
     cron.schedule('0 0 * * *', async () => {
-        console.log("Running Cron Job to Check Expired Batches");
+    
 
         try {
             const now = new Date();

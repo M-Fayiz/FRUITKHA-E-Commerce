@@ -17,7 +17,8 @@ const cart = async (req, res) => {
         CURRENTpage: 'Cart',
         data: { Products: [] },
         info: 'Your Cart is Empty',
-        coupon
+        coupon,
+        NOtify
       })
     } else {
       return res.render('user/cart', {

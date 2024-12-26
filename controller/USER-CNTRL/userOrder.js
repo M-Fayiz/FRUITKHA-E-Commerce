@@ -13,15 +13,34 @@ const orderList=async(req,res)=>{
     }
     
     try {
-     
-      const orders = await ORDER.find({ UserID: User }).populate('Products.product')
+      const page = parseInt(req.query.page) || 1;
+      const limit = 6;
+      const skip = (page - 1) * limit;
+      const orders = await ORDER.find({ UserID: User }).populate('Products.product').sort({ _id: -1 }).skip(skip).limit(limit);
+
     
       if (!orders ) {
        res.render('user/orderList', { info: "You have no orders yet", orders: [] })
       }
      
+
+
+
+
+const totalOrders = await ORDER.countDocuments();
+const totalPages = Math.ceil(totalOrders / limit);
+
+
+if (skip >= totalOrders && totalOrders > 0) {
+    return res.redirect('/admin/order?page=' + totalPages);
+}
+
+
+
        
-      res.render('user/orderList', { orders ,user:req.session.user})
+      res.render('user/orderList', { orders ,user:req.session.user,currentPage: page,
+        totalPages,
+        totalOrders,})
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Server Error")
@@ -47,62 +66,62 @@ const orderDetails=async(req,res)=>{
 }
 
 
-const cancelorder = async (req, res) => {
-    console.log("GET IN CANCEL ORDER");
-    const { itemId, Orderid, product, quantity } = req.body;
+// const cancelorder = async (req, res) => {
+//     console.log("GET IN CANCEL ORDER");
+//     const { itemId, Orderid, product, quantity } = req.body;
   
-    const User = req.session.user;
+//     const User = req.session.user;
   
-    if (!User) {
-      return res.status(400).json({ success: false, message: 'User is not logged in' });
-    }
+//     if (!User) {
+//       return res.status(400).json({ success: false, message: 'User is not logged in' });
+//     }
   
-    try {
+//     try {
       
-      const order = await ORDER.findOneAndUpdate(
-        { _id: Orderid, 'Products._id': itemId },
-        { $set: { 'Products.$.status': 'Cancelled' } }, 
-        { new: true }
-      );
+//       const order = await ORDER.findOneAndUpdate(
+//         { _id: Orderid, 'Products._id': itemId },
+//         { $set: { 'Products.$.status': 'Cancelled' } }, 
+//         { new: true }
+//       );
   
-      if (!order) {
-        return res.status(404).json({ success: false, message: 'Order or product not found' });
-      }
+//       if (!order) {
+//         return res.status(404).json({ success: false, message: 'Order or product not found' });
+//       }
   
   
-      const productDetails = await PRODUCT.findById(product);
+//       const productDetails = await PRODUCT.findById(product);
       
   
-      if (!productDetails) {
-        return res.status(404).json({ success: false, message: 'Product not found' });
-      }
+//       if (!productDetails) {
+//         return res.status(404).json({ success: false, message: 'Product not found' });
+//       }
    
-   console.log(order,'order')
-      productDetails.Stock += Number(quantity);
-      await productDetails.save();
+//    console.log(order,'order')
+//       productDetails.Stock += Number(quantity);
+//       await productDetails.save();
       
-      const cancelled =order.Products.every(p=>p.status==='Cancelled')
-      if(cancelled){
-        order.status='Cancelled'
-        order.Shipping=0
+//       const cancelled =order.Products.every(p=>p.status==='Cancelled')
+//       if(cancelled){
+//         order.status='Cancelled'
+//         order.Shipping=0
   
-      }
-      await order.save();
+//       }
+//       await order.save();
   
-      return res.status(200).json({
-        success: true,
-        message: 'Product has been successfully cancelled',
-        order: order,
-      });
+//       return res.status(200).json({
+//         success: true,
+//         message: 'Product has been successfully cancelled',
+//         order: order,
+//       });
   
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        success: false,
-        message: 'An error occurred while canceling the product',
-      });
-    }
-  };
+//     } catch (error) {
+//       console.error(error);
+//       return res.status(500).json({
+//         success: false,
+//         message: 'An error occurred while canceling the product',
+//       });
+//     }
+//   };
 
 
   const CANCELallORDER = async (req, res) => {
@@ -116,10 +135,8 @@ const cancelorder = async (req, res) => {
       if (!order) {
         return res.status(400).json({ success: false, message: 'Order not found' });
       }
-      
-  
       order.orderStatus = 'Cancelled';
-      console.log(order.status)
+    
       const refundAmount=order.Final_Amount-order.Shipping
       if(order.payment==='razorpay'||order.payment==='wallet'){
          const wallet=await WALLET.findOne({userId:user})
@@ -177,9 +194,12 @@ const ReturnOrder=async(req,res)=>{
     if(!order){
       return res.status(400).json({success:false,message:'Order not Found'})
     }
-    const Current=new Date()
-    if(order.Datess.expiryDate<Current){
-      return res.status(410).json({success:false,message:'Your return time has exceeded the allowed 2-day period'})
+    const Current = new Date();
+    if (order && new Date(order.Datess.expiryDate) < Current) {
+      return res.status(410).json({
+        success: false,
+        message: 'Your return time for this order has exceeded 2 days , which the allowed period.',
+      });
     }
 
     order.Return.req=true
@@ -207,13 +227,13 @@ const productReturn=async(req,res)=>{
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found in the order.' });
     }
-    
-    console.log(product)
-    const Current=new Date()
-    // console.log(Current)
-    // if(product.expiryDate>Current){
-    //   return res.status(410).json({success:false,message:'Your return time has exceeded the allowed 2-day period'})
-    // }
+    const Current = new Date();
+    if (order && new Date(order.Datess.expiryDate) < Current) {
+      return res.status(410).json({
+        success: false,
+        message: 'Your return time for this order has exceeded the allowed period.',
+      });
+    }
 
     product.return.req=true
     product.return.reason=Reason
@@ -232,7 +252,7 @@ const productReturn=async(req,res)=>{
   module.exports={
     orderList,
     orderDetails,
-    cancelorder,
+    // cancelorder,
     CANCELallORDER,
     ReturnOrder,
     productReturn

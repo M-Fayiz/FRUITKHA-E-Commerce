@@ -25,9 +25,10 @@ let LoadProfile = async (req, res) => {
     try {
       console.log(typeof req.params.id);
       
-    
+      
       let userId = req.params.id
-      console.log(userId);
+      console.log(userId)
+    
 
       const user = await USER.findById(userId);
      
