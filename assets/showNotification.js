@@ -35,14 +35,14 @@ window.showToast = function (message, status = 'info') {
         </button>
     `;
     
-    // Append and remove toast
+
     container.appendChild(toast);
-    currentToastTimeout = setTimeout(() => removeToast(toast), 4000); // Toast lasts for 4 seconds
+    currentToastTimeout = setTimeout(() => removeToast(toast), 2000); 
 };
 
 function removeToast(toast) {
     if (toast) {
-        toast.style.opacity = 0; // Fade out
-        setTimeout(() => toast.remove(), 200); // Remove after fade-out
-    }
+        toast.style.opacity = 0; 
+        setTimeout(() => toast.remove(), 200)
+        }
 }

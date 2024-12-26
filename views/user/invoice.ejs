@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      color: #333;
+    }
+    .invoice-container {
+      max-width: 800px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #f57c00;
+    }
+    .header p {
+      margin: 5px 0;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    table th {
+      background-color: #f57c00;
+      color: #fff;
+    }
+    .totals {
+      text-align: right;
+    }
+    .totals td {
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-container">
+    <div class="header">
+      <!-- <img src="/img/logo.png" alt=""> -->
+       <h1>FRUITKHA</h1>
+      <p>Fresh Fruits Online</p>
+    </div>
+
+    <div class="section">
+      <h2>Invoice Details</h2>
+      <p><strong>Invoice No:</strong> <%=value%></p>
+      <p><strong>OrderID :</strong><%=order.id%></p>
+      <p><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString('en-US', {
+        weekday: 'short', 
+        month: 'short',    
+        day: '2-digit',    
+        year: 'numeric',  
+        
+      }) %></p>
+    </div>
+
+    <div class="section">
+      <h2>Billing Information</h2>
+      <p><strong>Customer Name:</strong> <%=order.UserID.firstName%></p>
+      <p><strong>Email:</strong> <%=order.UserID.email%></p>
+      <p><strong>Phone:</strong> <%=order.UserID.phone%></p>
+      <p><strong>Address:</strong><%=order.addressId.District %>, <%=order.addressId.State %> <br><%=order.addressId.PIN %>, <%=order.addressId.place %>, <%=order.addressId.mark %></p>
+    </div>
+    <% 
+    let hasRefund = order.Products.some(item => item.refundAmound > 0);
+    %>
+    <div class="section">
+      <h2>Order Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Status</th>
+            <% if (hasRefund) { %>
+                <th>Refund Amount</th>
+              <% } %>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% order.Products.forEach((item)=>{%>
+
+            
+          <tr>
+            <td><%=item.product.productTitle%></td>
+            <td><%=item.quantity%></td>
+            <td>₹<%=item.Price%></td>
+            <td><%=item.status%></td>
+            <% if (hasRefund) { %>
+                <td><%= item.refundAmound || '-' %></td>
+              <% } %>
+            <td>₹<%=item.TOTAL%></td>
+          </tr>
+          <%})%>
+          
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="totals">Subtotal</td>
+            <td>₹<%=order.subTotal%></td>
+          </tr>
+          <tr>
+            <td colspan="4" class="totals">Discount Value</td>
+            <td>₹<%=order.Coupon.discountValue%></td>
+          </tr>
+          <tr>
+            <td colspan="4" class="totals">Shipping Fee</td>
+            <td>₹<%=order.Shipping%></td>
+          </tr>
+          <tr>
+            <td colspan="4" class="totals">Total Amount</td>
+            <td>₹<%=order.Final_Amount%></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Payment Details</h2>
+      <p><strong>Payment Method:</strong> <%=order.payment%></p>
+      <%if(order.payment=='razorpay'){%>
+      <p><strong>Transaction ID:</strong> <%=order.RazorPay.razorpay_payment_id%></p>
+      <%}%>
+    </div>
+
+    <div class="footer">
+      <p>For any questions, contact us at support@fruitkha.com </p>
+      <p>Thank you for shopping with us! 🍇</p>
+    </div>
+  </div>
+</body>
+</html>

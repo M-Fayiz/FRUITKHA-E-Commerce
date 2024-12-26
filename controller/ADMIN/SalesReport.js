@@ -48,7 +48,7 @@ const genorate=async (req, res) => {
           };
         }
         
-     
+    //  console.log(filters,'filters')
             const report = await ORDER.aggregate([
                 { $match: filters },
                 {
@@ -75,13 +75,13 @@ const genorate=async (req, res) => {
    
         res.json({
             success: true,
-            data: {
-                metrics: report[0] || {
-                    totalOrders: 0,
-                    totalOrderAmount: 0,
-                    totalDiscounts: 0,
-                },
-                orders,
+                data: {
+                    metrics: report[0] || {
+                        totalOrders: 0,
+                        totalOrderAmount: 0,
+                        totalDiscounts: 0,
+                    },
+                    orders,
 
             },
         });

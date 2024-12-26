@@ -9,22 +9,22 @@ const STOCK=require('../controller/ADMIN/Stock')
 const COUPON=require('../controller/ADMIN/Coupon')
 const REPORT=require('../controller/ADMIN/SalesReport')
 const adminAuth=require('../middleware/auth')
-
+const GRAPH=require('../controller/ADMIN/graph')
 
 // Login.,.,.,.,
 Router.get('/login',admin_Cntrl.LoadLogin)
 Router.post('/verify_login',admin_Cntrl.verifyLogin)
 
 // Home,.,.,.,...
-Router.get('/',admin_Cntrl.LoadHome)
+Router.get('/',adminAuth.adminAuth,admin_Cntrl.LoadHome)
 
 // User List
-Router.get('/userList',admin_Cntrl.Load_manage)
+Router.get('/userList',adminAuth.adminAuth,admin_Cntrl.Load_User)
 Router.patch('/toogleUserStatus',admin_Cntrl.toogleUserStatus)
 
 // For Category
 Router.post('/addCategory',upload.single('image'),admin_Cntrl.addCategory)
-Router.get('/category',admin_Cntrl.LoadCategory)
+Router.get('/category',adminAuth.adminAuth,admin_Cntrl.LoadCategory)
 
 Router.post('/clear-offer',admin_Cntrl.clearOffer)
 // 
@@ -34,14 +34,14 @@ Router.patch('/EditCategory',upload.single('image'),admin_Cntrl.EditCategory)
 
 
 //  PRODUCT |  PRODUCT |  PRODUCT |
-Router.get('/product',product_CNTRL.productForm)
+Router.get('/product',adminAuth.adminAuth,product_CNTRL.productForm)
 Router.post('/addProduct',upload.array("primaryImageInput",3),product_CNTRL.addProduct)
 
 // PRODUCT LIST ---------------
 
-Router.get('/productList',product_CNTRL.prductList)
+Router.get('/productList',adminAuth.adminAuth,product_CNTRL.prductList)
 Router.patch('/productList',product_CNTRL.productList)
-Router.get('/SingleImage/:id',product_CNTRL.getSingle)
+Router.get('/SingleImage/:id',adminAuth.adminAuth,product_CNTRL.getSingle)
 Router.patch('/updateProduct',upload.fields([
     { name: 'primaryImage', maxCount: 1 },
     { name: 'additionalImage0', maxCount: 1 },
@@ -55,29 +55,35 @@ Router.patch('/updateProduct',upload.fields([
 //  |  OFFER  |  OFFER  |  OFFER  |  OFFER 
 Router.post('/clearOffer',OFFER.removeOFF)
 Router.post('/addOffer',OFFER.addOffer)
-Router.get('/Offer',OFFER.getOffer)
+Router.get('/Offer',adminAuth.adminAuth,OFFER.getOffer)
 
 // ORDER | ORDER | ORDER | ORDER ORDER ORDER 
-Router.get('/order',ORDER.order)
+Router.get('/order',adminAuth.adminAuth,ORDER.order)
 Router.get('/order-details/:id',ORDER.details)
 Router.put('/OrderStatus',ORDER.OrderStatus)
-Router.post('/response',ORDER.allReturn)
-Router.post('/productRes',ORDER.forProductReturn)
+Router.post('/response',ORDER.ReturnHandle)
+Router.post('/productRes',ORDER.ReturnHandle)
 
 //  |   STOCK   |   STOCK   |   STOCK
 
-Router.get('/stock',STOCK.stock)
+Router.get('/stock',adminAuth.adminAuth,STOCK.stock)
 Router.post('/addStock',STOCK.addQuantity)
 
 //  | COUPON | COUPON | COUPON | COUPON
 
-Router.get('/coupon',COUPON.coupon)
+Router.get('/coupon',adminAuth.adminAuth,COUPON.coupon)
 Router.post('/addCoupon',COUPON.addCoupon)
 Router.patch('/editCoupon',COUPON.editCoupon)
 Router.post('/removeCoupon',COUPON.deletCoupon)
 
-// SALES REPORT  -  SALES REPORT  -  SALES REPORT
-Router.get('/sales-Report',REPORT.salesReport) 
+// SALES REPORT  |  SALES REPORT  |  SALES REPORT
+
+Router.get('/sales-Report',adminAuth.adminAuth,REPORT.salesReport) 
 Router.post('/get-sales-report',REPORT.genorate)
+
+// GRAPH  ||   GRAPH   ||   GRAPH   ||   GRAPH   |
+
+Router.post('/graph',adminAuth.adminAuth,GRAPH.graph)
+
 
 module.exports=Router

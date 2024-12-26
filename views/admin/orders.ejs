@@ -75,7 +75,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% orders.forEach(item=>{%>
+                                          <% orders.forEach(item=>{%>
                                             <tr>
                                                
 
@@ -90,7 +90,7 @@
                                                 item.orderStatus === 'Delivered' ? 'delivered' : 
                                                 item.orderStatus === 'Cancelled' ? 'cancelled' : 
                                                 item.orderStatus === 'Return' ? 'return' : '' 
-                                              %>">
+                                              %> ">
                                                 <%= item.orderStatus %> 
                                               </td>
                                                 <td>₹<%=item.Final_Amount%></td>

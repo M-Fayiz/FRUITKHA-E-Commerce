@@ -205,7 +205,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Ind</th>
+                                        <!-- <th>Ind</th> -->
                                         <th>User ID</th>
                                         <th>Email</th>
                                         <th>Last Login</th>
@@ -223,8 +223,8 @@
                                                 
                                             </div>
                                         </td> -->
-                                        <td><%= index + 1 %></td>
-                                        <td><%= user.id %></td>
+                                        <!-- <td><%= index + 1 %></td> -->
+                                        <td>#<%= user.id %></td>
                                        
                                         <td><%= user.email %></td>
                                         <td><%= new Date(user.lastLogin).toLocaleDateString() %></td>

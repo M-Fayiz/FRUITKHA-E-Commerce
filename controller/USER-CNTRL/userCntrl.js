@@ -177,7 +177,10 @@ const Login = async (req, res) => {
 }
 
 const logOut=(req,res)=>{
-  req.session.destroy()
+   console.log('get in logOut')
+  // console.log(req.params.id)
+//  console.log(req.session.user)
+  req.session.user=null
   res.redirect('/')
 }
 
@@ -199,7 +202,7 @@ const LoadHome=async(req,res)=>{
      console.log(cart.totalProject)
     
      const NOtify=await notify.findOne({UserId:req.session.user})
-     console.log(NOtify,'')
+  
     const Data=await category.find({isList:true})
 
     const coupon=await COUPON.find({status:'Active'})
@@ -435,7 +438,7 @@ const productId=async(req,res)=>{
 
     const item=await PRODUCT.findById(productId)
 
-
+    const NOtify=await notify.findOne({UserId:req.session.user})
     const related=await PRODUCT.find({
       Category:item.Category,
       _id:{
@@ -448,7 +451,7 @@ const productId=async(req,res)=>{
   const cat=await category.findOne({category:item.Category})
   
   const coupon=await COUPON.find({status:'Active'})
-    res.render('user/single-product',{item,user: req.session.user,related,CURRENTpage:'product',cat ,Category:item.Category,coupon})
+    res.render('user/single-product',{item,user: req.session.user,related,CURRENTpage:'product',cat ,Category:item.Category,coupon,NOtify})
   } catch (error) {
     console.log(error)
   }
