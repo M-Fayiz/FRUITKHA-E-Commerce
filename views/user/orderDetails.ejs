@@ -244,6 +244,7 @@
                     <th>Price</th>
                     <th>Sub Total</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
         <tbody>
          <%Order.Products.forEach(item=>{%>
@@ -253,8 +254,8 @@
        
               
                     <td>
-                        <div >
-                            <p><strong><%= item.product.productTitle %></strong></p>
+                            <div >
+                            <p style="margin-bottom: 1px;"><strong><%= item.product.productTitle %></strong></p>
                             <p><%=item.product.description %></p>
                             </div>                    
                      </td>
@@ -280,7 +281,7 @@
                                             </td> 
                                             <td>
                                         <div>
-                                        <p>SubTotal :<%=item.TOTAL%></p>
+                                        <p>SubTotal : ₹<%=item.TOTAL%></p>
                                         </div>
                                     </td>
                                     <td class="<%= 
@@ -336,12 +337,12 @@
     <hr>
  <div style="display: flex;justify-content: space-around;">
     <!-- Delivery Address -->
-    <div>
+    <div  >
       <h4 class="section-title">Delivery Address</h4>
       <div class="address">
-        <p><strong>Recipient Name:</strong> <%=Order.addressId.Name %></p>
-        <p><strong>Address:</strong> <%=Order.addressId.District %>, <%=Order.addressId.State %> <br><%=Order.addressId.PIN %>, <%=Order.addressId.place %>, <%=Order.addressId.mark %></p>
-        <p><strong>Contact:</strong> +91 <%=Order.UserID.phone%></p>
+        <p style="margin-bottom: 1px;"><strong>Recipient Name:</strong> <%=Order.addressId.Name %></p>
+        <p style="margin-bottom: 1px;"><strong>Address:</strong> <%=Order.addressId.District %>, <%=Order.addressId.State %> <br><%=Order.addressId.PIN %>, <%=Order.addressId.place %>, <%=Order.addressId.mark %></p>
+        <p style="margin-bottom: 1px;"><strong>Contact:</strong> +91 <%=Order.UserID.phone%></p>
       </div>
     </div>
     <hr>
@@ -349,14 +350,15 @@
     <!-- Delivery Method -->
     <div>
      
-      <div class="delivery-method">
-        <p>SubTotal: <%=Order.subTotal%></p>
-        <p>Shipping : <%=Order.Shipping%></p>
-        <% if(Order.subTotal>0){%>
-        <p>Discount : <%=Order.Coupon.discountValue%></p>
-        <%}%>
+      <div class="delivery-method" style="line-height: 10px;">
+        <p>SubTotal: ₹<%=(Order.subTotal).toFixed(1)%></p>
+        <p>GST : ₹<%=(Order.GST).toFixed(1)%></p>
+        <p>Discount : ₹<%=(Order.Coupon.discountValue).toFixed(1)%></p>
+        <p>Shipping : ₹<%=(Order.Shipping).toFixed(1)%></p>
+      
+       
         <hr>
-        <h5>TOTAL Amount :<%=Order. Final_Amount%></h5> 
+        <h5>TOTAL Amount : ₹<%=(Order. Final_Amount).toFixed(2)%></h5> 
         
       </div>
     </div>
@@ -382,25 +384,51 @@
   <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-          <form action="" id="return-form">
-            <div class="modal-header">
-                <h5 class="modal-title" id="returnModalLabel">Reason for Return</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..."></textarea>
-            </div>
-            <input type="text" id="OrderId" hidden>
-            <input type="text" id="productId" hidden>
-        
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success6" id="submitReturn">Submit</button>
-            </div>
-          </form>
+            <form action="" id="return-form" enctype="multipart/form-data">
+                <div class="modal-header" style="background-color: #d1f2b8f1;color: #707070;">
+                    <h5 class="modal-title" id="returnModalLabel">Return Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Return Policy Section -->
+                    <div class="mb-3">
+                        <h6>Return Policy:</h6>
+                        <p>
+                            We only accept returns for the following reasons:
+                        </p>
+                        <ul>
+                            <li>Damaged products on delivery.</li>
+                            <li>Products dispatched accidentally with an expired date.</li>
+                        </ul>
+                        <p>Please upload a clear image of the product as proof and provide a valid reason for return.</p>
+                    </div>
+
+                    <!-- Image Upload Section -->
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Upload Image of Product</label>
+                        <input type="file" id="productImage" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <!-- Reason Input Section -->
+                    <div class="mb-3">
+                        <label for="returnReason" class="form-label">Reason for Return</label>
+                        <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..." required></textarea>
+                    </div>
+
+                    <!-- Hidden Inputs -->
+                    <input type="text" id="OrderId" hidden>
+                    <input type="text" id="productId" hidden>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" id="submitReturn">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
-  </div>
+</div>
+
   <script src="/TOAST.js"></script>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
@@ -479,7 +507,7 @@ function returnItem(element){
                 document.getElementById('OrderId').value = orderId
                 document.getElementById('productId').value=productId
                 var myModal = new bootstrap.Modal(document.getElementById('returnModal'));
-                myModal.show();
+                myModal.show()
             } else {
                 Swal.fire('Cancelled', 'Your product remains in the order.', 'info');
             }
@@ -491,14 +519,24 @@ function returnItem(element){
 
     const orderId=document.getElementById('OrderId').value
     const productId=document.getElementById('productId').value
-  const Reason=document.getElementById('returnReason').value
+    const Reason=document.getElementById('returnReason').value.trim()
+    const productImage=document.getElementById('productImage').files[0]
+   if(!Reason|| !productImage){
+    return showToast('Please Insert Required Fields','error')
+   }
+    
+    const formData=new FormData()
+     formData.append('orderId',orderId)
+     formData.append('productId',productId)
+     formData.append('Reason',Reason)
+     formData.append('productImage',productImage)
+
+
       console.log(orderId,productId,Reason)
       fetch('/req-return',{
         method:'post',
-        headers:{
-          'Content-type':'application/json'
-        },
-        body:JSON.stringify({orderId,productId,Reason})
+        
+        body:formData
       }).then(res=>res.json())
       .then(data=>{
         if(data.success){

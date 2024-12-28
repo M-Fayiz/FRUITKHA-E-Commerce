@@ -212,6 +212,9 @@ const handleProductAction = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Order not found.' });
     }
 
+    const sum=order.Products.reduce((acc,vl)=>acc+=vl.quantity,0)
+    console.log(sum,'summ')
+
     const productIndex = order.Products.findIndex((p) => p.product.toString() === productId);
     if (productIndex === -1) {
       return res.status(404).json({ success: false, message: 'Product not found in the order.' });
@@ -236,6 +239,7 @@ const handleProductAction = async (req, res) => {
             'Products.$.status': 'Cancelled',
             'Products.$.refundAmount':calculation.refundAmount,
             subTotal: calculation.remainingSubTotal,
+            GST:calculation.remainingGst,
             Final_Amount: calculation.finalAmount,
             Shipping: calculation.shipping,
             orderStatus: calculation.orderStatus,
@@ -260,6 +264,7 @@ const handleProductAction = async (req, res) => {
     if (allProductsCancelled) {
       order.orderStatus = 'Cancelled';
       order.Shipping = 0;
+      order.GST=0
       order.Final_Amount = 0;
       order.Coupon.discountValue=0
       await order.save();
@@ -282,18 +287,22 @@ const handleProductAction = async (req, res) => {
 
 //     SINGLE PRODUCT RETURN
 const ReturnHandle = async (req, res) => {
+  console.log('Return Handle ')
   try {
     const { selected, itemId, orderId } = req.body;
+   console.log(selected)
 
     const order = await ORDER.findOne({ _id: orderId });
     if (!order) {
+      console.log('order not found')
       return res.status(404).json({ success: false, message: 'Order not found.' });
     }
 
     if (selected === 'Approve') {
+    
       
       if (itemId) {
-      
+    
         const productIndex = order.Products.findIndex((p) => p._id.toString() === itemId);
         if (productIndex === -1) {
           return res.status(400).json({ success: false, message: 'Product not found in the order.' });
@@ -316,6 +325,7 @@ const ReturnHandle = async (req, res) => {
               'Products.$.return.adminStatus': product.return.adminStatus,
               subTotal: calculation.remainingSubTotal,
               Final_Amount: calculation.finalAmount,
+              GST:calculation.remainingGst,
               Shipping: calculation.shipping,
               orderStatus: calculation.orderStatus,
               'Coupon.discountValue': calculation.remainingDiscount,
@@ -325,8 +335,8 @@ const ReturnHandle = async (req, res) => {
 
         await sendNotification(req.session.user, 'Product approved and marked as returned.', 'success');
         return res.status(200).json({ success: true, message: 'Product marked as returned.' });
-      } else {
-       
+      } else if(!itemId) {
+      
         order.Products.forEach((product) => {
           if (product.status !== 'Cancelled') product.status = 'Returned';
         });
@@ -339,6 +349,7 @@ const ReturnHandle = async (req, res) => {
               Products: order.Products,
               subTotal: 0,
               Final_Amount: 40,
+              GST:0,
               orderStatus: 'Returned',
               'Request.admin.status': true,
               'Request.admin.response': 'Approved',
@@ -352,8 +363,9 @@ const ReturnHandle = async (req, res) => {
         await sendNotification(req.session.user, 'Order approved and marked as returned.', 'success');
         return res.status(200).json({ success: true, message: 'Order marked as returned.' });
       }
+  
     }
-
+    
     if (selected === 'Cancel') {
      
       if (itemId) {
@@ -439,31 +451,35 @@ const ReturnHandle = async (req, res) => {
   };
  
   const calculateRefundAndAdjustments = (order, product) => {
-      console.log(order,'orderId',product,'product')
+      
       const initialSubTotal = order.subTotal;
       const initialDiscount = order.Coupon.discountValue;
-   
+      const intialGst=order.GST
+
       const allProductsReturned = order.Products.every((product) => product.status === 'Returned');
       const shipping = allProductsReturned ? 0 : order.Shipping;
 
-     console.log(initialDiscount, 'intital discount',initialSubTotal)
+    //  console.log(initialDiscount, 'intital discount',initialSubTotal)
+      const productGSTshare=Math.round((intialGst/initialSubTotal)*product.TOTAL)
+      console.log(productGSTshare,'gst rate')
       const productDiscountShare = Math.round((initialDiscount / initialSubTotal) * product.TOTAL);
-      const refundAmount = product.TOTAL - productDiscountShare;
-      console.log(productDiscountShare,'product discount share')
-  
+      const refundAmount = product.TOTAL+productGSTshare - productDiscountShare;
+      // console.log(productDiscountShare,'product discount share')
+    const remainingGst=Math.round(intialGst-productGSTshare)
     const remainingSubTotal = Math.max(0, initialSubTotal - product.TOTAL);
     const remainingDiscount = Math.round(initialDiscount - productDiscountShare);
-    const finalAmount = Math.max(0, remainingSubTotal + shipping - remainingDiscount);
-    console.log(remainingDiscount,'dis',remainingSubTotal,'sub',finalAmount,'final')
-
-    console.log(remainingDiscount,'remaining discount')
+    const finalAmount = Math.max(0, remainingSubTotal + remainingGst+shipping - remainingDiscount);
+    // console.log(remainingDiscount,'dis',remainingSubTotal,'sub',finalAmount,'final')
+    console.log(remainingGst,'ramining')
+    // console.log(remainingDiscount,'remaining discount')
     return {
       refundAmount: Math.round(refundAmount),
       orderStatus: allProductsReturned ? 'Returned' : order.orderStatus,
       remainingSubTotal,
       remainingDiscount,
       finalAmount,
-      shipping
+      shipping,
+      remainingGst
     };
   };
   

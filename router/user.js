@@ -14,7 +14,7 @@ const COUPON=require('../controller/ADMIN/Coupon')
 const ORDER=require('../controller/ADMIN/order')
 const WALLET=require('../controller/USER-CNTRL/wallet')
 const userOrder=require('../controller/USER-CNTRL/userOrder')
-
+const upload=require('../utils/multer')
 
 router.get('/signUp',Auth.userAuth,user_Contrl.loadSignUp)
 // router.post('/signup',user_Contrl.registration)
@@ -93,8 +93,8 @@ router.post('/cancel-order',ORDER.handleProductAction)
 router.post('/order-cancel',userOrder.CANCELallORDER)
 
 // |   RETURN   |   RETURN   |   RETURN   |
-router.post('/return-Order',userOrder.ReturnOrder)
-router.post('/req-return',userOrder.productReturn)
+router.post('/return-Order',upload.single('prodctImage'),userOrder.ReturnOrder)
+router.post('/req-return',upload.single('productImage'),userOrder.productReturn)
 
 //   WISH LIST
 router.get('/wishList',Auth.blockUser,Auth.sessionAuth,WISHLIST.wishList)

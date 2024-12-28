@@ -78,7 +78,6 @@ const addCategory = async (req, res) => {
 
                   if(test){
                     
-                    
                       return res.json({success:false,message:'Category Exist with This Title'})
                   }
             

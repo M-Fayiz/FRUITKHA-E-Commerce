@@ -55,11 +55,11 @@ const checkout = async (req, res) => {
 
   const placeOrder = async (req, res) => {
     console.log('PLACE ORDER');
-    console.log(req.body);
+   
   
     try {
       const { selectedAddress, paymentMethod, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-      console.log(paymentMethod)
+      
       const User = req.session.user;
   
       if (!User) {
@@ -75,7 +75,8 @@ const checkout = async (req, res) => {
       if (!cart || cart.Products.length === 0) {
         return res.status(404).json({ success: false, message: 'Cart is Empty' });
       }
-  
+      
+      let gst=0.12*cart.subTotal
       let discountValue = 0;
       let couponCode = null;
       let couponId = cart.Discount?.discountId;
@@ -115,7 +116,7 @@ const checkout = async (req, res) => {
         return res.status(400).json({success:true,message:'Wallet Not found'})
         } 
         const walletBalance = wallet.balance
-        const totalAmount = cart.subTotal - discountValue;
+        const totalAmount = cart.subTotal+gst - discountValue;
         console.log(totalAmount,walletBalance)
          if (walletBalance < totalAmount) {
           return res.status(400).json({ success: false, message: 'Insufficient Wallet Balance' });

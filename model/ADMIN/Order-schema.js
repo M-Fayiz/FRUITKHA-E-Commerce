@@ -31,6 +31,7 @@ const orderSchema = new mongoose.Schema(
         return:{
           req:{type:Boolean,default:false},
           reason:String,
+          image:{type:String},
           adminStatus:
           {
             status:{type:Boolean,default:false},
@@ -73,6 +74,7 @@ const orderSchema = new mongoose.Schema(
       code: { type: String },
       discountValue: { type: Number, default: 0 },
     },
+    GST:{type:Number},
     Final_Amount: {
       type: Number,
       // required: true,
@@ -80,6 +82,7 @@ const orderSchema = new mongoose.Schema(
      Return:{
       req:{type:Boolean,default:false},
       reason:{type:String},
+      image:{type:String},
       admin:{
         status:{type:Boolean,default:false},
         response:{type:String,
@@ -151,10 +154,10 @@ orderSchema.pre('save', function (next) {
   if(allProductsReturned){
     order.orderStatus = 'Returned';
     order.Shipping = 0; 
-   
   }
+  this.GST=0.12*subTotal
   this.subTotal = subTotal;
-  this.Final_Amount = this.subTotal + this.Shipping - this.Coupon.discountValue;
+  this.Final_Amount = this.subTotal + this.GST+this.Shipping - this.Coupon.discountValue;
 
   next();
 });

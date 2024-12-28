@@ -36,7 +36,7 @@ const graph=async(req,res)=>{
           };
         }
         
-  //  console.log(filters,';;;;')
+  //  console.log(filters.createdAt,';;;;')
             const report = await ORDER.aggregate([
                 { $match: filters },
                 {$unwind:'$Products'},
@@ -88,7 +88,21 @@ const graph=async(req,res)=>{
               { $sort: { _id: 1 } }
             ])
          
-            // console.log(monthlySales,'monthly sale')
+
+
+// const utcDateString = filters.createdAt['$gte'];
+
+
+// const utcDate = new Date(utcDateString);
+
+
+// const localDate = utcDate.toLocaleDateString('en-US', {
+//   weekday: 'long', 
+//   year: 'numeric',
+//   month: 'long',
+//   day: 'numeric' 
+// });
+
             return res.status(200).json({success:true,report,category,monthlySales})
         
     

@@ -306,23 +306,49 @@ button {
 <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
-        <form action="" id="return-form">
-          <div class="modal-header">
-              <h5 class="modal-title" id="returnModalLabel">Reason for Return</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..."></textarea>
-          </div>
-          <input type="text" id="OrderId" hidden>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-success6" id="submitReturn">Submit</button>
-          </div>
-        </form>
+          <form action="" id="return-form" enctype="multipart/form-data">
+              <div class="modal-header" style="background-color: #d1f2b8f1;color: #707070;">
+                  <h5 class="modal-title" id="returnModalLabel">Return Request</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <!-- Return Policy Section -->
+                  <div class="mb-3">
+                      <h6>Return Policy:</h6>
+                      <p>
+                          We only accept returns for the following reasons:
+                      </p>
+                      <ul>
+                          <li>Damaged products on delivery.</li>
+                          <li>Products dispatched accidentally with an expired date.</li>
+                      </ul>
+                      <p>Please upload a clear image of the product as proof and provide a valid reason for return.</p>
+                  </div>
+
+                  <!-- Image Upload Section -->
+                  <div class="mb-3">
+                      <label for="productImage" class="form-label">Upload Image of Product</label>
+                      <input type="file" id="productImage" class="form-control" accept="image/*" required>
+                  </div>
+
+                  <!-- Reason Input Section -->
+                  <div class="mb-3">
+                      <label for="returnReason" class="form-label">Reason for Return</label>
+                      <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..." required></textarea>
+                  </div>
+
+                  <!-- Hidden Inputs -->
+                  <input type="text" id="OrderId" hidden>
+                  <input type="text" id="productId" hidden>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-success" id="submitReturn">Submit</button>
+              </div>
+          </form>
       </div>
   </div>
- 
 </div>
 
 <!-- Bootstrap 5.3 CSS -->
@@ -416,17 +442,24 @@ function orderReturn(element) {
         });
     }
 
- document.getElementById('return-form').addEventListener('submit',e=>{
+ document.getElementById('return-form').addEventListener('submit',(e)=>{
   e.preventDefault()
   const orderId=document.getElementById('OrderId').value
-  const Reason=document.getElementById('returnReason').value
+  const Reason=document.getElementById('returnReason').value.trim()
+  const prodctImage=document.getElementById('productImage').files[0]
+  console.log(prodctImage)
+   if(!Reason|| !prodctImage){
+    return showToast('Please Insert Required Fields','error')
+   }
+   const formData=new FormData()
+     formData.append('orderId',orderId)
+  
+     formData.append('Reason',Reason)
+     formData.append('prodctImage',prodctImage)
 
   fetch('/return-Order',{
     method:'post',
-    headers:{
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({orderId,Reason})
+    body:formData
   }).then(res=>res.json())
   .then(data=>{
     if(data.success){

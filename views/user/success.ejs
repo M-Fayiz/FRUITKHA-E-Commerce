@@ -192,7 +192,7 @@
        </div>
         <div style="display: flex; justify-content: space-between;">
         <a href="/shop" class="home-button">Return to Home</a>
-        <%if(order.paymentStatus==='completed'){%>
+        <%if(order.paymentStatus==='Completed'){%>
         <button onclick="download('<%=order.id%>')" class="home-button" id="kk">Invoice</button>
         <%}%>
       </div>

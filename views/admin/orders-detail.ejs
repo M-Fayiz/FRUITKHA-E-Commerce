@@ -94,15 +94,16 @@
                                <% if (orders.Return.req==true && orders.orderStatus!=="Returned"){%>
                                 <div style="display: flex; gap: 20px;align-items: center;">
                                 <p>User Request: <span style="color: red;">for Return</span> </p>
-                                  <button 
-                                    type="button" 
-                                   
-                                    data-bs-toggle="popover" 
-                                    data-bs-content="<%=orders.Return.reason%>"
-                                    data-bs-placement="top" 
-                                    data-bs-trigger="focus" style="border: none;color: #00b3ff;background:none ;">
-                                    Notify
-                                    </button>
+                                <button 
+                                type="button" 
+                                class="btn btn-link p-0" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#infoModal"
+                                data-reason="<%= orders.Return.reason %>" 
+                                data-image="http://localhost:4000/images/<%=orders.Return.image %>" 
+                                style="border: none; color: #00b3ff; background: none;">
+                                <i class="bi bi-info-circle me-2"></i>
+                            </button>
                                 <form action="" id="approve-form">
                                  <select name="" id="approval" style="width: 100px; height: 25px; border:0.7px solid #b1b1b1; border-radius: 5px;" >
                                     <option value="">Select </option>
@@ -228,15 +229,16 @@
                                             <td>
                                                 <%if (item.return.req==true && item.status!=="Returned") {%>
                                                     <span style="color: red;">Return</span>
-                                                     <button 
-                                                        type="button" 
-                                                       
-                                                        data-bs-toggle="popover" 
-                                                        data-bs-content="<%=item.return.reason%>"
-                                                        data-bs-placement="top" 
-                                                        data-bs-trigger="focus" style="border: none;color: #00b3ff;background:none ;">
-                                                        <i class="bi bi-info-circle me-2"></i>
-                                                        </button>
+                                                    <button 
+                                                    type="button" 
+                                                    class="btn btn-link p-0" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#infoModal"
+                                                    data-reason="<%= item.return.reason %>" 
+                                                    data-image="http://localhost:4000/images/<%= item.return.image %>" 
+                                                    style="border: none; color: #00b3ff; background: none;">
+                                                    <i class="bi bi-info-circle me-2"></i>
+                                                </button>
                                                 <%}%>
                                             </td>
                                             <td>
@@ -336,6 +338,37 @@
                 <!-- card end// -->
             </section>
             <!-- content-main end// -->
+             <!-- Small Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="infoModalLabel">Return Info</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <p id="returnReason"></p>
+              <img id="returnImage" src="" alt="Product Image" style="width: 100%; height: auto; border-radius: 5px;">
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const infoModal = document.getElementById('infoModal');
+    infoModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const reason = button.getAttribute('data-reason');
+        const image = button.getAttribute('data-image');
+
+        // Update modal content
+        const returnReason = infoModal.querySelector('#returnReason');
+        const returnImage = infoModal.querySelector('#returnImage');
+        returnReason.textContent = reason;
+        returnImage.src = image;
+    });
+});
+</script>
           
         </main>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -424,16 +457,16 @@
     approveForm.addEventListener('change', (e) => {
       e.preventDefault();
 
-      const response = document.getElementById('approval').value;
+      const selected = document.getElementById('approval').value;
       const orderId = document.getElementById('orderrrID').value;
-     
-
+      console.log(selected ,orderId)
+ 
       fetch('/admin/response', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ response, orderId }),
+        body: JSON.stringify({ selected, orderId }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -456,12 +489,10 @@
       </script>
        <script>
         // Initialize all Bootstrap popovers
-        document.addEventListener('DOMContentLoaded', function () {
-          const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-          popoverTriggerList.map(function (popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl);
-          });
-        });
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+});
       </script>
     </body>
 </html>

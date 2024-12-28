@@ -129,6 +129,16 @@
     background-color: #004494; /* Even darker blue on click */
     transform: translateY(0); /* Reset lift effect */
   }
+.payment-method{
+   padding: 6px;
+   border: 1.2px solid rgb(178, 178, 178);
+   border-radius: 10px;
+   margin-bottom: 6px;
+}
+.img{
+  width: 35px;
+}
+
 </style>
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
@@ -153,6 +163,9 @@
 	<!-- responsive -->
 	<link rel="stylesheet" href="/css/responsive.css">
      <link rel="stylesheet" href="/SHOW.css">
+     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css" 
+    integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 	 <!-- Add SweetAlert2 CDN link in the head of your HTML -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -265,40 +278,47 @@
 						  
 						</div>
 						<div class="payment-methods">
-							<h3 class="mb-4" style="font-weight: 500;">Select Payment Method</h3>
+							<h3 class="mb-4 mt-4" style="font-weight: 500;">Select Payment Method</h3>
 		
 							<!-- Razorpay Payment Option -->
-							<div class="payment-method" style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
+							<div class="payment-method" >
+          
 								<input type="radio" name="paymentMethod" id="razorpay" value="razorpay" >
+                <img class="img" src="/img/smartphone.png" alt="">
 								<label for="razorpay">
-									
-									<div>
-										<h5 style="color: #3f3f3f;font-weight: 500;">Razorpay Online Payment</h5>
-										<p class="text-muted">Pay securely using credit/debit cards, net banking, UPI, and wallets</p>
-									</div>
+								
+										<h5 style="color: #3f3f3f;font-weight: 500;">Online Payment via Razorpay</h5>
+										
+							
 								</label>
+                 <p class="text-muted">Pay securely using credit/debit cards, net banking, UPI, and wallets</p>
 							</div>
 		
-							<!-- Cash on Delivery Option -->
-							<div class="payment-method"  style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
+							
+							
+							<div class="payment-method"  >
+								<input type="radio" name="paymentMethod" id="WALLET" value="wallet">
+                <img class="img" src="/img/wallet.png" alt="">
+								<label for="cod">
+									
+									
+										<h5 style="color: #3e3e3e;font-weight: 500;">Wallet</h5>
+										
+								
+								</label>
+                <p class="text-muted">Pay from Your Cart Balance</p>
+							</div>
+               <!-- Cash on Delivery Option -->
+              <div class="payment-method" id="CODinf" >
 								<input type="radio" name="paymentMethod" id="cod" value="COD">
 								<label for="cod">
 									
-									<div>
+							
 										<h5 style="color: #3e3e3e;font-weight: 500;">Cash on Delivery (COD)</h5>
-										<p class="text-muted">Pay in cash when your order is delivered</p>
-									</div>
+	
 								</label>
-							</div>
-							<div class="payment-method"  style="border:solid #f3f3f3; border-radius: 10px; padding: 5px; margin-top: 8px;">
-								<input type="radio" name="paymentMethod" id="WALLET" value="wallet">
-								<label for="cod">
-									
-									<div>
-										<h5 style="color: #3e3e3e;font-weight: 500;">Wallet</h5>
-										<p class="text-muted">Pay from Your Cart Balance</p>
-									</div>
-								</label>
+                <p class="text-muted">Pay in cash when your order is delivered</p>
+                <p  id="inform"></p>
 							</div>
 						</div>
 					  
@@ -306,11 +326,11 @@
 				</div>
 
 				<div class="col-lg-4">
-					<div class="order-details-wrap">
-						<div class="order-summary">
+					<div class="order-details-wrap" >
+						<div class="order-summary" >
 							<h2>Order Summary</h2>
-							<div class="item">
-								<div class="item-details" style="display:flex;flex-direction: column;" >
+							<div class="item" >
+								<div class="item-details" style="display:flex;flex-direction: column;"  >
 								<% cart.Products.forEach(item=>{%>
 									    <input type="text" value="<%= cart.UserID %>" hidden>
 										<div style="display: flex; justify-content: space-between;">
@@ -324,24 +344,29 @@
 							  
 							</div>
 						
-							<div class="order-total">
+							<div class="order-total" style="line-height: 17px;">
 							  <div>
-								<span>Subtotal</span>
-								<span>₹<%=cart.subTotal%></span>
+								<span>Subtotal :</span>
+								<span>₹<%=cart.subTotal%>.00</span>
 							  </div>
 							  <div>
-								<span>Shipping</span>
+								<span>GST 12%:</span>
+                <% let gst=(0.12* cart.subTotal)%>
+								<span>₹<%=(gst).toFixed(2)%></span>
+							  </div>
+                <div>
+                  <span>Discount :</span>
+                  <span>₹<%=(cart.Discount.discount_amount).toFixed(2)%></span>
+                </div>
+							  <div>
+								<span>Shipping :</span>
 								<span>₹<%=cart.Shipping%>.00</span>
 							  </div>
-							  <div>
-								<span>Discount</span>
-								<span>₹<%=cart.Discount.discount_amount%>.00</span>
-							  </div>
+							  
 							  <div class="total">
-								<span>Total</span>
-								<span>₹<%=(cart.subTotal + cart.Shipping-cart.Discount.discount_amount).toFixed(2)%></span>
+								<span>Total :</span>
+								<span>₹<%=(cart.subTotal + gst+ cart.Shipping-cart.Discount.discount_amount).toFixed(2)%></span>
 									
-
 							  </div>
 							</div>
 						 <fieldset id="innerForm">
@@ -359,7 +384,7 @@
 							  <p id="result" style="color: red;"></p>
 						    </fieldset>
 						  </div>
-						<button type="submit" data-amount="<%=(cart.subTotal + cart.Shipping-cart.Discount.discount_amount)%>" style="background-color:#FF6600 ;color: white;" id="place" class="coupon">Place Order</button>
+						<button type="submit" data-amount="<%=(cart.subTotal + gst+ cart.Shipping-cart.Discount.discount_amount)%>" style="background-color:#FF6600 ;color: white;" id="place" class="coupon">Place Order</button>
 					</div>
 				</div>
 			</div>
@@ -514,7 +539,15 @@ document.getElementById('remove')?.addEventListener('click', () => {
 	<script src="/js/main.js"></script>
      <script src="/TOAST.js"></script>
 	<script>
-		
+	
+    const getamount=document.getElementById('place')
+    const amount=getamount.getAttribute('data-amount')
+    const info=document.getElementById('inform')
+    const cod=document.getElementById('cod')
+    if (amount>500) {
+      cod.disabled  =true
+      info.innerHTML='Cash on Delivery is unavailable for orders above 500. Please choose another payment option'
+    }
 
 		document.getElementById('order-form').addEventListener('submit', async (e) => {
   e.preventDefault(); 
@@ -540,6 +573,10 @@ let limit=500
   if(paymentMethod.value==='COD'&&Amount>limit){
    return  showToast(`Cash on Delivery is unavailable for orders above ₹${limit}. Please choose another payment option`,'info')
   }
+
+  
+
+
   if (paymentMethod.value === 'razorpay') {
   const amount = parseInt(Amount);
 
