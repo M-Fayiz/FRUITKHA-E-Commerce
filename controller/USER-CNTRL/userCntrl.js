@@ -189,7 +189,9 @@ const loadSignUp=(req,res)=>{
     res.render('user/signup')
 }
 
-
+const about=(req,res)=>{
+  res.render('user/about')
+}
 
 const LoadHome=async(req,res)=>{
   console.log('log home')
@@ -516,7 +518,9 @@ const ALL = async (req, res) => {
   }
 }
 
-
+const contact=(req,res)=>{
+  res.render('user/contact')
+}
 
 module.exports={
     loadSignUp,
@@ -536,6 +540,8 @@ module.exports={
     logOut,
     search,
     ALL,
+    about,
+    contact
     
    
    

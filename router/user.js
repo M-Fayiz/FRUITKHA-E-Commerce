@@ -20,6 +20,8 @@ router.get('/signUp',Auth.userAuth,user_Contrl.loadSignUp)
 // router.post('/signup',user_Contrl.registration)
 
 router.get('/',Auth.blockUser,user_Contrl.LoadHome)
+router.get('/about',Auth.blockUser,user_Contrl.about)
+router.get('/contact',Auth.blockUser,user_Contrl.contact)
 
 
     // <---- OTP -- OTP-- OTP -- OTP  ---->
