@@ -292,7 +292,7 @@ const shop = async (req, res) => {
         match: { _id: { $in: offerIds } } 
     })
     const product = await PRODUCT.find()
-    console.log(product)
+    console.log('product ',product)
 
       if (products.length === 0) {
           message = message || 'No products found.'

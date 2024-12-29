@@ -4,11 +4,11 @@ const {MONGO_URL} = require('../utils/env')
 
 const connectDB =async ()=>{
     try{
-     await mongoose.connect(MONGO_URL);
-     console.log('success fully connected db');
+     const connect = await mongoose.connect(MONGO_URL);
+     console.log('database succesfully connected ...',connect.connection.host);
      
     }catch(error){
-        console.log('error in db connect',error.message);;
+        console.log('error in db connect',error.message);
         process.exit(1)
     }
 }
