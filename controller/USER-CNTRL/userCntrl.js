@@ -197,12 +197,7 @@ const LoadHome=async(req,res)=>{
   console.log('log home')
   
   try {
-    const cart = await CART.aggregate([
-      { $match: { UserID: req.session.user } }, 
-      { $project: { totalProject: { $size: "$Products" } } } 
-    ])
-     console.log(cart.totalProject)
-    
+
      const NOtify=await notify.findOne({UserId:req.session.user})
   
     const Data=await category.find({isList:true})
