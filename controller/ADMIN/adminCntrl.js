@@ -18,7 +18,7 @@ const PRODUCT=require('../../model/ADMIN/product')
 
 
 const verifyLogin=async(req,res)=>{
-    
+    console.log('VERIFY LOGIN')
     
     try {
         const {email,password}=req.body
@@ -28,7 +28,7 @@ const verifyLogin=async(req,res)=>{
       
 
        const admin= await adminModel.findOne({email}) 
-      
+      console.log(admin)
        
        if(!admin){
          return  res.json({success:false,message:"InValid Email"})

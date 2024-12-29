@@ -249,10 +249,7 @@ const shop = async (req, res) => {
   
 
   const totalProject = cart[0] ? cart[0].totalProject : 0;
-  
-  console.log(totalProject);
 
-  console.log('log shop')
   try {
       
       const Category = req.query.category
