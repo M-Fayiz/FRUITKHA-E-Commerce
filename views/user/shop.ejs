@@ -553,7 +553,7 @@
 									</i>
 								</div>	
 								<a href="/product/<%= item._id %>">
-								  <img src="http://localhost:4000/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
+								  <img src="/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
 								  <% if (item.Offer.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
 									<% let offer = Math.round(((item.RegulerPrice - item.Offer.OfferPrice) / item.RegulerPrice) * 100); %>
 									<% if(offer>0){%> 

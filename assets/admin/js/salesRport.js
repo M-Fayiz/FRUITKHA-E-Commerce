@@ -24,7 +24,14 @@
                         const { metrics, orders } = result.data;
             
                        
-            
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "sales_report.pdf"; 
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
                         
                        
                         localStorage.setItem('salesReportMetrics', JSON.stringify(metrics));

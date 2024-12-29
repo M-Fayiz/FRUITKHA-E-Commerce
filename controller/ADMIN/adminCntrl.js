@@ -71,7 +71,7 @@ const addCategory = async (req, res) => {
     
         try {
             const { title, discription } = req.body;
-            
+          const image=  req.file
             const test = await category.findOne({
                 category: { $regex: new RegExp('^' + title + '$', 'i') }  
               });
@@ -89,7 +89,7 @@ const addCategory = async (req, res) => {
     
             const saveCategory = new category({
                 category: title,
-                image: image,
+                image: image.filename,
                 description: discription,
             
             });

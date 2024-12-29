@@ -13,10 +13,10 @@ const addProduct = async (req, res) => {
     
     try {
         const { title, description, regularPrice, expiryDate, quantity, category, subCategories } = req.body;
-     console.log(regularPrice)
+   
         const batch_id = `batch_${new Date().getTime()}`;
         // const OFFER=regularPrice*(1-offerPrice/100)
-        console.log(title);
+     
        
         const test = await PRODUCT.findOne({
             productTitle: { $regex: new RegExp('^' + title + '$', 'i') }  
@@ -25,7 +25,7 @@ const addProduct = async (req, res) => {
                   return res.json({success:false,message:'Product Exist with This Title'})
               }
         
-        console.log('tesgg',test);
+        
        
         if (test) {
             return res.json({ success: false, message: "Product Already Exists" });
@@ -37,9 +37,7 @@ const addProduct = async (req, res) => {
 
         const image = req.files ? (Array.isArray(req.files) ? req.files.map((file) => file.filename) : [req.files.filename]) : [];
 
-        console.log(image);
-        console.log('files', req.files);
-
+     
         const primaryImage = image[0];
         const additionalImage = image.slice(1); // Fixed typo
 
