@@ -10,8 +10,6 @@ const wishListSchema=mongoose.Schema({
     },
     Products:[{
         product:{
-
-       
         type:ObjectId,
         ref:'products',
         required:true

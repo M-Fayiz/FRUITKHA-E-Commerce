@@ -159,8 +159,7 @@ const addCart = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Product Not Found in Database' })
       }
   
-      console.log('Found Product:', product.name)
-  
+     
       let currentQuantity = cart.Products[productIndex].quantity
       let newQuantity = currentQuantity + QNTY
      
@@ -197,11 +196,18 @@ const addCart = async (req, res) => {
         return sum + (p.quantity * p.Price)
       }, 0)
   
-      console.log('Cart Subtotal:', cart.subTotal)
+  const final =    cart.subTotal
   
-      await cart.save()
+    const result=  await cart.save()
   
-      return res.status(200).json({ success: true, cart })
+      return res.status(200).json({ success: true,cart: {
+        Products: result.Products.map(p => ({
+            productId: p.productId._id,
+            quantity: p.quantity,
+            TOTAL: p.TOTAL,
+        })),
+        subTotal: cart.subTotal
+    } })
   
     } catch (error) {
       console.error('Error:', error.message)

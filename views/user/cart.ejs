@@ -152,13 +152,13 @@
 										<td class="product-quantity">
 											<div class="d-flex align-items-center mb-3">
 												<% if( item.quantity !== 1){%>
-												<button type="button" class="btn btn-outline-secondary btn-sm  dec-button"    data-id="<%=item.productId.id %>" >-</button>
+												<button type="button" class="btn btn-outline-secondary btn-sm  dec-button"  id="decre-<%=item.productId.id %>"  data-id="<%=item.productId.id %>" >-</button>
 												<%}%>
 												<input
 												  style="margin-top: 15px;"
 												  type="number"
 												  class="form-control mx-2 quantity-input"
-												  id="quantity"
+												  id="quantity-<%= item.productId.id %>"
 												  value="<%=item.quantity%>" 
 												  min='1'
 												  readonly

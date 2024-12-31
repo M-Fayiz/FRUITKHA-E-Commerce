@@ -4,7 +4,7 @@ const bcrypt=require('bcrypt')
 
 const COUPON=require('../../model/ADMIN/Coupon')
 const category=require('../../model/ADMIN/category')
-
+const wishList=require('../../model/User/wishList')
 const PRODUCT=require('../../model/ADMIN/product')
 const OFFER=require('../../model/ADMIN/Offer')
 const CART=require('../../model/User/CART')
@@ -299,7 +299,37 @@ const shop = async (req, res) => {
       if (page > totalPages && totalProducts > 0) {
           return res.redirect(`/user/shop?page=${totalPages}`)
       }
-
+    const userId=req.session.user
+console.log(userId)
+const whishlist=await wishList({UserId:userId})
+console.log(whishlist.Products,'kkk')
+      const heart = await PRODUCT.aggregate([
+        {
+          $lookup: {
+            from: 'wishlists', 
+            let: { productId: "$_id" },
+            pipeline: [
+              { $match: { $expr: { $and: [ { $eq: ["$UserId", userId] }, { $in: ["$$productId", "$Products.product"] } ] } } }
+            ],
+            as: "wishlistMatch"
+          }
+        },
+        {
+          $addFields: {
+            isInWishlist: { $gt: [{ $size: "$wishlistMatch" }, 0] } 
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            
+            isInWishlist: 1
+          }
+        }
+      ]);
+      
+      console.log(heart,'heart');
+      
      const data=await category.find({isList:true})
      const coupon=await COUPON.find({status:'Active'})
    

@@ -95,6 +95,7 @@ const orderDetails=async(req,res)=>{
           });
           await newWallet.save()
          }
+         order.paymentStatus='Refund'
   
       }
       if (Array.isArray(order.Products)) {
