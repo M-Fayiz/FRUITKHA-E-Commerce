@@ -1,92 +1,108 @@
     
-            async function generateReport() {
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-                const quickFilter = document.getElementById('quickFilter').value;
+            // async function generateReport() {
+            //     const startDate = document.getElementById('startDate').value;
+            //     const endDate = document.getElementById('endDate').value;
+            //     const quickFilter = document.getElementById('quickFilter').value;
               
-                if ((startDate && endDate) && quickFilter !== 'select') {
-                    showToast('Please select either a date range (Start Date and End Date) or a Quick Filter, but not both.');
-                    return;
-                }
+            //     if ((startDate && endDate) && quickFilter !== 'select') {
+            //         showToast('Please select either a date range (Start Date and End Date) or a Quick Filter, but not both.');
+            //         return;
+            //     }
             
-                try {
-                    const response = await fetch('/admin/get-sales-report', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ startDate, endDate, quickFilter }),
-                    });
+            //     try {
+            //         const response = await fetch('/admin/get-sales-report', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //             },
+            //             body: JSON.stringify({ startDate, endDate, quickFilter }),
+            //         });
             
-                    const result = await response.json();
+            //         const result = await response.json();
             
-                    if (result.success) {
-                        const { metrics, orders } = result.data;
+            //         if (result.success) {
+            //             const { metrics, orders } = result.data;
             
                        
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = url;
-                        a.download = "sales_report.pdf"; 
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
+            //             const blob = await response.blob();
+            //             const url = window.URL.createObjectURL(blob);
+            //             const a = document.createElement("a");
+            //             a.href = url;
+            //             a.download = "sales_report.pdf"; 
+            //             document.body.appendChild(a);
+            //             a.click();
+            //             a.remove();
                         
                        
-                        localStorage.setItem('salesReportMetrics', JSON.stringify(metrics));
-                        localStorage.setItem('salesReportOrders', JSON.stringify(orders));
+            //             localStorage.setItem('salesReportMetrics', JSON.stringify(metrics));
+            //             localStorage.setItem('salesReportOrders', JSON.stringify(orders));
             
                     
-                        updateMetrics(metrics);
+            //             updateMetrics(metrics);
                       
-                        updateTable(orders);
-                    } else {
-                        alert('Failed to generate report.');
-                    }
-                } catch (error) {
-                    console.error('Error generating report:', error);
-                    alert('Error generating report.');
-                }
-            }
+            //             updateTable(orders);
+            //         } else {
+            //             alert('Failed to generate report.');
+            //         }
+            //     } catch (error) {
+            //         console.error('Error generating report:', error);
+            //         alert('Error generating report.');
+            //     }
+            // }
             
-            function updateMetrics(metrics) {
-                document.getElementById('overallSalesCount').innerText = metrics.totalOrders;
-                document.getElementById('overallOrderAmount').innerText = `₹${metrics.totalOrderAmount.toFixed(2)}`;
-                document.getElementById('overallDiscount').innerText = `₹${metrics.totalDiscounts.toFixed(2)}`;
-            }
+            // function updateMetrics(metrics) {
+            //     document.getElementById('overallSalesCount').innerText = metrics.totalOrders;
+            //     document.getElementById('overallOrderAmount').innerText = `₹${metrics.totalOrderAmount.toFixed(2)}`;
+            //     document.getElementById('overallDiscount').innerText = `₹${metrics.totalDiscounts.toFixed(2)}`;
+            // }
             
-            function updateTable(orders) {
-                const table = document.getElementById('salesReportTable');
-                table.innerHTML = orders.map((order, index) => `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
-                        <td>${order._id}</td>
-                        <td>${order.UserID.firstName}</td> <!-- User's name -->
+            // function updateTable(orders) {
+            //     const table = document.getElementById('salesReportTable');
+            //     table.innerHTML = orders.map((order, index) => `
+            //         <tr>
+            //             <td>${index + 1}</td>
+            //             <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+            //             <td>${order._id}</td>
+            //             <td>${order.UserID.firstName}</td> <!-- User's name -->
                        
-                        <td>₹${order.Final_Amount.toFixed(2)}</td>
-                        <td>₹${order.Coupon.discountValue.toFixed(2)}</td>
-                        <td>${order.payment}</td>
-                        <td>${order.orderStatus}</td>
-                        <td>${order.paymentStatus}</td>
-                    </tr>
-                `).join('');
+            //             <td>₹${order.Final_Amount.toFixed(2)}</td>
+            //             <td>₹${order.Coupon.discountValue.toFixed(2)}</td>
+            //             <td>${order.payment}</td>
+            //             <td>${order.orderStatus}</td>
+            //             <td>${order.paymentStatus}</td>
+            //         </tr>
+            //     `).join('');
+            // }
+            // document.addEventListener('DOMContentLoaded', () => {
+            //     const storedMetrics = localStorage.getItem('salesReportMetrics');
+            //     const storedOrders = localStorage.getItem('salesReportOrders');
+            
+            //     if (storedMetrics && storedOrders) {
+            //         const metrics = JSON.parse(storedMetrics);
+            //         const orders = JSON.parse(storedOrders);
+            
+            //         // Update metrics and table with the stored data
+            //         updateMetrics(metrics);
+            //         updateTable(orders);
+            //     }
+            // });
+            
+            function btncustom(){
+                customDate.style.display = "flex";
             }
-            document.addEventListener('DOMContentLoaded', () => {
-                const storedMetrics = localStorage.getItem('salesReportMetrics');
-                const storedOrders = localStorage.getItem('salesReportOrders');
+            // const filter = document.getElementById('btncustom');
+            // const customDate = document.getElementById('costumDate');
             
-                if (storedMetrics && storedOrders) {
-                    const metrics = JSON.parse(storedMetrics);
-                    const orders = JSON.parse(storedOrders);
+            // filter.addEventListener('change', () => {
+            //     const customValue = filter.value;
+            //     if (customValue === 'custom') {
+                   
+            //     } else {
+            //         customDate.style.display = "none";
+            //     }
+            // })
             
-                    // Update metrics and table with the stored data
-                    updateMetrics(metrics);
-                    updateTable(orders);
-                }
-            });
-            
+        
             
             
                     function downloadExcel() {

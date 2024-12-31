@@ -80,34 +80,37 @@
                     <!-- Filters Section -->
                     <div class="card mt-4">
                         <div class="card-body">
-                            <form id="filter-form">
+                            <form id="filter-form" method="get" action="/admin/generoteReport" >
                                 <div class="row g-3">
+                                    <div style="display: none; gap: 20px;" id="costumDate"  >
                                     <!-- Date Range -->
                                     <div class="col-md-4">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="date" id="startDate" class="form-control" required>
+                                        <input type="date" id="startDate" name="startDate" class="form-control" >
                                     </div>
                                     <div class="col-md-4">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="date" id="endDate" class="form-control" required>
+                                        <input type="date" id="endDate" name="endDate" class="form-control" >
+                                    </div>
                                     </div>
             
                                     <!-- Quick Filters -->
                                     <div class="col-md-4">
                                         <label for="quickFilter" class="form-label">Quick Filter</label>
-                                        <select id="quickFilter" class="form-select">
+                                        <select id="quickFilter" name="quickFilter" class="form-select">
                                             <option value="select">Select...</option>
                                             <option value="1Day">1 Day</option>
                                             <option value="1Week">1 Week</option>
                                             <option value="1Month">1 Month</option>
                                             <option value="all">All</option>
+                                            <option value="custom">Custom Date</option>
                                         </select>
                                     </div>
                                 </div>
-            
+
                                 <div class="row mt-3">
                                     <div class="col text-end">
-                                        <button type="button" class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                                        <button type="submit" class="btn btn-primary" >Generate Report</button>
                                     </div>
                                 </div>
                             </form>
@@ -120,15 +123,15 @@
                             <h4>Sales Metrics</h4>
                             <div class="row text-center">
                                 <div class="col-md-4" style="color: #0080ff;">
-                                    <h5 id="overallSalesCount">0</h5>
+                                    <h5 id="overallSalesCount"><%=metrics.totalOrders||0%></h5>
                                     <p>Overall Sales Count</p>
                                 </div>
                                 <div class="col-md-4" style="color: green;">
-                                    <h5 id="overallOrderAmount">$0.00</h5>
+                                    <h5 id="overallOrderAmount">₹<%=metrics.totalOrderAmount.toFixed(2)||0%></h5>
                                     <p>Overall Order Amount</p>
                                 </div>
                                 <div class="col-md-4" style="color: rgb(255, 187, 0);">
-                                    <h5 id="overallDiscount">$0.00</h5>
+                                    <h5 id="overallDiscount">₹<%=metrics.totalDiscounts.toFixed(2)||0.00%></h5>
                                     <p>Total Discounts</p>
                                 </div>
                             </div>
@@ -156,9 +159,20 @@
                                     </tr>
                                 </thead>
                                 <tbody id="salesReportTable">
+                                    <% orders.forEach((order,ind)=>{%>                                 
                                     <tr>
-                                        <td colspan="6" class="text-center">No data available</td>
+                                        <td><%=ind+1%></td>
+                                        <td><%=new Date(order.createdAt).toLocaleDateString()%></td>
+                                        <td><%=order._id%></td>
+                                        <td><%=order.UserID.firstName%></td> <!-- User's name -->
+                                       
+                                        <td>₹<%=order.Final_Amount.toFixed(2)%></td>
+                                        <td>₹<%=order.Coupon.discountValue.toFixed(2)%></td>
+                                        <td><%=order.payment%></td>
+                                        <td><%=order.orderStatus%></td>
+                                        <td><%=order.paymentStatus%></td>
                                     </tr>
+                                 <%})%>
                                 </tbody>
                             </table>
                         </div>

@@ -172,7 +172,7 @@ const Login = async (req, res) => {
     
   } catch (error) {
     console.log(error.message)
-    res.json({ success: false, message: "Failed to verify OTP." })  
+    res.json({ success: false, message: error.message })  
   }
 }
 
@@ -284,7 +284,7 @@ const shop = async (req, res) => {
         match: { _id: { $in: offerIds } } 
     })
     const product = await PRODUCT.find()
-    console.log('product ',product)
+   
 
       if (products.length === 0) {
           message = message || 'No products found.'

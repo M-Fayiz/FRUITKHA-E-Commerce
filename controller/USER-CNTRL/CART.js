@@ -129,10 +129,9 @@ const addCart = async (req, res) => {
 }
 
 
-
   // | UPDAT CART 
   const updateCART = async (req, res) => {
-    console.log('?-? LOG UPDATE CART ?-?')
+    console.log('?-? LOG UPDATE CART ?-?..m   ')
     try {
       const { productId, QNTY } = req.body
       const UserID = req.session.user

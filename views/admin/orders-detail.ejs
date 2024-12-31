@@ -100,7 +100,7 @@
                                 data-bs-toggle="modal" 
                                 data-bs-target="#infoModal"
                                 data-reason="<%= orders.Return.reason %>" 
-                                data-image="http://localhost:4000/images/<%=orders.Return.image %>" 
+                                data-image="/images/<%=orders.Return.image %>" 
                                 style="border: none; color: #00b3ff; background: none;">
                                 <i class="bi bi-info-circle me-2"></i>
                             </button>
@@ -195,7 +195,7 @@
                                                 <td>
                                                     <a class="itemside" href="#">
                                                         <div class="left">
-                                                            <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" width="40" height="40" class="img-xs" alt="Item" />
+                                                            <img src="/images/<%= item.product.primaryImage %>" width="40" height="40" class="img-xs" alt="Item" />
                                                         </div>
                                                         <div class="info"><%=item.Name%></div>
                                                     </a>
@@ -235,7 +235,7 @@
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#infoModal"
                                                     data-reason="<%= item.return.reason %>" 
-                                                    data-image="http://localhost:4000/images/<%= item.return.image %>" 
+                                                    data-image="/images/<%= item.return.image %>" 
                                                     style="border: none; color: #00b3ff; background: none;">
                                                     <i class="bi bi-info-circle me-2"></i>
                                                 </button>

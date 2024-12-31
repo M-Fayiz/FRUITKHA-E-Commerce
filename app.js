@@ -8,17 +8,15 @@ const path=require('path')
 
 const passport=require('./config/passport')
 const {startExpired,StockExpire,manageExpiration}=require('./utils/service/cron')
-// const morgan=require('morgan')
+
 
 const {PORT}=require('./utils/env')
 
-// const mongoose=require('mongoose')
-// mongoose.connect(MONGO_URL)
 
 app.use('/images', express.static(path.join(__dirname, "IMAGES")))
 
 app.use(session({
-    secret:"mewo",
+    secret:process.env.secret,
     resave:false,
     saveUninitialized:false,
     cookie:{
@@ -38,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine','ejs')
 app.set('views', path.join(__dirname, 'views'));
-// app.use(morgan('common'))
+
 app.use(express.static(path.join(__dirname, 'assets')));
 
 app.use(passport.initialize())

@@ -78,7 +78,8 @@ Router.post('/removeCoupon',COUPON.deletCoupon)
 
 // SALES REPORT  |  SALES REPORT  |  SALES REPORT
 
-Router.get('/sales-Report',adminAuth.adminAuth,REPORT.salesReport) 
+Router.get('/generoteReport',adminAuth.adminAuth,REPORT.salesReport) 
+
 Router.post('/get-sales-report',REPORT.genorate)
 
 // GRAPH  ||   GRAPH   ||   GRAPH   ||   GRAPH   |

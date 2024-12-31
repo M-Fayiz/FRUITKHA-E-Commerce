@@ -10,6 +10,14 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function handleImageCrop(file, inputIndex) {
+
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!file || !allowedTypes.includes(file.type)) {
+            
+            showToast("Invalid file type! Please upload a PNG or JPEG image ..",'info');
+            return; 
+        }
+
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             console.log('reader',reader);
@@ -18,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cropImage.src = e.target.result;
                 imageCropModal.style.display = 'block';
 
-                if (cropper) cropper.destroy(); // Destroy any previous cropper instance
+                if (cropper) cropper.destroy(); 
 
                 cropper = new Cropper(cropImage, {
                     aspectRatio: 1,
@@ -27,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     responsive: true,
                 });
 
-                // Set cropping action for the current input's cropped image
+               
                 cropButton.onclick = () => {
                     if (cropper) {
                         const canvas = cropper.getCroppedCanvas();
                         canvas.toBlob(blob => {
-                            croppedBlobs[inputIndex] = blob; // Store cropped blob by input index
+                            croppedBlobs[inputIndex] = blob;
                             imageCropModal.style.display = 'none';
                             cropper.destroy();
                             cropper = null;
