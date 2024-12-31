@@ -9,6 +9,7 @@ const PRODUCT=require('../../model/ADMIN/product')
 const OFFER=require('../../model/ADMIN/Offer')
 const CART=require('../../model/User/CART')
 const notify=require('../../model/User/notification')
+const { success } = require('./CHECK-OUT')
 
 
 
@@ -152,7 +153,9 @@ const Login = async (req, res) => {
     if (!user){
      return res.status(400).json({success: false, message: "invalid Email" }) 
     }
-    
+    if(user.isGoogle===true){
+      return res.status(400).json({success:false,message:'user loged with google, please login with google'})
+    }
     
     if(user.isActive===false){
     return  res.json({success:false,message:"you have been blocked for some reason"})
