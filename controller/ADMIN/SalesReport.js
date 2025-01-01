@@ -53,10 +53,7 @@ const salesReport = async (req, res) => {
       };
     } else if (quickFilter === 'all') {
       filters = {}; 
-    } else {
-    
-      return res.status(400).send('Invalid filter option.');
-    }
+    } 
     
     console.log('Filters:', filters);
 
