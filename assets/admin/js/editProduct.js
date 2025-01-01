@@ -12,7 +12,12 @@
     let cropper;
     let croppedBlobs = {}; 
     function handleImageCrop(file, inputName) {
-        // console.log(file,inputName,'inputNAME');
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!file || !allowedTypes.includes(file.type)) {
+            
+            showToast("Invalid file type! Please upload a PNG or JPEG image ..",'info');
+            return; 
+        }
         
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();

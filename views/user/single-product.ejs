@@ -273,11 +273,11 @@
 						class="bi <%= item.isWishList ? 'bi-heart-fill text-danger' : 'bi-heart' %>">
 					</i>
 				</div>				
-				<img id="mainImage" src="http://localhost:4000/images/<%=item.primaryImage%>" alt="Main product image">
+				<img id="mainImage" src="/images/<%=item.primaryImage%>" alt="Main product image">
 			</div>
 			<div class="thumbnail-container">
 				<div class="thumbnail active" onclick="changeImage(this)">
-					<img src="http://localhost:4000/images/<%=item.primaryImage%>" alt="Product thumbnail 1">
+					<img src="/images/<%=item.primaryImage%>" alt="Product thumbnail 1">
 					<% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
 						<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
 						<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px; padding-left: 8px;padding-right: 8px;">
@@ -288,10 +288,10 @@
 					<% } %>
 				</div>
 				<div class="thumbnail" onclick="changeImage(this)">
-					<img src="http://localhost:4000/images/<%=item.additonalImage[0]%>" alt="Product thumbnail 2">
+					<img src="/images/<%=item.additonalImage[0]%>" alt="Product thumbnail 2">
 				</div>
 				<div class="thumbnail" onclick="changeImage(this)">
-					<img src="http://localhost:4000/images/<%=item.additonalImage[1]%>" alt="Product thumbnail 3">
+					<img src="/images/<%=item.additonalImage[1]%>" alt="Product thumbnail 3">
 				</div>
 			</div>
 		</div>
@@ -443,7 +443,7 @@
 				<div class="col-lg-4 col-md-6 text-center" >
 					<div class="single-product-item">
 						<div class="product-image">
-							<a href="/product/<%=item._id%>"><img src="http://localhost:4000/images/<%=item.primaryImage%>" alt=""></a>
+							<a href="/product/<%=item._id%>"><img src="/images/<%=item.primaryImage%>" alt=""></a>
 							<% if (item.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
 								<% let offer = Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100); %>
 								<div style="position: absolute; top: 5px; left: 15px; background-color: green; border-radius: 2px; padding: 10px;">

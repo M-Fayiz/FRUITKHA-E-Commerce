@@ -1,0 +1,408 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+}
+
+/* Add Category Form */
+.add-category-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.form-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      font-size: 0.9rem;
+}
+.file-input{
+  flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #40c057;
+    box-shadow: 0 0 0 2px rgba(64, 192, 87, 0.2);
+}
+
+.btn-add {
+    background: #40c057;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Category List */
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.category-name {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.category-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.category-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    background: #339af0;
+    color: white;
+}
+
+.btn-list {
+    background: #40c057;
+    color: white;
+}
+
+.btn-unlist {
+    background: #fa5252;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Subcategory styles */
+.subcategory-list {
+    padding: 1rem 1.5rem 1rem 3.5rem;
+    background: white;
+    border-top: 1px solid #e9ecef;
+}
+
+.subcategory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.subcategory-item:last-child {
+    border-bottom: none;
+}
+
+.subcategory-name {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.subcategory-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Dropdown arrow */
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.arrow.active {
+    transform: rotate(180deg);
+}
+
+/* Add Subcategory button */
+.btn-add-sub {
+    background: none;
+    border: 1px dashed #40c057;
+    color: #40c057;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.btn-add-sub:hover {
+    background: #f1f9f1;
+}
+
+/* dfghjkl; */
+/* Basic styling for the Add Subcategory button */
+.add-subcategory-btn {
+background-color: transparent;
+color: #40c057;
+border: 1px dotted #40c057;
+padding: 10px;
+cursor: pointer;
+}
+
+/* Modal Background */
+.modal {
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+}
+
+/* Modal Content Box */
+.modal-content {
+background-color: #fff;
+margin: 10% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+max-width: 400px;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button */
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+color: #000;
+text-decoration: none;
+}
+
+/* Form Styles */
+#subcategoryForm {
+display: flex;
+flex-direction: column;
+}
+
+#subcategoryForm label {
+margin-bottom: 5px;
+}
+
+#subcategoryForm input {
+padding: 8px;
+margin-bottom: 10px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+.add-btn {
+background-color: green;
+color: white;
+padding: 10px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+.modal {
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+background-color: #fefefe;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 50%;
+}
+
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}
+/* Modal Background */
+.modal-background {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+}
+
+/* Centered Modal Form */
+.edit-category-form {
+background-color: #ffffff;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+width: 400px;
+max-width: 90%;
+}
+.modal {
+display: none; 
+position: fixed; 
+z-index: 1; 
+left: 0;
+top: 0;
+width: 80%; 
+height: 80%; 
+overflow: auto; 
+background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+margin: 15% auto; 
+padding: 20px;
+border: 1px solid #888;
+width: 30%;
+max-width: 200px;
+background-color: white;
+}
+
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}
+/* modal for edit category */
+.modal {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 100%;
+max-width: 600px;
+background-color: white;
+}
+
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+color: black;
+text-decoration: none;
+cursor: pointer;
+}

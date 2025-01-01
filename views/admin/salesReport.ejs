@@ -63,6 +63,10 @@
             tr:hover {
                 background-color: #f1f1f1;
             }
+            a{
+                text-decoration: none;
+                color: green;
+            }
         </style>
            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     </head>
@@ -84,6 +88,7 @@
                                 <div class="row g-3">
                                     <div style="display: none; gap: 20px;" id="costumDate"  >
                                     <!-- Date Range -->
+                                     
                                     <div class="col-md-4">
                                         <label for="startDate" class="form-label">Start Date</label>
                                         <input type="date" id="startDate" name="startDate" class="form-control" >
@@ -145,7 +150,7 @@
                             <table class="table table-striped mt-3" >
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Date</th>
                                         <th>Order ID</th>
                                         <th>Customer</th>
@@ -161,7 +166,7 @@
                                 <tbody id="salesReportTable">
                                     <% orders.forEach((order,ind)=>{%>                                 
                                     <tr>
-                                        <td><%=ind+1%></td>
+                                        <!-- <td><%=ind+1%></td> -->
                                         <td><%=new Date(order.createdAt).toLocaleDateString()%></td>
                                         <td><%=order._id%></td>
                                         <td><%=order.UserID.firstName%></td> <!-- User's name -->
@@ -187,6 +192,46 @@
                     </div>
                 </div>
             </section>
+            <div class="border-t border-gray-100 p-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">
+                        Showing <%= (currentPage - 1) * 10 + 1 %> to <%= Math.min(currentPage * 10, totalProducts) %> of <%= totalProducts %> products
+                    </p>
+                    <div class="flex gap-2">
+                        <!-- Previous Button -->
+                        <% if (currentPage > 1) { %>
+                            <a href="/admin/generoteReport?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                Previous
+                            </a>
+                        <% } %>
+            
+                        <!-- Page Numbers -->
+                        <% 
+                            const maxButtons = 3; // Maximum visible page buttons
+                            let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                            let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+            
+                           
+                            if (endPage - startPage + 1 < maxButtons) {
+                                startPage = Math.max(1, endPage - maxButtons + 1);
+                            }
+                        %>
+            
+                        <% for (let i = startPage; i <= endPage; i++) { %>
+                            <a href="/admin/generoteReport?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                                <%= i %>
+                            </a>
+                        <% } %>
+            
+                        <!-- Next Button -->
+                        <% if (currentPage < totalPages) { %>
+                            <a href="/admin/generoteReport?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                Next
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
             
         </main>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>

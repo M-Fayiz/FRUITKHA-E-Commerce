@@ -111,17 +111,14 @@ const addCategory = async (req, res) => {
 
 
 const categoryStatus=async(req,res)=>{
+   
     try {
         const {itemId,condition}=req.body
         let status;
-      condition==true?status='Listed':status='Un Listed'
-        
-      
-    category.findByIdAndUpdate(itemId,{isList:condition})
-    .then(response=>{
+      condition==true?status='Listed':status='Un Listed'      
+   const result=await category.findByIdAndUpdate(itemId,{isList:condition})
+  
         res.json({success:true,message:`succesfully ${status}`})
-    })
-
     } catch (error) {
         console.log(error.message);
         
@@ -179,7 +176,6 @@ console.log('edit Category');
         
     }
 }
-
 
 
 const clearOffer=async(req,res)=>{
@@ -271,9 +267,22 @@ const LoadHome=async(req,res)=>{
 
 const LoadCategory=async(req,res)=>{
 try {
-    const data= await category.find({}).populate('Offer');
-    res.render('admin/page-categories',{data ,CURRENTpage:'category'})
-    // console.log('loadCategory',data);
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 3;
+    const skip = (page - 1) * limit;
+
+    const totalProducts = await category.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+
+
+    if (skip >= totalProducts && totalProducts > 0) {
+        return res.redirect('/admin/productList?page=' + totalPages);
+    }
+
+    const data= await category.find({}).populate('Offer').skip(skip).limit(limit);
+    res.render('admin/page-categories',{data ,CURRENTpage:'category', totalPages,  totalProducts ,currentPage: page, })
+       
+   
     
 } catch (error) {
     console.log(error.message);

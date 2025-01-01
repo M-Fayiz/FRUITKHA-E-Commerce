@@ -179,7 +179,7 @@
                                       
                                         <select id="category" name="category" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <% data.forEach(item => { %> 
-                                                <option value="<%= item.category %>"><%= item.category %></option>
+                                                <option value="<%= item._id %>"><%= item.category %></option>
                                             <% }) %>
                                         </select>
                                         

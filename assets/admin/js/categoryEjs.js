@@ -20,11 +20,6 @@ document.getElementById('image').addEventListener('change', function (event) {
     document.getElementById('imageModal').style.display = 'none';
   });
   
-  // Preview Image**********************
-  
-  
-  // List and Unlist $$$$$$$$$$$$$$$$$$$$$$$$$$
-  
             function toggleItemStatus(itemId,condition){
               console.log("working")
               console.log(itemId,condition);
@@ -55,11 +50,11 @@ document.getElementById('image').addEventListener('change', function (event) {
               })
               
             }
-  // end List and Unlist $$$$$$$$$$$$$$$$$$$$$$$$$$
+  //    end List and Unlist 
   
   
   
-  // EDIT CATEGORY [][[[[[]]]]]
+  //      EDIT CATEGORY 
   
   document.addEventListener("DOMContentLoaded", function() {
   
@@ -69,8 +64,7 @@ document.getElementById('image').addEventListener('change', function (event) {
     const closeUpdateModal = document.getElementById("closeUpdateModal");
     const updateButton = document.getElementById("updateButton");
   
-    // Check if edit buttons are being selected
-    console.log("Edit buttons:", editButtons);
+   
   
     // Open modal for clicked item
     editButtons.forEach((button) => {

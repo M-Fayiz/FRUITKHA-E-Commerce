@@ -301,7 +301,7 @@ body {
             <% } else { %>
                 <% wish.Products.forEach(item => { %>
                     <div class="list-group-item">
-                        <img src="http://localhost:4000/images/<%=item.product.primaryImage %>" class="product-image" alt="Product Image">
+                        <img src="/images/<%=item.product.primaryImage %>" class="product-image" alt="Product Image">
                         <div class="product-details">
                             <h5><%= item.product.productTitle %></h5>
                             <div>

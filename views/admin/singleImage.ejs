@@ -208,7 +208,7 @@
                     <div class="form-group">
                         <label>Main Image</label>
                         <div class="image-preview">
-                            <img id="mainImagePreview" src="http://localhost:4000/images/<%=result.primaryImage%>" alt="Main product image">
+                            <img id="mainImagePreview" src="/images/<%=result.primaryImage%>" alt="Main product image">
                         </div>
                         <input type="file" id="primaryImageInput" accept="image/*" style="margin-top: 10px;">
                     </div>
@@ -219,13 +219,13 @@
                            
                                     <div class="gallery-item">
                                         
-                                        <img src="http://localhost:4000/images/<%= result.additonalImage[0] %>" alt="Gallery image ">
+                                        <img src="4000/images/<%= result.additonalImage[0] %>" alt="Gallery image ">
                                        
                                     </div>
                                     <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
                             
                                     <div class="gallery-item">
-                                        <img src="http://localhost:4000/images/<%= result.additonalImage[1] %>" alt="Gallery image ">
+                                        <img src="4000/images/<%= result.additonalImage[1] %>" alt="Gallery image ">
                                        
                                     </div>
                                     <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
@@ -268,7 +268,7 @@
                         
                       
     
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Stock Quantity</label>
                         <input type="number" class="form-control" min="0" id="stock" value="<%=result.Stock %>">
                         <div style="padding-top: 8px;">
@@ -285,11 +285,12 @@
                                 Out of Stock
                             </span>
                         <% } %> 
-                    </div>
+                    </div> -->
+                    <button type="submit" data-id="<%= result.id %>" class="save-button">Save Changes</button>
                     </div>
     
                  
-                    <button type="submit" data-id="<%= result.id %>" class="save-button">Save Changes</button>
+                  
                 </div>
             </div>
         </form>

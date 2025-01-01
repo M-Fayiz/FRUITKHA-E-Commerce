@@ -10,7 +10,8 @@ const Wallet=require('../../model/User/wallet')
 const notify=require('../../model/User/notification')
 const path = require('path');
 const ejs = require('ejs');
-const pdf = require('html-pdf');
+const PDFDocument = require('pdfkit');
+const wishList=require('../../model/User/wishList')
 
 const checkout = async (req, res) => {
     console.log('- - - LOG CHECKED - - -')
@@ -22,6 +23,17 @@ const checkout = async (req, res) => {
       const cart = await CART.findOne({ UserID:UserID }).populate('Products.productId')
       const coupon=await COUPON.find({status:'Active'})
       const NOtify=await notify.findOne({UserId:req.session.user}).sort({createdAt:-1})
+     
+      let carSize
+      if(cart&&cart.Products){
+        carSize=cart.Products.length
+      }
+      let size
+      const wishlist = await wishList.findOne({ UserId: req.session.user })
+       
+        if (wishlist && wishlist.Products) {
+          wishlist.Products.length >0?size=wishlist.Products.length:size=null
+      }
       if (!address) {
         
         res.render('user/checkout', {
@@ -29,7 +41,9 @@ const checkout = async (req, res) => {
           user: req.session.user,
           address: [],
           info: 'No Address Added Yet',
-          NOtify
+          NOtify,
+          carSize,
+          size
         });
       } else {
         const shipping=50
@@ -43,7 +57,9 @@ const checkout = async (req, res) => {
           shipping,
           TOTAL,
           coupon,
-          NOtify
+          NOtify,
+          carSize,
+          size
         });
       }
     } catch (error) {
@@ -61,7 +77,7 @@ const checkout = async (req, res) => {
       const { selectedAddress, paymentMethod, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
       
       const User = req.session.user;
-  
+  console.log(paymentMethod)
       if (!User) {
         return res.status(400).json({ success: false, message: 'User Not Found' });
       }
@@ -76,7 +92,8 @@ const checkout = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Cart is Empty' });
       }
       
-      let gst=0.12*cart.subTotal
+      let gst=Ma.round(0.12*cart.subTotal)
+      console.log(gst,'gst')
       let discountValue = 0;
       let couponCode = null;
       let couponId = cart.Discount?.discountId;
@@ -111,13 +128,17 @@ const checkout = async (req, res) => {
           paymentStatus = 'Pending';
         }
       } else if (paymentMethod === 'wallet') {
+        
         const wallet = await Wallet.findOne({ userId: User });
-        if (!wallet || wallet.balance) {
+        
+        if (!wallet || !wallet.balance) {
         return res.status(400).json({success:true,message:'Wallet Not found'})
         } 
+        console.log(gst)
         const walletBalance = wallet.balance
         const totalAmount = cart.subTotal+gst - discountValue;
-        console.log(totalAmount,walletBalance)
+        console.log(totalAmount)
+        console.log(totalAmount,'total amount',walletBalance)
          if (walletBalance < totalAmount) {
           return res.status(400).json({ success: false, message: 'Insufficient Wallet Balance' });
          }
@@ -316,10 +337,10 @@ const success=async(req,res)=>{
 const invoice = async (req, res) => {
   try {
       const orderId = req.params.id;
-      console.log(orderId, '...');
+     
       const randomNumber = Math.floor(1000 + Math.random() * 9000)
 
-      const value=`inv-${randomNumber}`
+
      
       const order = await ORDER.findById(orderId).populate('UserID').populate('Products.product')
       if (!order) {
@@ -327,33 +348,110 @@ const invoice = async (req, res) => {
       }
 
     
-      const ejsTemplatePath = path.join(__dirname, '../../views', 'user', 'invoice.ejs');
+      const doc = new PDFDocument({ margin: 30 });
 
-      
-      ejs.renderFile(ejsTemplatePath, { order,value }, (err, html) => {
-          if (err) {
-              console.error('Error rendering EJS template:', err);
-              return res.status(500).json({ success: false, message: 'Error rendering template' });
-          }
-
-   
-          const pdfOptions = { format: 'A4' };
-          pdf.create(html, pdfOptions).toStream((err, stream) => {
-              if (err) {
-                  console.error('Error generating PDF:', err);
-                  return res.status(500).json({ success: false, message: 'Error generating PDF' });
-              }
-
-              res.setHeader('Content-Type', 'application/pdf');
-              res.setHeader(
-                  'Content-Disposition',
-                  `attachment; filename=invoice_${orderId}.pdf`
-              );
-
-             
-              stream.pipe(res);
-          });
+      // Set response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+          'Content-Disposition',
+          `attachment; filename=invoice_${order._id}.pdf`
+      );
+  
+      // Pipe the PDF document to the response
+      doc.pipe(res);
+  
+      // Add header
+      doc.fontSize(20).fillColor('#f57c00').text('FRUITKHA', { align: 'center' });
+      doc.fontSize(10).fillColor('#333').text('Fresh Fruits Online', { align: 'center' });
+      doc.moveDown();
+  
+      // Add invoice details
+      doc.fontSize(12).fillColor('#000').text(`Invoice No: INC${randomNumber}`);
+      doc.text(`Order ID: ${order._id}`);
+      doc.text(`Date: ${new Date(order.createdAt).toLocaleString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+      })}`);
+      doc.moveDown();
+  
+      // Add billing information
+      doc.fontSize(14).text('Billing Information', { underline: true });
+      doc.fontSize(12).text(`Customer Name: ${order.UserID.firstName}`);
+      doc.text(`Email: ${order.UserID.email}`);
+      doc.text(`Phone: ${order.UserID.phone}`);
+      doc.text(`Address: ${order.addressId.District}, ${order.addressId.State}, ${order.addressId.PIN}`);
+      doc.moveDown();
+  
+      // Add order summary
+      doc.fontSize(14).text('Order Summary', { underline: true }).moveDown();
+  
+      // Table header
+      const headers = ['Item Name', 'Quantity', 'Unit Price', 'Status', 'Total'];
+      const tableTop = doc.y;
+      const colWidths = [150, 50, 80, 80, 80];
+  
+      let x = 50;
+      headers.forEach((header, i) => {
+          doc.fontSize(12).font('Helvetica-Bold').text(header, x, tableTop, { width: colWidths[i], align: 'center' });
+          x += colWidths[i];
       });
+  
+      // Draw a line below headers
+      doc.moveTo(50, tableTop + 15).lineTo(530, tableTop + 15).stroke();
+      let currentY = tableTop + 25;
+  
+      // Table rows
+      order.Products.forEach((item) => {
+          x = 50;
+          const row = [
+              item.product.productTitle,
+              item.quantity,
+              `₹${item.Price}`,
+              item.status,
+              `₹${item.TOTAL}`,
+          ];
+  
+          row.forEach((data, i) => {
+              doc.fontSize(12).font('Helvetica').text(data, x, currentY, { width: colWidths[i], align: 'center' });
+              x += colWidths[i];
+          });
+          currentY += 20; // Row height
+      });
+  
+      // Add totals below the table
+      currentY += 10;
+      doc.moveTo(50, currentY).lineTo(530, currentY).stroke(); // Line above totals
+      currentY += 5;
+  
+      const totals = [
+          { label: 'Subtotal', value: `₹${order.subTotal}` },
+          { label: 'GST ', value: `₹${order.GST}` },
+          { label: 'Shipping Fee', value: `₹${order.Shipping}` },
+          { label: 'Discount Value', value: `₹${order.Coupon.discountValue}` },
+          { label: 'Total Amount', value: `₹${order.Final_Amount}` },
+      ];
+  
+      totals.forEach((total) => {
+          doc.fontSize(12).text(total.label, 400, currentY, { align: 'left' });
+          doc.text(total.value, 50, currentY, { align: 'right' });
+          currentY += 20;
+      });
+  
+      // Add payment details
+      doc.moveDown().fontSize(14).text('Payment Details', { underline: true }).moveDown();
+      doc.fontSize(12).text(`Payment Method: ${order.payment}`);
+      if (order.payment === 'razorpay') {
+          doc.text(`Transaction ID: ${order.RazorPay.razorpay_payment_id}`);
+      }
+  
+      // Add footer
+      doc.moveDown().fontSize(10).fillColor('#555').text('For any questions, contact us at support@fruitkha.com', { align: 'center' });
+      doc.text('Thank you for shopping with us! 🍇', { align: 'center' });
+  
+      // Finalize the PDF
+      doc.end();
   } catch (error) {
       console.error('Server error:', error);
       res.status(500).json({ success: false, message: 'Server error' });

@@ -50,6 +50,7 @@
     </style>
     <!-- Template CSS -->
     <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/SHOW.css">
   </head>
 
   <body>
@@ -57,6 +58,7 @@
     <%-include('../partials/sidebar.ejs') %>
     <main class="main-wrap">
       <%-include('../partials/adminHeader.ejs')%>
+      <%-include('../partials/block.ejs')%>
       <section class="content-main">
         <div class="content-header">
           <div>
@@ -278,6 +280,7 @@
     <script src="/admin/js/custom-chart.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/admin/js/adminIndex.js"></script>
+  <script src="/TOAST.js"></script>
 
   </body>
 </html>

@@ -200,22 +200,41 @@
     <script>
 
 async function download(orderId) {
-        try {
-            const response = await fetch(`/invoice/${orderId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `invoice_${orderId}.pdf`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error downloading invoice:', error);
+    try {
+        // Fetch the PDF from the server
+        const response = await fetch(`/invoice/${orderId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        // Convert the response to a Blob
+        const blob = await response.blob();
+
+        // Create a URL for the Blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create an anchor element to trigger the download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `invoice_${orderId}.pdf`;
+
+        // Append the anchor to the document (optional for Firefox compatibility)
+        document.body.appendChild(a);
+
+        // Trigger the download
+        a.click();
+
+        // Remove the anchor element
+        document.body.removeChild(a);
+
+        // Revoke the Blob URL to free up memory
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        // Log any errors to the console
+        console.error('Error downloading invoice:', error);
+        alert('Failed to download the invoice. Please try again.');
     }
+}
 
     </script>
 </body>

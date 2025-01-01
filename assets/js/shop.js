@@ -1,4 +1,4 @@
-
+//  for apply filter and search
 document.getElementById('applyFiltersBtn').addEventListener('click', async function() {
     await handleSearch();
 });
@@ -59,7 +59,7 @@ async function handleSearch() {
     }
 }
 
-
+//   for display fetched product
 
 async function fetchAllproduct() {
 	console.log('fetch');
@@ -110,15 +110,26 @@ function displayProduct(products) {
                         : `<p>Per Kg ${item.RegulerPrice}₹</p>`}
                     </div>
                     <div>
-                        ${item.Stock > 10 ? `<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">In Stock: ${item.Stock}</span>` :
-                        item.Stock > 0 ? `<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">Low Stock: ${item.Stock}</span>` :
-                        `<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">Out of Stock</span>`}
-                    </div>
+    ${
+        item.totalStock > 10 
+        ? `<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
+             In Stock: ${item.totalStock}
+           </span>` 
+        : item.Stock > 0 
+        ? `<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
+             Low Stock: ${item.totalStock}
+           </span>` 
+        : `<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
+             Out of Stock
+           </span>`
+    }
+</div>
+
                 </div>
                 <div>
-                    <a href="cart.html" class="cart-btn">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </a>
+                    <button class="cart-btn" onclick="pass('<%=item.id%>','<%=item.productTitle%>','<%=item.RegulerPrice%>','<%=item.OfferPrice%>')">
+										  <i class="fas fa-shopping-cart"></i> Add to Cart
+										</button>
                 </div>
             </div>
         </div>
@@ -193,7 +204,7 @@ function wishList(val){
 
 
 	console.log('po')
-    const isInWishlist = wishlistIcon.classList.contains('bi-heart-fill') 
+  
     // const val = wishlistIcon.getAttribute('data-id'); 
 
     fetch('/toggleWishList', {
@@ -201,16 +212,26 @@ function wishList(val){
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ val, isInWishlist }), 
+        body: JSON.stringify({ val }), 
     })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-				showToast(data.message,'success'); 
-                wishlistIcon.classList.toggle('bi-heart');
-                wishlistIcon.classList.toggle('bi-heart-fill');
-                wishlistIcon.classList.toggle('text-danger');
-                location.reload()
+				showToast(data.message,'success')
+                const wishlistIcon1=document.getElementById(`wishlistIcon1-${val}`)
+                const countW=document.getElementById('countW')
+               if(parseInt( data.aa)>=0){
+                countW.innerText=data.aa
+               }
+                if (data.isWishList) {
+                    
+                    wishlistIcon1.classList.add('bi-heart-fill', 'text-danger'); 
+                    wishlistIcon1.classList.remove('bi-heart');
+                } else {
+                   
+                    wishlistIcon1.classList.add('bi-heart'); 
+                    wishlistIcon1.classList.remove('bi-heart-fill', 'text-danger');
+                }
             } else {
                 showToast(data.message,'error'); 
             }

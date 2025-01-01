@@ -447,7 +447,7 @@
 				<h6 class="filter-title">Categories</h6>
 				<% data.forEach(item => { %>
 					<div class="form-check mb-2">
-					  <input class="form-check-input category" type="checkbox" id="sort-category" value="<%= item.category %>">
+					  <input class="form-check-input category" type="checkbox" id="sort-category" value="<%= item.id%>">
 					  <label class="form-check-label" for="sort-category"><%= item.category %></label>
 					</div>
 				  <% }) %>
@@ -527,7 +527,7 @@
                         <ul>
                            <li><a style="color: #f28123;" class="active" href="/shop">All</a></li> 
 						   <% listedCategory.forEach(item=>{ %>
-                           <li><a style="color: #f28123;" href="/shop?category=<%=item.category %>"><%=item.category %></a></li> 
+                           <li><a style="color: #f28123;" href="/shop?category=<%=item._id%>"><%=item.category %></a></li> 
 						<% })%>
                             
                         </ul>
@@ -547,10 +547,11 @@
 							  <div style="width: 300px;" class="product-image">
 								<div id="stop" style="position: absolute; top: 35px; right: 35px; z-index: 2;">
 									<i style="font-size: 20px;"
-										id="wishlistIcon1" 
+										id="wishlistIcon1-<%=item._id%>" 
 										
-										class="bi <%= item.isWishList ? 'bi-heart-fill text-danger' : 'bi-heart' %>" onclick="wishList('<%= item._id %>')">
+										class="bi <%= item.isInWishlist ? 'bi-heart-fill text-danger' : 'bi-heart' %>" onclick="wishList('<%= item._id %>')">
 									</i>
+									
 								</div>	
 								<a href="/product/<%= item._id %>">
 								  <img src="/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">

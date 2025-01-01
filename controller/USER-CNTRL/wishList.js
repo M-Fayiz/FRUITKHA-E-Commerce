@@ -42,6 +42,7 @@ const toggleWishList = async (req, res) => {
         if (!User) {
             return res.status(401).json({ success: false, message: 'User not logged in' });
         }
+        let isWishList
 
         const product = await PRODUCT.findOne({ _id: val });
         if (!product) {
@@ -56,8 +57,8 @@ const toggleWishList = async (req, res) => {
                 Products: [{ product: val }],
             });
 
-            product.isWishList = true;
-            await product.save();
+          isWishList = true;
+            
 
             await wishlist.save();
             return res.status(200).json({ success: true, message: 'Product successfully added to wishlist' });
@@ -67,9 +68,9 @@ const toggleWishList = async (req, res) => {
         if (productIndex > -1) {
             wishlist.Products.splice(productIndex, 1);
 
-            product.isWishList = false;
-            await product.save();
-
+            
+            isWishList=false
+              
             await wishlist.save();
             return res.status(200).json({ success: true, message: 'Product successfully removed from wishlist' });
         } else {
@@ -77,11 +78,14 @@ const toggleWishList = async (req, res) => {
             wishlist.Products.push({ product: val });
 
            
-            product.isWishList = true;
-            await product.save();
+            isWishList=true
+         
 
-            await wishlist.save();
-            return res.status(200).json({ success: true, message: 'Product successfully added to wishlist' });
+           const cc= await wishlist.save()
+           let aa =cc.Products.length
+        
+        //    console.log(cc)
+            return res.status(200).json({ success: true, message: 'Product successfully added to wishlist' ,val,isWishList,aa});
         }
     } catch (error) {
         console.error(error.message);

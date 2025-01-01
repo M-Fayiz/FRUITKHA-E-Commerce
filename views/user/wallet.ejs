@@ -51,6 +51,23 @@
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
      
     }
+    html {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+.table-container {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.table-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+
   </style>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
@@ -84,7 +101,7 @@
 
           <!-- Transaction History -->
           <h4>Transaction History</h4>
-          <div class="table-container mt-3">
+          <div class="table-container mt-3" style="height: 400px; overflow: scroll;">
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -104,7 +121,7 @@
                     <% if(item.type=='credit'){%>
                      <td style="color: green;">+<%=item.amount%></td>
                       <%}else{%>
-                        <td style="color:red;">+<%=item.amount%></td>
+                        <td style="color:red;">-<%=item.amount%></td>
                         <%}%>
                     <!-- <td><span class="badge bg-success">Completed</span></td> -->
                   </tr>

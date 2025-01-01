@@ -67,6 +67,176 @@
 }
 
 	</style>
+	<style>
+		/* General Reset */
+	body {
+	  margin: 0;
+	  font-family: Arial, sans-serif;
+	  background-color: #f5f5f5;
+	}
+	
+	/* Notification Icon */
+	.notification-icon {
+	  position: fixed;
+	  top: 20px;
+	  right: 20px;
+	  background: #ff5722;
+	  color: #fff;
+	  width: 50px;
+	  height: 50px;
+	  border-radius: 50%;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  cursor: pointer;
+	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	 z-index: 5;
+	}
+	
+	.notification-icon:hover {
+	  background: #e64a19;
+	}
+	
+	.notification-count {
+	  position: absolute;
+	  top: 5px;
+	  right: 5px;
+	  background: #fff;
+	  color: #ff5722;
+	  font-size: 12px;
+	  font-weight: bold;
+	  width: 20px;
+	  height: 20px;
+	  border-radius: 50%;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
+	
+	.sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Initially hidden */
+  width: 300px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 10; /* Higher than other elements */
+}
+.sidebar.active {
+  right: 0; /* Visible when active */
+}
+
+	.sidebar-header {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  padding: 15px;
+	  background: #146d97;
+	  color:    #fff;
+	}
+	
+	.sidebar-header button {
+	  background: transparent;
+	  border: none;
+	  color: #fff;
+	  font-size: 0px;
+	  cursor: pointer;
+	}
+	
+	.sidebar-content {
+	  flex: 1;
+	  overflow-y: auto;
+	  padding: 15px;
+	}
+	
+	.notification-item {
+	  background: #f9f9f9;
+	  margin-bottom: 10px;
+	  padding: 10px;
+	  border-radius: 5px;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+	
+	.notification-item h4 {
+	  margin: 0 0 5px;
+	}
+	
+	.notification-item p {
+	  margin: 0 0 10px;
+	  font-size: 14px;
+	  color: #555;
+	}
+	
+	.notification-time {
+	  font-size: 12px;
+	  color: #999;
+	}
+	.close-btn {
+background: none;
+border: none;
+color: white;
+font-size: 20px;
+cursor: pointer;
+}
+
+	.notification-item {
+background-color: #fff;
+border-left: 5px solid; /* Status-specific color */
+padding: 15px;
+margin-bottom: 10px;
+border-radius: 5px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+transition: all 0.3s ease;
+}
+
+/* Success Notifications */
+.notification-item.success {
+border-left-color: #4caf50; /* Green */
+}
+
+.notification-item.success:hover {
+background-color: #e8f5e9; /* Light Green */
+}
+
+/* Error Notifications */
+.notification-item.error {
+border-left-color: #f44336; /* Red */
+}
+
+.notification-item.error:hover {
+background-color: #fdecea; /* Light Red */
+}
+
+/* Info Notifications */
+.notification-item.info {
+border-left-color: #2196f3; /* Blue */
+}
+
+.notification-item.info:hover {
+background-color: #e3f2fd; /* Light Blue */
+}
+
+/* Typography and Spacing */
+.notification-item h4 {
+margin: 0;
+font-size: 18px;
+color: #333;
+}
+
+.notification-item p {
+margin: 5px 0 10px;
+font-size: 14px;
+color: #555;
+}
+
+.notification-item .notification-time {
+font-size: 12px;
+color: #999;
+}
+	
+	  </style>
 
 </head>
 <body>
@@ -82,7 +252,30 @@
 	<!-- header -->
 	<%-include('../partials/Header.ejs') %>
 	<!-- end header -->
-	
+	<div class="notification-icon" onclick="toggleSidebaR()">
+		<span>&#128276;</span>
+	  </div>
+	  
+	  <div id="notification-sidebar" class="sidebar">
+		<div class="sidebar-header">
+		  <h4>Notifications</h4>
+		  <button class="close-btn" onclick="toggleSidebaR()">&#10006;</button>
+		</div>
+		<div class="sidebar-content">
+		  <% if (NOtify && Array.isArray(NOtify.notification) && NOtify.notification.length > 0) { %>
+			<% NOtify.notification
+			   .sort((a, b) => b.createdAt - a.createdAt)
+			   .forEach(item => { %>
+			  <div class="notification-item <%= item.status %>">
+				<p><%= item.message %></p>
+			  </div>
+			<% }); %>
+		  <% } else { %>
+			<p>No notifications available</p>
+		  <% } %>
+		</div>
+	  </div>
+	  
 	<!-- search area -->
 	<div class="search-area">
 		<div class="container">
@@ -368,6 +561,18 @@
 	<script src="/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="/js/main.js"></script>
+	<script>
+		function toggleSidebaR() {
+  const sidebar = document.getElementById('notification-sidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('active');
+    console.log('Sidebar toggled:', sidebar.classList.contains('active'));
+  } else {
+    console.error('Sidebar not found');
+  }
+}
+
+	</script>
 
 </body>
 </html>

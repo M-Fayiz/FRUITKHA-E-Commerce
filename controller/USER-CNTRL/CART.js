@@ -4,6 +4,7 @@ const USER = require('../../model/User/userModel')
 const PRODUCT=require('../../model/ADMIN/product')
 const COUPON=require('../../model/ADMIN/Coupon')
 const notify=require('../../model/User/notification')
+const wishList=require('../../model/User/wishList')
 // Fetch Cart Items
 const cart = async (req, res) => {
   try {
@@ -11,6 +12,16 @@ const cart = async (req, res) => {
     const cartItems = await CART.findOne({ UserID: req.session.user }).populate('Products.productId')
     const coupon=await COUPON.find({status:'Active'})
     const NOtify=await notify.findOne({UserId:req.session.user}).sort({createdAt:-1})
+    const cart = await CART.findOne({UserID:req.session.user})
+  let carSize
+  if(cart&&cart.Products){
+    carSize=cart.Products.length
+  }
+  const wishlist = await wishList.findOne({ UserId: req.session.user })
+    let size
+    if (wishlist && wishlist.Products) {
+      wishlist.Products.length >0?size=wishlist.Products.length:size=null
+  }
     if (!cartItems || !cartItems.Products || cartItems.Products.length === 0) {
       return res.render('user/cart', {
         user: req.session.user,
@@ -18,7 +29,9 @@ const cart = async (req, res) => {
         data: { Products: [] },
         info: 'Your Cart is Empty',
         coupon,
-        NOtify
+        NOtify,
+        size,
+        carSize
       })
     } else {
       return res.render('user/cart', {
@@ -27,7 +40,9 @@ const cart = async (req, res) => {
         data: cartItems,
         info: '',
         coupon,
-        NOtify
+        NOtify,
+        size,
+        carSize
         
       })
     }

@@ -1,7 +1,6 @@
 const User=require('../../model/User/userModel')
 const mailSender=require('../../utils/mail_sender')
 const bcrypt=require('bcrypt')
-
 const COUPON=require('../../model/ADMIN/Coupon')
 const category=require('../../model/ADMIN/category')
 const wishList=require('../../model/User/wishList')
@@ -9,10 +8,9 @@ const PRODUCT=require('../../model/ADMIN/product')
 const OFFER=require('../../model/ADMIN/Offer')
 const CART=require('../../model/User/CART')
 const notify=require('../../model/User/notification')
-const { success } = require('./CHECK-OUT')
-
-
-
+const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
+const { findById } = require('../../model/ADMIN/adminModel')
 const securePassword = async (password) => {
     try {
       const hashpassword = await bcrypt.hash(password, 10)
@@ -206,7 +204,18 @@ const LoadHome=async(req,res)=>{
     const Data=await category.find({isList:true})
 
     const coupon=await COUPON.find({status:'Active'})
-    res.render('user/index',{Data,user: req.session.user,CURRENTpage:'Home',Category:null,coupon,NOtify})  
+
+    const cart = await CART.findOne({UserID:req.session.user})
+  let carSize
+  if(cart&&cart.Products){
+    carSize=cart.Products.length
+  }
+  const wishlist = await wishList.findOne({ UserId: req.session.user })
+    let size
+    if (wishlist && wishlist.Products) {
+      wishlist.Products.length >0?size=wishlist.Products.length:size=null
+  }
+    res.render('user/index',{Data,user: req.session.user,CURRENTpage:'Home',Category:null,coupon,NOtify,carSize,size})  
   } catch (error) {
     console.log("from home error",error)
     
@@ -238,55 +247,52 @@ const email=(req,res)=>{
 
 const shop = async (req, res) => {
 
-  const NOtify=await notify.findOne({UserId:req.session.user}).sort({createdAt:-1})
-
-  const cart = await CART.aggregate([
-    { $match: { UserID: req.session.user } },
-    { $project: { totalProject: { $size: "$Products" } } }
-  ]);
   
 
-  const totalProject = cart[0] ? cart[0].totalProject : 0;
+  const cart = await CART.findOne({UserID:req.session.user})
+  let carSize
+  if(cart&&cart.Products){
+    carSize=cart.Products.length
+  }
 
   try {
-      
       const Category = req.query.category
-      const cattt=req.query.Category
+     const categoru=await category.findById(Category)
+      // const cattt=req.query.Category
+      // console.log(Category,'Category')
       const page = parseInt(req.query.page) || 1 
       const limit = 6 
       const skip = (page - 1) * limit 
       let message = ''
-
-      
       const listedCategory = await category.find({ isList: true })
-      const listedCategoryNames = listedCategory.map(cat => cat.category)
-
+      const listedCategoryNames = listedCategory.map(cat => cat._id)
      
       let query = { isList: true } 
-      if (Category||cattt) {
+      if (Category) {
           
-          if (listedCategoryNames.includes(Category)) {
-              query.Category = Category
-          } 
+        
+              query.Category =Category
+            
+          
       } else {
          
           query.Category = { $in: listedCategoryNames }
       }
 
-      const current=new Date()
-      const activeOffers = await OFFER.find({
-        status: 'Active',
-        CreatedAt: { $lte: current },
-        expiredAt: { $gte: current }  
-    }).select('_id'); 
-    const offerIds = activeOffers.map(offer => offer._id);
-    
-
-      const products = await PRODUCT.find(query).skip(skip).limit(limit).populate({
-        path: 'Offer.OfferId',
-        match: { _id: { $in: offerIds } } 
-    })
-    const product = await PRODUCT.find()
+    //   const current=new Date()
+    //   const activeOffers = await OFFER.find({
+    //     status: 'Active',
+    //     CreatedAt: { $lte: current },
+    //     expiredAt: { $gte: current }  
+    // }).select('_id'); 
+    // // const offerIds = activeOffers.map(offer => offer._id);
+    // if (listedCategoryNames.length > 0) {
+    //   query.Category = { $in: listedCategoryNames };
+    //   console.log(query.Category ,';;;;')
+    // }
+      const products = await PRODUCT.find(query).skip(skip).limit(limit)
+      
+ 
    
 
       if (products.length === 0) {
@@ -300,35 +306,16 @@ const shop = async (req, res) => {
           return res.redirect(`/user/shop?page=${totalPages}`)
       }
     const userId=req.session.user
-console.log(userId)
-const whishlist=await wishList({UserId:userId})
-console.log(whishlist.Products,'kkk')
-      const heart = await PRODUCT.aggregate([
-        {
-          $lookup: {
-            from: 'wishlists', 
-            let: { productId: "$_id" },
-            pipeline: [
-              { $match: { $expr: { $and: [ { $eq: ["$UserId", userId] }, { $in: ["$$productId", "$Products.product"] } ] } } }
-            ],
-            as: "wishlistMatch"
-          }
-        },
-        {
-          $addFields: {
-            isInWishlist: { $gt: [{ $size: "$wishlistMatch" }, 0] } 
-          }
-        },
-        {
-          $project: {
-            _id: 1,
-            
-            isInWishlist: 1
-          }
-        }
-      ]);
-      
-      console.log(heart,'heart');
+    const wishlist = await wishList.findOne({ UserId: userId })
+    let size
+    if (wishlist && wishlist.Products) {
+      wishlist.Products.length >0?size=wishlist.Products.length:size=null
+  }
+products.forEach(product => {
+  const isInWishlist = wishlist && wishlist.Products.some(item => item.product.toString() === product._id.toString());
+  product.isInWishlist = isInWishlist;
+});
+
       
      const data=await category.find({isList:true})
      const coupon=await COUPON.find({status:'Active'})
@@ -341,11 +328,12 @@ console.log(whishlist.Products,'kkk')
           currentPage: page,
           totalPages,
           CURRENTpage:'shop',
-          Category:req.query.category,
+          Category:categoru,
           data,
           coupon,
-          totalProject,
-          NOtify
+         
+          size,
+          carSize
           
       })
       
@@ -368,7 +356,7 @@ const search = async (req, res) => {
   const page = parseInt(req.query.page) || 1 
   const limit = 6 
   const skip = (page - 1) * limit 
-  // let message = ''
+  let message = ''
 
   let query = { isList: true }
 
@@ -474,13 +462,22 @@ const productId=async(req,res)=>{
           $ne:productId
       }
   }).limit(4)
-
-
+  const cart = await CART.findOne({ UserID:req.session.user })
+  let carSize
+  if(cart&&cart.Products){
+    carSize=cart.Products.length
+  }
+  let size
+  const wishlist = await wishList.findOne({ UserId: req.session.user })
+   
+    if (wishlist && wishlist.Products) {
+      wishlist.Products.length >0?size=wishlist.Products.length:size=null
+  }
   
   const cat=await category.findOne({category:item.Category})
   
   const coupon=await COUPON.find({status:'Active'})
-    res.render('user/single-product',{item,user: req.session.user,related,CURRENTpage:'product',cat ,Category:item.Category,coupon,NOtify})
+    res.render('user/single-product',{item,user: req.session.user,carSize,size,related,CURRENTpage:'product',cat ,Category:item.Category,coupon,NOtify})
   } catch (error) {
     console.log(error)
   }

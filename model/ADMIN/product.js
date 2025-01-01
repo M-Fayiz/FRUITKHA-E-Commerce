@@ -48,7 +48,7 @@ const productModel = new mongoose.Schema(
       type: [String],
     },
     Category: {
-      type: String,
+      type: ObjectId,
       required: false,
     },
    

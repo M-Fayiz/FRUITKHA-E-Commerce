@@ -155,7 +155,7 @@ orderSchema.pre('save', function (next) {
     order.orderStatus = 'Returned';
     order.Shipping = 0; 
   }
-  this.GST=0.12*subTotal
+  this.GST=Math.round(0.12*subTotal)
   this.subTotal = subTotal;
   this.Final_Amount = this.subTotal + this.GST+this.Shipping - this.Coupon.discountValue;
 

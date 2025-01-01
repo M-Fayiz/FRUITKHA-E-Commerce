@@ -51,7 +51,7 @@
                     <!-- Filters Section -->
                     <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
                         <div class="flex flex-wrap gap-4">
-                            <input type="text" placeholder="Search products..." class="flex-1 min-w-[200px] px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                            <!-- <input type="text" placeholder="Search products..." class="flex-1 min-w-[200px] px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500"> -->
                             <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" id="productCategory" onchange="navigateToCategory()">
                                 <option value="/productList">All Category</option>
                                 <option value="/admin/productList">All Category</option>
@@ -92,7 +92,7 @@
                                 <% } %>
                         
                                 <div class="flex gap-4">
-                                    <img src="http://localhost:4000/images/<%= item.primaryImage %>" alt="Product" class="w-24 h-24 rounded-lg object-cover">
+                                    <img src="/images/<%= item.primaryImage %>" alt="Product" class="w-24 h-24 rounded-lg object-cover">
                                     <div class="flex-1">
                                         <h3 class="font-medium text-gray-800"><%= item.productTitle %></h3>
                                         <p class="text-sm text-gray-500 mb-2"><%= item.Category %></p>
@@ -122,11 +122,11 @@
                                     </button>
                                     <% if (item.isList === true) { %> 
                                         <button onclick="toggleUserStatus('<%= item.id %>', false)" class="px-3 py-1 text-sm text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors duration-200">
-                                            <i class="fas fa-trash-alt mr-1"></i> List
+                                            <i class="fas fa-trash-alt mr-1"></i> UnList
                                         </button>
                                     <% } else { %> 
                                         <button onclick="toggleUserStatus('<%= item.id %>', true)" class="px-3 py-1 text-sm text-green-600 border border-green-200 rounded hover:bg-green-50 transition-colors duration-200">
-                                            <i class="fa-light fa-arrow-up" style="color: #00b80c;"> UnList</i>
+                                            <i class="fa-light fa-arrow-up" style="color: #00b80c;"> List</i>
                                         </button>
                                     <% } %>
                                 </div>

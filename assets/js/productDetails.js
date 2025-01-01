@@ -72,10 +72,10 @@ console.log(quantity)
 						location.href='/login'
 					}
 					if (data.success) {
-					alert(data.message);
+				showToast(data.message,'success')
 					location.href = '/cart';
 					} else {
-					alert(data.message);
+					showToast(data.message,'error');
 					}
 				})
 				.catch((error) => {

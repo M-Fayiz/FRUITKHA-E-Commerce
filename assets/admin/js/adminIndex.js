@@ -9,8 +9,11 @@ let totalOrder = [];
 async function generateReport() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
-  const quickFilter = document.getElementById("quickFilter").value;
 
+  const quickFilter = document.getElementById("quickFilter").value;
+  if(startDate>endDate){
+      return showToast('Invalid startDate or endDate','error');
+    }
   try {
     const response = await fetch("/admin/graph", {
       method: "POST",
@@ -108,7 +111,7 @@ async function generateReport() {
         }
       });
 
-      // Switch to product chart by default
+      
       switchChart("product");
     }
   } catch (error) {
