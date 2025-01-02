@@ -41,7 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (productSubtotalElement && updatedProduct) {
                         productSubtotalElement.textContent = `${updatedProduct.TOTAL} ₹`;
                         quantityvalue.value=`${updatedProduct.quantity}`
-                        parseInt(quantityvalue.value)>1?decre.style.display='block':decre.style.display='none'
+                        if (parseInt(quantityvalue.value) > 1) {
+                            decre.style.display = 'block'; 
+                        } else {
+                            decre.style.display = 'none'; 
+                        }
                     }
     
                   

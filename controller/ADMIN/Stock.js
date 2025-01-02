@@ -4,12 +4,12 @@ const stock=async(req,res)=>{
     try {
     
         
-        const products = await PRODUCT.find();
+        const products = await PRODUCT.find().populate('Category')
 
         const inventory = products.map((product) => ({
             id: product._id,
             productName: product.productTitle,
-            category: product.Category,
+            category: product.Category.category,
             expiredQuantity: product.expiredQuantity,
             currentQuantity: product.totalStock,
         }));

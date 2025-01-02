@@ -49,6 +49,7 @@ const productModel = new mongoose.Schema(
     },
     Category: {
       type: ObjectId,
+      ref:'categories',
       required: false,
     },
    

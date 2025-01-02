@@ -92,7 +92,7 @@ const checkout = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Cart is Empty' });
       }
       
-      let gst=Ma.round(0.12*cart.subTotal)
+      let gst=Math.round(0.12*cart.subTotal)
       console.log(gst,'gst')
       let discountValue = 0;
       let couponCode = null;

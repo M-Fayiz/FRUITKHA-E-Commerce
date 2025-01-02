@@ -1,7 +1,7 @@
 const PRODUCT=require('../../model/ADMIN/product')
 const category=require('../../model/ADMIN/category')
 const OFFER=require('../../model/ADMIN/Offer')
-
+const mongoose=require('mongoose')
 
 const removeOFF = async (req, res) => {
     try {
@@ -19,8 +19,7 @@ const removeOFF = async (req, res) => {
             return res.status(404).json({ success: false, message: "Offer not found" })
         }
 
-        console.log("Offer deleted - Product ID:", result.productId)
-        console.log("Offer deleted - Category ID:", result.categoryId)
+        
 
         if (result.categoryId) {
             const updatedCategory = await category.findByIdAndUpdate(
@@ -33,9 +32,9 @@ const removeOFF = async (req, res) => {
             }
 
             
-
+console.log(result.categoryId,'nnn')
             await PRODUCT.updateMany(
-                { Category: updatedCategory.category },
+                { Category: result.categoryId },
                 { $unset: { "Offer.OfferPrice": "", "Offer.OfferId": "" } }
             )
 
@@ -69,7 +68,7 @@ const addOffer = async (req, res) => {
   try {
       const { categoryID, offerPercentage, offerDescription, expiredAt, createdAt, productId } = req.body
        console.log(req.body)
-   
+    
 
       let savedOffer
 
@@ -91,9 +90,12 @@ const addOffer = async (req, res) => {
               CreatedAt: createdAt,
               expiredAt: expiredAt,
           })
-          await savedOffer.save()
-
-          const productsInCategory = await PRODUCT.find({ Category: CATEGORY.category })
+         
+          let categoryIdd=new mongoose.Types.ObjectId(categoryID);
+       
+          const productsInCategory = await PRODUCT.find({ Category: categoryIdd })
+         
+          
           for (const product of productsInCategory) {
               const discount = (product.RegulerPrice * offerPercentage) / 100
               const offerPrice = product.RegulerPrice - discount
@@ -102,7 +104,7 @@ const addOffer = async (req, res) => {
                   { $set: { 'Offer.OfferPrice': offerPrice, 'Offer.OfferId': savedOffer._id } }
               )
           }
-
+          await savedOffer.save()
           await category.findByIdAndUpdate(categoryID, { Offer: savedOffer._id })
       } else if (productId) {
           const product = await PRODUCT.findById(productId)
