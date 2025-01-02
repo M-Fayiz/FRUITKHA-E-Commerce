@@ -28,12 +28,13 @@ async function generateReport() {
     if (data.success) {
       const chartData = data.report; 
       const category = data.category;
+      const categoryName=data.hello
       const sales = data.monthlySales;
     
       // Ensure data is correctly populated
       productNames = chartData.map(item => item._id);
       productSales = chartData.map(item => item.totalsales);
-      categoryNames = category.map(item => item._id);
+      categoryNames = categoryName
       categorySales = category.map(item => item.TTLsales);
 
       const labels = sales.map(item => item._id);

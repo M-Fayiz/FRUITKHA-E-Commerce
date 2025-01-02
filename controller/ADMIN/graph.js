@@ -1,5 +1,5 @@
 const ORDER=require('../../model/ADMIN/Order-schema')
-
+const categorry=require('../../model/ADMIN/category')
 const graph=async(req,res)=>{
     // console.log(req.body)
      const {startDate,endDate,quickFilter}=req.body
@@ -68,7 +68,8 @@ const graph=async(req,res)=>{
               {$unwind:'$prdctCategory'},
               {$group:{_id:'$prdctCategory.Category',TTLsales:{$sum:'$Products.quantity'}}},
               { $sort: { TTLsales: -1 } },
-              {$limit:4}
+              {$limit:4},
+
             ])
 
             const monthlySales = await ORDER.aggregate([
@@ -89,21 +90,14 @@ const graph=async(req,res)=>{
             ])
          
 
+   const hello=[]
+   for(let i of category){
+   const k= await categorry.findById(i._id)
+   hello.push(k.category)
+   }
 
-// const utcDateString = filters.createdAt['$gte'];
-
-
-// const utcDate = new Date(utcDateString);
-
-
-// const localDate = utcDate.toLocaleDateString('en-US', {
-//   weekday: 'long', 
-//   year: 'numeric',
-//   month: 'long',
-//   day: 'numeric' 
-// });
-
-            return res.status(200).json({success:true,report,category,monthlySales})
+ console.log(hello)
+            return res.status(200).json({success:true,report,category,monthlySales,hello})
         
     
        
