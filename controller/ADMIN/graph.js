@@ -96,7 +96,7 @@ const graph=async(req,res)=>{
    hello.push(k.category)
    }
 
- console.log(hello)
+
             return res.status(200).json({success:true,report,category,monthlySales,hello})
         
     

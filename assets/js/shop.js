@@ -96,7 +96,7 @@ function displayProduct(products) {
             <div class="single-product-item">
                 <div style="width: 280px;" class="product-image">
                     <a href="/product/${item._id}">
-                        <img src="http://localhost:4000/images/${item.primaryImage}" alt="${item.productTitle}">
+                        <img src="/images/${item.primaryImage}" alt="${item.productTitle}">
                         ${item.OfferPrice > 0 ? `<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px;">
                             <span style="color: rgb(255, 255, 255); font-weight: 600;">${Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100)}% OFF</span>
                         </div>` : ''}

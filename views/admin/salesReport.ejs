@@ -164,6 +164,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="salesReportTable">
+                                    <% orders.sort((a,b)=>b.createdAt-a.createdAt)%>
                                     <% orders.forEach((order,ind)=>{%>                                 
                                     <tr>
                                         <!-- <td><%=ind+1%></td> -->
