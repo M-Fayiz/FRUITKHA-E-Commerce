@@ -1,6 +1,12 @@
 
 document.getElementById('image').addEventListener('change', function (event) {
     const file = event.target.files[0];
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!file || !allowedTypes.includes(file.type)) {
+        showToast("Invalid file type! Please upload a PNG or JPEG image ..",'info');
+        return; 
+    }
+
     if (file) {
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -86,6 +92,12 @@ document.getElementById('image').addEventListener('change', function (event) {
       
       
       const imageFile = document.getElementById('modalImageInput').files[0];
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    
+      if (!imageFile || !allowedTypes.includes(imageFile.type)) {
+        alert("Invalid file type! Please upload a PNG or JPEG image ..",'info');
+        return; 
+    }
   
       // Only show an alert if the title or description fields are non-empty and contain invalid characters
       if ((modalTitle && !modalTitle.match(/^[A-Za-z ]+$/)) || 
@@ -172,17 +184,17 @@ document.getElementById('image').addEventListener('change', function (event) {
       
       return;
     }
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    const file =document.getElementById('image').files[0]
+    if (!file || !allowedTypes.includes(file.type)) {
+      alert("Invalid file type! Please upload a PNG or JPEG image ..",'info');
+      return; 
+  }
        const formData=new FormData()
        formData.append('title',document.getElementById('title').value.trim())
        formData.append('discription',document.getElementById('discr').value.trim())
-      
-       formData.append('image',document.getElementById('image').files[0])
+       formData.append('image',file)
     
-  
-  
-       
-       
-       
            try {
            fetch('/admin/addCategory',{
             method:'post',
@@ -191,16 +203,15 @@ document.getElementById('image').addEventListener('change', function (event) {
            .then(data=>{
            
             if(data.success){
-              // alert(data.message)
-              console.log(data)
-              showToast(data.message, 'success');
+         
+              alert(data.message,'success');
                  setTimeout(()=>{
                   location.reload()
                  })
               }else{
-                // alert(data.message)
-                console.log(data)
-                showToast(data.message, 'error');
+              
+           
+                alert(data.message, 'error');
               }
               })
         
@@ -211,4 +222,9 @@ document.getElementById('image').addEventListener('change', function (event) {
     
       })
      
-  
+  function editCategory(itemId,Category,description,img){
+    document.getElementById('modalTitle').value=Category
+    document.getElementById('modalDescription').value=description
+  const modalImage=  document.getElementById('editImg')
+    modalImage.src = `/images/${img}`;
+  }

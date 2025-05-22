@@ -40,7 +40,7 @@ const userSchema= mongoose.Schema({
     isGoogle:{
         type:Boolean,
         default:false
-    },
+    }, 
     usedCoupon:[{
        
         usageCount:{type:Number,required:true},

@@ -4,15 +4,15 @@ require("dotenv").config();
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "fayizmuhammedmuhammedfayiz@gmail.com",
-    pass: "jrar wqwc faig rjtb",
+    user:process.env.passEmail,
+    pass: process.env.passKey,
   },
 });
 
 const sendMail = async (email,otp)=>{
   try{
     await transporter.sendMail({
-      from:'fayizmuhammedmuhammedfayiz@gmail.com',
+      from:process.env.passEmail,
       to:email,
       subject:'Test',
       text:`Your otp is ${otp}`
@@ -26,7 +26,7 @@ const sendForgotPasswordMail = async (email, resetToken) => {
   const resetLink = `http://localhost:4000/rest-Password?token=${resetToken}`;
   try {
     await transporter.sendMail({
-      from: 'fayizmuhammedmuhammedfayiz@gmail.com',
+      from:process.env.passEmail,
       to: email,
       subject: 'Password Reset Request',
       text: `You requested a password reset. Click the link below to reset your password: \n\n${resetLink}\n\nIf you didn't request this, please ignore this email.`,

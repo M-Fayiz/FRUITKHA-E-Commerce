@@ -114,7 +114,9 @@ html::-webkit-scrollbar {
                 </thead>
                 <tbody>
                   <%if (Wallet){%>
+                    <% Wallet.transactions.sort((a,b)=>b.date-a.date)%>
                     <% Wallet.transactions.forEach(item=>{%>
+                      
                   <tr>
                     <td><%= new Date(item.date).toLocaleDateString() %></td>
                     <td><%=item.type%></td>

@@ -386,12 +386,13 @@ const search = async (req, res) => {
       const selectedCategoryArray = selectedCategories.split(',')
       query.Category = { $in: selectedCategoryArray }
     }
-
+const number=Number(priceRange)
     if (priceRange) {
-      const [minPrice, maxPrice] = priceRange.split('-').map(Number)
-      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-        query.Price = { $gte: minPrice, $lte: maxPrice }
-      }
+      const Price = number
+      console.log(Price)
+  
+        query.Price = {  $lte: Price }
+      
     }
 
     
