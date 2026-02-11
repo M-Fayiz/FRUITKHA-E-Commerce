@@ -2,8 +2,9 @@ const USER=require('../model/User/userModel')
 
 const userAuth=(req,res,next)=>{
 
-
+    console.log('user::: ', req.session.user)
      if(req.session.user){
+        // req.session.user = null
         res.redirect("/")
      }
      else{
@@ -13,7 +14,7 @@ const userAuth=(req,res,next)=>{
 
 const blockUser=async(req,res,next)=>{
     try {
-
+        console.log('user from middleware :',req.session.user)
      if(req.session.user){
          const user=await USER.findById(req.session.user)
 

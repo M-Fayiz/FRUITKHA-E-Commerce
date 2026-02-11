@@ -10,7 +10,7 @@ const passport=require('./config/passport')
 const {startExpired,StockExpire,manageExpiration}=require('./utils/service/cron')
 
 
-const {PORT}=require('./utils/env')
+const { PORT}=require('./utils/env')
 
 
 app.use('/images', express.static(path.join(__dirname, "IMAGES")))
@@ -54,6 +54,6 @@ StockExpire();
 manageExpiration()
 app.listen(PORT,()=>{
     connectDB()
-    console.log('_...,.,,., RUNNING......');
+    console.log('.................. RUNNING....................');
 })
 

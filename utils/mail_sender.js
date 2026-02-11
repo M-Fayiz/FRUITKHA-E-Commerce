@@ -23,7 +23,7 @@ const sendMail = async (email,otp)=>{
 }
 
 const sendForgotPasswordMail = async (email, resetToken) => {
-  const resetLink = `http://localhost:4000/rest-Password?token=${resetToken}`;
+  const resetLink = `${process.env.resetLink}?token=${resetToken}`;
   try {
     await transporter.sendMail({
       from:process.env.passEmail,

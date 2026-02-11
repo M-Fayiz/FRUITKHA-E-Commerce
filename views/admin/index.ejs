@@ -81,7 +81,8 @@
                 ></span>
                 <div class="text">
                   <h6 class="mb-1 card-title">Revenue</h6>
-                  <%if(data.revenue >0){%>
+               <% if(data && data.revenue > 0){ %>
+
                   <span>₹<%=data.revenue%></span>
                   <%}%>
                   <!-- <span class="text-sm"> Shipping fees are not included </span> -->
@@ -97,7 +98,9 @@
                 ></span>
                 <div class="text">
                   <h6 class="mb-1 card-title">Orders</h6>
-                  <span><%=data.totalOrder%></span>
+               
+                <span><%= data?.totalOrder || 0 %></span>
+
                   <!-- <span class="text-sm"> Excluding orders Returned and Cancelled </span> -->
                 </div>
               </article>

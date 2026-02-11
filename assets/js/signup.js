@@ -1,14 +1,19 @@
-document.getElementById("signupForm").addEventListener("submit", (e) => {
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const form = e.target;
   const result = document.getElementById("result");
 
-  // Clear previous error message
-  setTimeout(() => {
-    result.innerHTML = "";
-  }, 8000); 
+  // ================================
+  // 🔥 CLEAR OLD ERRORS FIRST
+  // ================================
+  result.innerHTML = "";
+  document.querySelectorAll(".error").forEach(el => el.innerHTML = "");
+  document.getElementById('firstNameerror').innerHTML = "";
 
+  // ================================
+  // GET VALUES
+  // ================================
   const firstName = form.querySelector("#firstName").value.trim();
   const lastName = form.querySelector("#lastName").value.trim();
   const email = form.querySelector("#email").value.trim();
@@ -16,87 +21,99 @@ document.getElementById("signupForm").addEventListener("submit", (e) => {
   const password = form.querySelector("#password").value.trim();
   const confirmPassword = form.querySelector("#confirmPassword").value.trim();
 
-  console.log(password,confirmPassword);
+  let isValid = true;
 
- 
-  let isValid=true
-  if (firstName === "" || lastName === "" || email === "" ||phone === "" ||password === "" ||confirmPassword === "" ){
-     result.innerHTML="Please fill out all required fields correctly"
-     isValid=false
-  }
- 
-  if (!firstName.match(/^[A-Za-z ]+$/))  {  
-   document.getElementById('firstNameerror').innerHTML='First Name should be letters'
-   isValid=false;
-  }
-  if( !lastName.match(/^[A-Za-z ]+$/)){
-    document.getElementById('lasterror').innerHTML='Last Name should be letters'
-    isValid=false;
+  // ================================
+  // EMPTY FIELD CHECK
+  // ================================
+  if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+    result.innerHTML = "Please fill out all required fields correctly";
+    isValid = false;
   }
 
-  if (!email.match(/^([a-zA-Z0-9_]+)@([a-zA-Z0-9]+)\.([a-zA-Z]+)(.[a-zA-Z]+)?$/)) {
-    document.getElementById('EMIALerror').innerHTML='Email should be valid'
-    isValid=false;
+  // ================================
+  // NAME VALIDATION
+  // ================================
+  if (firstName && !/^[A-Za-z ]+$/.test(firstName)) {
+    document.getElementById('firstNameerror').innerHTML = 'First Name should contain only letters';
+    isValid = false;
   }
 
-  if (!phone.match(/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/)) {
-   
-    document.getElementById('PHONEerror').innerHTML='Phone number should be in a valid format'
-    isValid=false;
+  if (lastName && !/^[A-Za-z ]+$/.test(lastName)) {
+    document.getElementById('lasterror').innerHTML = 'Last Name should contain only letters';
+    isValid = false;
   }
-  if (!password.match(/^(?=.*\d).{8,}$/)) {
-   
-    document.getElementById('Passworderror').innerHTML='Password should be 8 digit'
-    isValid=false;
-}
 
-if (!password.match(/^(?=.*[0-9])(?=.*[!@#$%^&])[a-zA-Z0-9!@#$%^&]{6,16}$/)) {
+  // ================================
+  // EMAIL VALIDATION
+  // ================================
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('EMIALerror').innerHTML = 'Enter a valid email';
+    isValid = false;
+  }
 
-  document.getElementById('Passworderror').innerHTML='Password must contain at least one number and one special character.'
-    isValid=false;
-}
+  // ================================
+  // INDIAN PHONE VALIDATION
+  // ================================
+  if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+    document.getElementById('PHONEerror').innerHTML = 'Enter valid 10 digit Indian number';
+    isValid = false;
+  }
 
+  // ================================
+  // PASSWORD VALIDATION (ONE CLEAN RULE)
+  // ================================
+  if (password && !/^(?=.*[0-9])(?=.*[!@#$%^&]).{8,}$/.test(password)) {
+    document.getElementById('Passworderror').innerHTML =
+      'Password must be 8+ characters with a number & special character';
+    isValid = false;
+  }
+
+  // ================================
+  // CONFIRM PASSWORD
+  // ================================
   if (password !== confirmPassword) {
-    result.innerHTML = "Confirm Password does not match";
+    document.getElementById('Confirmerror').innerHTML = "Passwords do not match";
+    isValid = false;
+  }
+
+  // ================================
+  // 🔥 STOP IF INVALID
+  // ================================
+  if (!isValid) {
+    showToast("Please fix form errors", "error");
     return;
   }
 
-  console.log(firstName,lastName,email)
+  // ================================
+  // API CALL
+  // ================================
+  try {
+    const response = await fetch("/genarateOTP", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+      }),
+    });
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("/genarateOTP", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          password,
-        }),
-      });
-      
-     
-      
-      const data = await response.json();
-      console.log(data)
-      if(data.success){
+    const data = await response.json();
 
-        if(data.success){
-          showToast(data.message, 'success');
-        
-             window.location.href = `/getOTP`
-      
-      }else{
-        showToast(data.message, 'error');
-      }
-       
-      }
-    } catch (err) {}
-  };
-  fetchData();
+    if (data.success) {
+      showToast(data.message, "success");
+      window.location.href = `/getOTP`;
+    } else {
+      showToast(data.message || "Something went wrong", "error");
+    }
 
+  } catch (err) {
+    console.log(err);
+    showToast("Server error. Try again later.", "error");
+  }
 });
