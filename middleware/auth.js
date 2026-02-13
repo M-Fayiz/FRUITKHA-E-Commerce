@@ -2,14 +2,12 @@ const USER=require('../model/User/userModel')
 
 const userAuth=(req,res,next)=>{
 
-    console.log('user::: ', req.session.user)
-     if(req.session.user){
-        // req.session.user = null
+    if(req.session.user){
+    
         res.redirect("/")
-     }
-     else{
+    }else{
         next()
-     }
+    }
 }
 
 const blockUser=async(req,res,next)=>{

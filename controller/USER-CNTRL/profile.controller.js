@@ -10,7 +10,6 @@ const crypto = require('crypto');
 
 
 
-const secretKEY=secret.JWT_SECRET
 
 const securePassword = async (password) => {
     try {

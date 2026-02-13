@@ -1,14 +1,13 @@
 const passport=require('passport')
 const GoogleStrategy=require('passport-google-oauth20').Strategy
-
 const User=require('../model/User/userModel')
-// const env=require('dotenv').config()
-const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET}=require('../utils/env')
+
+const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,callbackURL}=require('../utils/env')
 passport.use(new GoogleStrategy({
     clientID:GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
-}, async (accessToken, refreshToken, profile, done) => {  // Ensure done is passed as an argument
+    callbackURL: callbackURL
+}, async (accessToken, refreshToken, profile, done) => { 
     try {
         let user = await User.findOne({ googleId: profile.id });
 
@@ -29,7 +28,7 @@ passport.use(new GoogleStrategy({
             return done(null, user);
         }
     } catch (error) {
-        return done(error, null);  // Ensure done is used here as well
+        return done(error, null); 
     }
 }));
 
