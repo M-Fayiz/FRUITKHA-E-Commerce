@@ -75,7 +75,7 @@
             }
         });
 
-        // count down
+      
         if($('.time-countdown').length){  
             $('.time-countdown').each(function() {
             var $this = $(this), finalDate = $(this).data('countdown');
@@ -85,7 +85,6 @@
          });
         }
 
-        // projects filters isotop
         $(".product-filters li").on('click', function () {
             
             $(".product-filters li").removeClass("active");

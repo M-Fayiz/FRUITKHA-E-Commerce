@@ -3,19 +3,19 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const stockSchema = new mongoose.Schema({
   batchId: {
-    type: String, 
+    type: String,
     required: true,
   },
   quantity: {
-    type: Number, 
+    type: Number,
     required: true,
   },
   expiryDate: {
-    type: Date, 
+    type: Date,
     required: true,
   },
   isExpired: {
-    type: Boolean, 
+    type: Boolean,
     default: false,
   },
 });
@@ -35,11 +35,15 @@ const productModel = new mongoose.Schema(
       required: true,
     },
     Offer: {
-         OfferPrice:Number,
-         OfferId:ObjectId
+      OfferPrice: Number,
+      OfferId: ObjectId
     },
-    Stock: [stockSchema], 
-    totalStock:{type:Number,default:0},
+    OfferPrice: {
+      type: Number,
+      default: 0
+    },
+    Stock: [stockSchema],
+    totalStock: { type: Number, default: 0 },
     primaryImage: {
       type: String,
       required: true,
@@ -49,14 +53,14 @@ const productModel = new mongoose.Schema(
     },
     Category: {
       type: ObjectId,
-      ref:'categories',
+      ref: 'categories',
       required: false,
     },
-   
+
     // expiresAt: {
     //   type: Date, 
     // },
-  
+
     isList: {
       type: Boolean,
       default: true,
@@ -66,11 +70,11 @@ const productModel = new mongoose.Schema(
 );
 
 productModel.virtual("expiredQuantity").get(function () {
-    return this.Stock.reduce((acc, batch) => (batch.isExpired ? acc + batch.quantity : acc), 0);
-  });
+  return this.Stock.reduce((acc, batch) => (batch.isExpired ? acc + batch.quantity : acc), 0);
+});
 
-  
-  productModel.set("toJSON", { virtuals: true });
-  productModel.set("toObject", { virtuals: true });
+
+productModel.set("toJSON", { virtuals: true });
+productModel.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model('products', productModel);

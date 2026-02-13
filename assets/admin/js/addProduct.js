@@ -7,26 +7,26 @@ document.addEventListener('DOMContentLoaded', function () {
     let croppedBlobs = []; // Array to store cropped blobs for each image input
 
     console.log(croppedBlobs);
-    
 
-    function handleImageCrop(file, inputIndex) {
+
+    function handleImageCrop(file, inputIndex, previewElement) {
 
         const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!file || !allowedTypes.includes(file.type)) {
-            
-            showToast("Invalid file type! Please upload a PNG or JPEG image ..",'info');
-            return; 
+
+            showToast("Invalid file type! Please upload a PNG or JPEG image ..", 'info');
+            return;
         }
 
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-            console.log('reader',reader);
-            
+            console.log('reader', reader);
+
             reader.onload = function (e) {
                 cropImage.src = e.target.result;
                 imageCropModal.style.display = 'block';
 
-                if (cropper) cropper.destroy(); 
+                if (cropper) cropper.destroy();
 
                 cropper = new Cropper(cropImage, {
                     aspectRatio: 1,
@@ -35,12 +35,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     responsive: true,
                 });
 
-               
+
                 cropButton.onclick = () => {
                     if (cropper) {
                         const canvas = cropper.getCroppedCanvas();
                         canvas.toBlob(blob => {
                             croppedBlobs[inputIndex] = blob;
+
+                            // Update Preview
+                            if (previewElement) {
+                                previewElement.src = URL.createObjectURL(blob);
+                                previewElement.style.display = 'block';
+                            }
+
                             imageCropModal.style.display = 'none';
                             cropper.destroy();
                             cropper = null;
@@ -53,11 +60,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     imageInputs.forEach((input, index) => {
-        console.log(input,index,'primary');
-        
+        console.log(input, index, 'primary');
+
         input.addEventListener('change', event => {
             const file = event.target.files[0];
-            handleImageCrop(file, index);
+            const previewElement = document.getElementById(`imagePreview${index}`);
+            handleImageCrop(file, index, previewElement);
         });
     });
 
@@ -66,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const title = document.getElementById("title").value.trim();
         if (!title.match(/^[A-Za-z][A-Za-z ]*$/)) {
-            showToast("Name should contain only letters and spaces.",'error');
+            showToast("Name should contain only letters and spaces.", 'error');
             return;
         }
         const expiry = document.getElementById('expiry').value.trim();
@@ -74,23 +82,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (expiryTimestamp < Date.now()) {
-        showToast('The date should be valid and in the future', 'error');
-        return;
+            showToast('The date should be valid and in the future', 'error');
+            return;
         }
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', document.getElementById('description').value.trim());
         formData.append('regularPrice', document.getElementById('regularPrice').value.trim());
-        formData.append('expiryDate',expiryTimestamp);
+        formData.append('expiryDate', expiryTimestamp);
         formData.append('category', document.getElementById('category').value.trim());
         formData.append('quantity', document.getElementById('stock').value.trim());
 
         imageInputs.forEach((input, index) => {
             const file = input.files[0];
             if (croppedBlobs[index]) {
-    formData.append('primaryImageInput', croppedBlobs[index], `image-${index}-cropped.jpg`);
-}
+                formData.append('primaryImageInput', croppedBlobs[index], `image-${index}-cropped.jpg`);
+            }
 
         });
 
@@ -98,20 +106,19 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             body: formData
         }).then(res => res.json())
-        .then(data =>{
-            if(data.success){
-                showToast(data.message, 'success');
-                setTimeout(()=>{
-                    location.reload()
-                },1000)
-                
-            }else{
-                showToast(data.message, 'error')
-            }
-            
-        } )
-      
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => {
+                        location.reload()
+                    }, 1000)
+
+                } else {
+                    showToast(data.message, 'error')
+                }
+
+            })
+
     });
 });
 
-                

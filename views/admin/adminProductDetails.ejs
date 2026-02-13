@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nest Mart - Product Edit</title>
+    <link rel="stylesheet" href="/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3BB77E;
+            --secondary-color: #253D4E;
+            --background-color: #f7f8f9;
+            --card-background: #ffffff;
+            --border-color: #ececec;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--background-color);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--secondary-color);
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .product-container {
+            padding: 20px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .save-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-button:hover {
+            background: #2ea56f;
+        }
+
+        .product-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .main-info,
+        .side-info {
+            background: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .image-preview {
+            width: 60%;
+            height: 200px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background: #f8f8f8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            background: #e8f6ea;
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .text-muted {
+            color: #7e7e7e;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="dashboard-header" style="display: flex; flex-direction: column;align-items: first baseline;">
+
+        <h1 class="page-title">Edit Product</h1>
+        <div style="display: flex;">
+            <a href="/admin/" style="color: #253D4E;text-decoration: none;">Home</a>
+            <a href="/admin/productList" style="color: #253D4E;text-decoration: none;">/ product List </a>
+            <a href="/admin/SingleImage/:id" style="color: #253D4E;text-decoration: none">/ Edit Product</a>
+        </div>
+
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="product-container">
+        <form id="updateProductForm">
+            <div class="product-form">
+                <div class="main-info">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="title" value="<%=result.productTitle %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="description" rows="4"><%=result.description %></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Main Image</label>
+                        <div class="image-preview">
+                            <img id="mainImagePreview" src="/images/<%=result.primaryImage%>" alt="Main product image">
+                        </div>
+                        <input type="file" id="primaryImageInput" accept="image/*" style="margin-top: 10px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gallery Images</label>
+                        <div class="gallery-grid">
+
+                            <div class="gallery-item">
+
+                                <img src="/images/<%= result.additonalImage[0] %>" alt="Gallery image ">
+
+                            </div>
+                            <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
+
+                            <div class="gallery-item">
+                                <img src="/images/<%= result.additonalImage[1] %>" alt="Gallery image ">
+
+                            </div>
+                            <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
+
+
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div id="imageCropModal" style="display: none;">
+                        <img id="cropImage" alt="Image to crop" style="max-width: 100%;" />
+                        <button type="button" id="cropButton"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4">Crop</button>
+                    </div>
+                </div>
+
+                <div class="side-info">
+
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="form-control" id="category">
+                            <%console.log(category)%>
+                            <% category.forEach(item=> {%>
+                                <option value="<%=item._id %>" <%=result.Category.toString()===item._id.toString()
+                                    ? 'selected' : '' %>>
+                                    <%=item.category %>
+                                </option>
+                                <%})%>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" class="form-control" min="1" id="regularPrice"
+                            value="<%=result.RegulerPrice %>" step="0.01">
+                    </div>
+
+<!-- 
+                    <label>Offer Price (%)</label>
+                    <input type="number" class="form-control" min="0" max="100" id="offerPrice"
+                        value="<%= offer ? offer : '' %>" step="0.01" style="color: #2ea56f;"> -->
+
+
+
+                    <div class="form-group">
+                        <!-- <label>Stock Quantity</label>
+                        <input type="number" class="form-control" min="0" id="stock" value="<%=result.Stock %>"> -->
+                        <div style="padding-top: 8px;">
+                            <% if (result.totalStock> 10) { %>
+                                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full"
+                                    style="background-color: #84ec7d; padding: 3px; border-radius: 5px;">
+                                    In Stock
+                                </span>
+                                <% } else if (result.totalStock> 0) { %>
+                                    <span
+                                        class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full"
+                                        style="background-color: #ecea7d; padding: 3px; border-radius: 5px;">
+                                        Low Stock
+                                    </span>
+                                    <% } else { %>
+                                        <span
+                                            class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full"
+                                            style="background-color: #f57a7a; padding: 3px; border-radius: 5px;">
+                                            Out of Stock
+                                        </span>
+                                        <% } %>
+                        </div>
+                        <button type="submit" data-id="<%= result.id %>" class="save-button">Save Changes</button>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="/admin/js/editProduct.js"></script>
+    <script src="/showNotification.js"></script>
+</body>
+
+</html>
