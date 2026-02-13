@@ -3,6 +3,11 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const orderSchema = new mongoose.Schema(
   {
+    orderNumber: {
+      type: String,
+      unique: true,
+      index: true,
+   },
     UserID: {
       type: ObjectId,
       ref: 'user',

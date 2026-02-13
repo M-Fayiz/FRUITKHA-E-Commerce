@@ -1,5 +1,5 @@
 
-const ORDER=require('../../model/ADMIN/Order-schema')
+const ORDER=require('../../model/ADMIN/order-schema')
 const PRODUCT=require('../../model/ADMIN/product')
 const WALLET =require('../../model/User/wallet')
 
@@ -36,7 +36,6 @@ if (skip >= totalOrders && totalOrders > 0) {
 }
 
 
-
        
       res.render('user/orderList', { orders ,user:req.session.user,currentPage: page,
         totalPages,
@@ -51,9 +50,9 @@ if (skip >= totalOrders && totalOrders > 0) {
 }
 
 const orderDetails=async(req,res)=>{
-    console.log('ORDER DETAILS')
+  
     const orderId=req.params.id
-    console.log(orderId,'id')
+  
     try {
        
    
@@ -66,7 +65,7 @@ const orderDetails=async(req,res)=>{
 }
 
   const CANCELallORDER = async (req, res) => {
-    console.log('GET IN CANCEL ALL ORDER');
+
     const { orderId } = req.body;
   
     try {
@@ -128,10 +127,10 @@ const orderDetails=async(req,res)=>{
 
 
 const ReturnOrder=async(req,res)=>{
-  console.log('GET IN RETURN ORDER')
+
   const {orderId,Reason}=req.body
   const prodctImage = req.file;
-  console.log(prodctImage)
+
 
   try {
     const order=await ORDER.findOne({_id:orderId})
@@ -145,7 +144,7 @@ const ReturnOrder=async(req,res)=>{
         message: 'Your return time for this order has exceeded 2 days , which the allowed period.',
       });
     }
-console.log(prodctImage.file,'filednawm')
+
     order.Return.req=true
     order.Return.reason=Reason
     order.Return.image=prodctImage.filename

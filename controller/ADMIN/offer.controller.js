@@ -1,6 +1,6 @@
 const PRODUCT=require('../../model/ADMIN/product')
 const category=require('../../model/ADMIN/category')
-const OFFER=require('../../model/ADMIN/Offer')
+const OFFER=require('../../model/ADMIN/offer')
 const mongoose=require('mongoose')
 
 const removeOFF = async (req, res) => {

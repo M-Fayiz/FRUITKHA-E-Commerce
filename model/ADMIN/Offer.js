@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 const { ObjectId } = mongoose.Schema.Types; 
-const PRODUCT=require('../../model/ADMIN/product')
+const PRODUCT=require('./product')
 
 
 const offer=new mongoose.Schema({

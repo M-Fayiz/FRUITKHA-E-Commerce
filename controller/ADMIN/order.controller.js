@@ -1,4 +1,4 @@
-const ORDER=require('../../model/ADMIN/Order-schema')
+const ORDER=require('../../model/ADMIN/order-schema')
 const PRODUCT=require('../../model/ADMIN/product')
 const WALLET=require('../../model/User/wallet')
 const notify=require('../../model/User/notification')
@@ -65,7 +65,7 @@ const details=async(req,res)=>{
 
 
 const OrderStatus = async (req, res) => {
-  console.log('GET IN ORDER STATUS')
+
   const { Status, OrderID } = req.body
 
   try {
@@ -96,10 +96,10 @@ const OrderStatus = async (req, res) => {
           order.Datess.DeliveryDate = new Date();
           order.Datess.expiryDate = new Date(Date.now() +1 * 24 * 60 * 60 * 1000)
       }
-      // 
+  
       await order.save();
 
-      console.log(order);
+
       res.status(200).json({ success: true, message: 'Order Status Successfully Updated' });
   } catch (error) {
       console.log(error.message);

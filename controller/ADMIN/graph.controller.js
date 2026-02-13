@@ -1,4 +1,4 @@
-const ORDER=require('../../model/ADMIN/Order-schema')
+const ORDER=require('../../model/ADMIN/order-schema')
 const categorry=require('../../model/ADMIN/category')
 const graph=async(req,res)=>{
     // console.log(req.body)

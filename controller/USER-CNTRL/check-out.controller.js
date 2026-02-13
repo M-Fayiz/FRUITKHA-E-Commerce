@@ -2,8 +2,8 @@ const USER=require('../../model/User/userModel')
 const CART=require('../../model/User/CART')
 const ADDRESS=require('../../model/User/address')
 const PRODUCT=require('../../model/ADMIN/product')
-const ORDER=require('../../model/ADMIN/Order-schema')
-const COUPON=require('../../model/ADMIN/Coupon')
+const ORDER=require('../../model/ADMIN/order-schema')
+const COUPON=require('../../model/ADMIN/coupon')
 const razorpay=require('../../utils/service/Razorpay')
 const crypto = require('crypto')
 const Wallet=require('../../model/User/wallet')
@@ -14,7 +14,7 @@ const PDFDocument = require('pdfkit');
 const wishList=require('../../model/User/wishList')
 
 const checkout = async (req, res) => {
-    console.log('- - - LOG CHECKED - - -')
+
     try {
       const UserID = req.session.user;
   
@@ -70,14 +70,14 @@ const checkout = async (req, res) => {
   };
 
   const placeOrder = async (req, res) => {
-    console.log('PLACE ORDER');
+   
    
   
     try {
       const { selectedAddress, paymentMethod, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
       
       const User = req.session.user;
-  console.log(paymentMethod)
+
       if (!User) {
         return res.status(400).json({ success: false, message: 'User Not Found' });
       }
@@ -93,7 +93,7 @@ const checkout = async (req, res) => {
       }
       
       let gst=Math.round(0.12*cart.subTotal)
-      console.log(gst,'gst')
+
       let discountValue = 0;
       let couponCode = null;
       let couponId = cart.Discount?.discountId;
@@ -151,6 +151,7 @@ const checkout = async (req, res) => {
       }
   
       const orderData = {
+         orderNumber: generateOrderNumber(),
         UserID: User,
         Products: cart.Products.map((item) => ({
           product: item.productId,
@@ -184,7 +185,7 @@ const checkout = async (req, res) => {
           razorpay_signature: razorpay_signature ,
         },
       };
-     console.log('ORDER is going to save')
+
       const newOrder = new ORDER(orderData);
      const hh= await newOrder.save();
    
@@ -240,12 +241,10 @@ const checkout = async (req, res) => {
   };
   
   const verifyPayment = async (req, res) => {
-    console.log('///////')
+  
     const crypto = require('crypto');
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
 
-  // console.log(orderId)
-  // console.log('req . body ',req.body)
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !orderId) {
       return res.status(422).json({ success: false, message: 'Missing required fields' });
     }
@@ -350,22 +349,20 @@ const invoice = async (req, res) => {
     
       const doc = new PDFDocument({ margin: 30 });
 
-      // Set response headers for PDF download
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
           'Content-Disposition',
           `attachment; filename=invoice_${order._id}.pdf`
       );
   
-      // Pipe the PDF document to the response
+
       doc.pipe(res);
   
-      // Add header
+ 
       doc.fontSize(20).fillColor('#f57c00').text('FRUITKHA', { align: 'center' });
       doc.fontSize(10).fillColor('#333').text('Fresh Fruits Online', { align: 'center' });
       doc.moveDown();
-  
-      // Add invoice details
+
       doc.fontSize(12).fillColor('#000').text(`Invoice No: INC${randomNumber}`);
       doc.text(`Order ID: ${order._id}`);
       doc.text(`Date: ${new Date(order.createdAt).toLocaleString('en-US', {
@@ -376,7 +373,7 @@ const invoice = async (req, res) => {
       })}`);
       doc.moveDown();
   
-      // Add billing information
+ 
       doc.fontSize(14).text('Billing Information', { underline: true });
       doc.fontSize(12).text(`Customer Name: ${order.UserID.firstName}`);
       doc.text(`Email: ${order.UserID.email}`);
@@ -384,10 +381,9 @@ const invoice = async (req, res) => {
       doc.text(`Address: ${order.addressId.District}, ${order.addressId.State}, ${order.addressId.PIN}`);
       doc.moveDown();
   
-      // Add order summary
+    
       doc.fontSize(14).text('Order Summary', { underline: true }).moveDown();
   
-      // Table header
       const headers = ['Item Name', 'Quantity', 'Unit Price', 'Status', 'Total'];
       const tableTop = doc.y;
       const colWidths = [150, 50, 80, 80, 80];
@@ -398,11 +394,11 @@ const invoice = async (req, res) => {
           x += colWidths[i];
       });
   
-      // Draw a line below headers
+    
       doc.moveTo(50, tableTop + 15).lineTo(530, tableTop + 15).stroke();
       let currentY = tableTop + 25;
   
-      // Table rows
+    
       order.Products.forEach((item) => {
           x = 50;
           const row = [
@@ -417,12 +413,12 @@ const invoice = async (req, res) => {
               doc.fontSize(12).font('Helvetica').text(data, x, currentY, { width: colWidths[i], align: 'center' });
               x += colWidths[i];
           });
-          currentY += 20; // Row height
+          currentY += 20; 
       });
   
-      // Add totals below the table
+      
       currentY += 10;
-      doc.moveTo(50, currentY).lineTo(530, currentY).stroke(); // Line above totals
+      doc.moveTo(50, currentY).lineTo(530, currentY).stroke(); 
       currentY += 5;
   
       const totals = [
@@ -439,18 +435,18 @@ const invoice = async (req, res) => {
           currentY += 20;
       });
   
-      // Add payment details
+
       doc.moveDown().fontSize(14).text('Payment Details', { underline: true }).moveDown();
       doc.fontSize(12).text(`Payment Method: ${order.payment}`);
       if (order.payment === 'razorpay') {
           doc.text(`Transaction ID: ${order.RazorPay.razorpay_payment_id}`);
       }
   
-      // Add footer
+
       doc.moveDown().fontSize(10).fillColor('#555').text('For any questions, contact us at support@fruitkha.com', { align: 'center' });
       doc.text('Thank you for shopping with us! 🍇', { align: 'center' });
   
-      // Finalize the PDF
+    
       doc.end();
   } catch (error) {
       console.error('Server error:', error);

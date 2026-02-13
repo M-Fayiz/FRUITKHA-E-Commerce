@@ -1,4 +1,4 @@
-const COUPON=require('../../model/ADMIN/Coupon')
+const COUPON=require('../../model/ADMIN/coupon')
 const USER=require('../../model/User/userModel')
 const CART=require('../../model/User/CART')
 // const check = async()=>{

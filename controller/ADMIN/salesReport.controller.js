@@ -1,4 +1,4 @@
-const ORDER=require('../../model/ADMIN/Order-schema')
+const ORDER=require('../../model/ADMIN/order-schema')
 const product = require('../../model/ADMIN/product')
 
 const salesReport = async (req, res) => {

@@ -3,7 +3,7 @@ const bcrypt=require('bcrypt')
 const USER=require('../../model/User/userModel')
 
 const category=require('../../model/ADMIN/category');
-const ORDER=require('../../model/ADMIN/Order-schema')
+const ORDER=require('../../model/ADMIN/order-schema')
 
 const PRODUCT=require('../../model/ADMIN/product')
 
