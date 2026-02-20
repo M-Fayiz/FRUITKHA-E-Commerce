@@ -12,6 +12,7 @@ const path = require('path');
 const ejs = require('ejs');
 const PDFDocument = require('pdfkit');
 const wishList=require('../../model/User/wishList')
+const generateOrderNumber = require('../../utils/generateOrderNumber')
 
 const checkout = async (req, res) => {
 
