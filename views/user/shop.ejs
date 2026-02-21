@@ -1,707 +1,620 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Fruitkha shop">
+  <title>Shop</title>
 
-	<!-- title -->
-	<title>Shop</title>
-	
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
-	<!-- google font -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-	<!-- fontawesome -->
-	<link rel="stylesheet" href="/css/all.min.css">
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="/css/owl.carousel.css">
-	<!-- magnific popup -->
-	<link rel="stylesheet" href="/css/magnific-popup.css">
-	<!-- animate css -->
-	<link rel="stylesheet" href="/css/animate.css">
-	<!-- mean menu css -->
-	<link rel="stylesheet" href="/css/meanmenu.min.css">
-	<!-- main style -->
-	<link rel="stylesheet" href="/css/main.css">
-	<!-- responsive -->
-	<link rel="stylesheet" href="/css/responsive.css">
+  <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/all.min.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/owl.carousel.css">
+  <link rel="stylesheet" href="/css/magnific-popup.css">
+  <link rel="stylesheet" href="/css/animate.css">
+  <link rel="stylesheet" href="/css/meanmenu.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/toast.css">
 
-	<style>
-		/* Basic button styling for pagination links */
-		.pagination-wrap ul {
-		  display: inline-block;
-		  padding: 0;
-		  margin: 0;
-		}
-		
-		.pagination-wrap ul li {
-		  display: inline;
-		  margin: 0 5px;
-		}
-		
-		.pagination-wrap ul li a {
-		  display: inline-block;
-		  padding: 8px 12px;
-		  font-size: 14px;
-		  color: #333;
-		  border: 1px solid #ccc;
-		  border-radius: 20px;
-		  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-		}
-		
-		/* Highlight the active page */
-		.pagination-wrap ul li a.bg-emerald-500 {
-		  background-color: #f28123; /* Emerald */
-		  color: #fff;
-		}
-		
-		/* Hover state for pagination buttons */
-		.pagination-wrap ul li a:hover {
-		  background-color: #f28123; /* Hover effect color */
-		  color: #fff;
-		  border-color: #f28123;
-		  transform: scale(1.05);
-		}
-		
-		/* Additional hover effect to change other buttons */
-		.pagination-wrap ul li a:hover ~ li a {
-		  background-color: #d1fae5; /* Light emerald shade for inactive buttons */
-		  color: #f28123;
-		}
-		</style>
-		<style>
-			.search-container {
-			  display: flex;
-			  justify-content: center;
-			  align-items: center;
-			 
-			 
-			  font-family: Arial, sans-serif;
-			}
-		
-			.search-wrapper {
-			  position: relative;
-			  width: 100%;
-			  max-width: 500px;
-			  margin: 0 20px;
-			}
-		
-			#search-input {
-			  width: 100%;
-			  padding: 15px 20px;
-			  padding-right: 50px;
-			  border: none;
-			  border-radius: 30px;
-			  font-size: 16px;
-			  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-			  transition: all 0.3s ease;
-			  background: rgb(239, 238, 238);
-			}
-		
-			.search-input:focus {
-			  outline: none;
-			  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-			  transform: translateY(-2px);
-			}
-		
-			.search-button {
-			  position: absolute;
-			  right: 15px;
-			  top: 50%;
-			  transform: translateY(-50%);
-			  border: none;
-			  background: none;
-			  cursor: pointer;
-			  padding: 0;
-			}
-		
-			.search-icon {
-			  width: 20px;
-			  height: 20px;
-			  fill: #666;
-			  transition: fill 0.3s ease;
-			}
-		
-			.search-button:hover .search-icon {
-			  fill: #333;
-			}
-		
-			/* Optional: Add a placeholder animation */
-			.search-input::placeholder {
-			  color: #999;
-			  transition: opacity 0.3s ease;
-			}
-		
-			.search-input:focus::placeholder {
-			  opacity: 0.5;
-			}
-		  </style>
-		  <style>
-		 /* Grid Layout */
-		 .product-grid {
-		   display: grid;
-		   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Compact grid layout */
-		   gap: 8px; /* Reduced spacing between items */
-		   padding: 8px;
-		 }
-		 
-		 /* Individual Product Styling */
-		 .single-product-item {
-		   background-color: #fff;
-		   border: 1px solid #ddd;
-		   border-radius: 8px;
-		   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		   overflow: hidden;
-		   padding: 10px;
-		   margin: 15px;
-		   display: flex;
-		   flex-direction: column;
-		   
-		   
-		 }
-		 
-		 /* Product Image */
-		 .product-image img {
-		   width: 100%;
-		   height: 200px; /* Compact height */
-		   object-fit: cover;
-		   border-radius: 8px;
-		 }
-		 
-		 /* Product Info */
-		 
-		 
-		 .product-info h3 {
-		   font-size: 16px;
-		   margin-bottom: 2px;
-		   font-weight: bold;
-		 }
-		 
-		 .product-info .price {
-		   font-size: 14px;
-		   color: #333;
-		   font-weight: bold;
-		 }
-		 
-		 .stock-label {
-		   margin-top: 5px;
-		   padding: 3px 8px;
-		   font-size: 12px;
-		   font-weight: bold;
-		   border-radius: 5px;
-		 }
-		 
-		 .stock-label.in-stock {
-		   background-color: #d4edda;
-		   color: #155724;
-		 }
-		 
-		 .stock-label.low-stock {
-		   background-color: #fff3cd;
-		   color: #856404;
-		 }
-		 
-		 .stock-label.out-of-stock {
-		   background-color: #f8d7da;
-		   color: #721c24;
-		 }
-		 
-		 /* Product Actions */
-		 .product-actions {
-		   display: flex;
-		   align-items: center;
-		   justify-content: space-between;
-		   margin-top: 10px;
-		   width: 100%;
-		 }
-		 
-		 .quantity-input {
-		   width: 50px;
-		   padding: 5px;
-		   text-align: center;
-		   border: 1px solid #ddd;
-		   border-radius: 5px;
-		 }
-		 
-		 .cart-btn {
-		   padding: 5px 15px;
-		   background-color: #f89c0e;
-		   color: white;
-		   font-size: 14px;
-		   font-weight: bold;
-		   border: none;
-		   border-radius: 5px;
-		   cursor: pointer;
-		   transition: background-color 0.3s ease;
-		 }
-		 
-		 .cart-btn:hover {
-		   background-color: #d9780c;
-		 }
-		 .cart-btn.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
+  <style>
+    :root {
+      --shop-primary: #ff7a18;
+      --shop-secondary: #ffe6cf;
+      --shop-dark: #1f2937;
+      --shop-muted: #64748b;
+      --shop-bg: #f6f8fb;
+      --shop-card: #ffffff;
+      --shop-success: #16a34a;
+      --shop-warning: #d97706;
+      --shop-danger: #dc2626;
+    }
 
-		 
-		
-		</style>
-		
-		 <style>
-			 :root {
-				 --primary-color: #F28123;
-				 --dark-color: #051922;
-			 }
-	 
-			 .sidebar {
-				 position: fixed;
-				 left: -300px;
-				 top: 0;
-				 height: 100vh;
-				 width: 300px;
-				 background-color: white;
-				 transition: 0.3s;
-				 z-index: 1000;
-				 box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-				 display: flex;
-				 flex-direction: column;
-			 }
-	 
-			 .sidebar.active {
-				 left: 0;
-			 }
-	 
-			 .sidebar-toggle {
-				 position: fixed;
-				 left: 20px;
-				 top: 20px;
-				 z-index: 1001;
-				 background-color: var(--primary-color);
-				 border: none;
-				 color: white;
-				 padding: 10px 15px;
-				 border-radius: 5px;
-				 transition: 0.3s;
-			 }
-	 
-			 .sidebar-toggle.hidden {
-				 opacity: 0;
-				 visibility: hidden;
-			 }
-	 
-			 .sidebar-header {
-				 background-color: var(--dark-color);
-				 color: white;
-				 padding: 20px;
-				 flex-shrink: 0;
-			 }
-	 
-			 .close-btn {
-				 color: white;
-				 background: none;
-				 border: none;
-				 font-size: 1.5rem;
-			 }
-	 
-			 .price-range {
-				 padding: 10px;
-			 }
-	 
-			 .filter-section {
-				 padding: 15px;
-				 border-bottom: 1px solid #eee;
-			 }
-	 
-			 .filter-title {
-				 color: var(--dark-color);
-				 font-weight: 600;
-				 margin-bottom: 15px;
-			 }
-	 
-			 .form-check-input:checked {
-				 background-color: var(--primary-color);
-				 border-color: var(--primary-color);
-			 }
-	 
-			 .overlay {
-				 position: fixed;
-				 top: 0;
-				 left: 0;
-				 width: 100%;
-				 height: 100%;
-				 background-color: rgba(0,0,0,0.5);
-				 display: none;
-				 z-index: 999;
-			 }
-	 
-			 .overlay.active {
-				 display: block;
-			 }
-	 
-			 /* Scrollable content area */
-			 .sidebar-content {
-				 flex-grow: 1;
-				 overflow-y: auto;
-				 padding-bottom: 80px; /* Make room for the fixed button */
-			 }
-	 
-			 /* Fixed button container at bottom */
-			 .button-container {
-				 position: fixed;
-				 bottom: 0;
-				 left: -300px;
-				 width: 300px;
-				 padding: 15px;
-				 background-color: white;
-				 border-top: 1px solid #eee;
-				 transition: 0.3s;
-				 z-index: 1002;
-			 }
-	 
-			 .sidebar.active + .button-container,
-			 .sidebar.active ~ .button-container {
-				 left: 0;
-			 }
-	 
-			 .apply-btn {
-				 background-color: var(--primary-color);
-				 color: white;
-				 border: none;
-				 padding: 10px 20px;
-				 border-radius: 5px;
-				 width: 100%;
-			 }
-	 
-			 .apply-btn:hover {
-				 background-color: #e67615;
-			 }
-		 </style>
-<link rel="stylesheet" href="/toast.css">
+    body {
+      background: radial-gradient(circle at top left, #fff2e5, #f6f8fb 45%);
+    }
+
+    .breadcrumb-section.breadcrumb-bg {
+      background: #fff7ef !important;
+      min-height: auto !important;
+      padding: 50px 0 28px !important;
+      margin-bottom: 12px;
+    }
+
+    .breadcrumb-text p {
+      margin-bottom: 4px !important;
+      font-size: 13px !important;
+      letter-spacing: 0.08em !important;
+    }
+
+    .breadcrumb-text h1 {
+      font-size: 34px !important;
+      line-height: 1.1 !important;
+      margin: 0 !important;
+    }
+
+    .shop-shell {
+      padding: 20px 0 90px;
+      min-height: 100vh;
+    }
+
+    .shop-head {
+      background: linear-gradient(130deg, #ffffff, #fff4ea);
+      border: 1px solid #f5dcc4;
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: 0 12px 30px rgba(19, 22, 26, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .shop-head h1 {
+      margin: 0;
+      font-size: 32px;
+      color: var(--shop-dark);
+      font-weight: 700;
+    }
+
+    .shop-head p {
+      margin: 6px 0 0;
+      color: var(--shop-muted);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 1px solid #e7ecf2;
+      border-radius: 12px;
+      height: 48px;
+      padding: 0 44px 0 14px;
+      color: #0f172a;
+      background: #fff;
+    }
+
+    .search-wrap i {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    .filter-open-btn {
+      border: 0;
+      background: var(--shop-primary);
+      color: #fff;
+      border-radius: 12px;
+      height: 48px;
+      padding: 0 18px;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .filter-open-btn:hover {
+      filter: brightness(0.94);
+      transform: translateY(-1px);
+    }
+
+    .quick-cats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .quick-cats a {
+      color: #1e293b;
+      border: 1px solid #d7dde6;
+      border-radius: 999px;
+      padding: 7px 15px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.2s ease;
+      text-decoration: none;
+      background: #fff;
+    }
+
+    .quick-cats a:hover,
+    .quick-cats a.active {
+      color: #fff;
+      background: var(--shop-primary);
+      border-color: var(--shop-primary);
+    }
+
+    .list-note {
+      color: #475569;
+      margin-bottom: 14px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      position: relative;
+      background: var(--shop-card);
+      border: 1px solid #e8edf4;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      transition: 0.2s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+    }
+
+    .product-thumb {
+      position: relative;
+      height: 210px;
+      background: linear-gradient(135deg, #fff8ef, #f4f7fb);
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .offer-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 0;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wishlist-btn.is-active {
+      color: #ef4444;
+    }
+
+    .product-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .product-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+    }
+
+    .price-block {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .price-now {
+      color: #0f172a;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .price-old {
+      color: #94a3b8;
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+
+    .stock-pill {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stock-in {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .stock-low {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .stock-out {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .cart-btn {
+      margin-top: auto;
+      border: 0;
+      border-radius: 10px;
+      height: 42px;
+      font-weight: 700;
+      background: var(--shop-primary);
+      color: #fff;
+      transition: 0.2s ease;
+      width: 100%;
+    }
+
+    .cart-btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .cart-btn[disabled] {
+      background: #e5e7eb;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .pagination-wrap ul {
+      margin: 30px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pagination-wrap a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid #d8e0ea;
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .pagination-wrap a.active,
+    .pagination-wrap a:hover {
+      border-color: var(--shop-primary);
+      background: var(--shop-primary);
+      color: #fff;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .filter-panel {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 320px;
+      height: 100vh;
+      z-index: 1000;
+      background: #fff;
+      border-right: 1px solid #e2e8f0;
+      transition: left 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-panel.active {
+      left: 0;
+    }
+
+    .filter-head {
+      background: #111827;
+      color: #fff;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filter-head h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-filter-btn {
+      background: transparent;
+      border: 0;
+      color: #fff;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .filter-body {
+      padding: 16px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .filter-title {
+      margin: 0 0 10px;
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .range-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .apply-btn {
+      border: 0;
+      border-radius: 10px;
+      width: 100%;
+      height: 44px;
+      color: #fff;
+      font-weight: 700;
+      background: var(--shop-primary);
+    }
+
+    @media (max-width: 767px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .shop-head h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
 </head>
 <body>
-	
-	<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
+  <div class="loader">
+    <div class="loader-inner">
+      <div class="circle"></div>
     </div>
-    <!--PreLoader Ends-->
-	
-	<!-- header -->
+  </div>
 
-	<%-include('../partials/Header.ejs') %>
-	<!-- end header -->
-	<div class="toast-container" id="toastContainer"></div>
-	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end search arewa -->
-	
-	<div class="sidebar" id="sidebar">
-		<div class="sidebar-header d-flex justify-content-between align-items-center">
-			<h5 class="mb-0">Filter Products</h5>
-			<button class="close-btn" id="closeBtn">
-				<i class="fas fa-times"></i>
-			</button>
-		</div>
-	
-		<div class="sidebar-content">
-			<!-- Price Range -->
-			<div class="filter-section">
-				<h6 class="filter-title">Price Range</h6>
-				<div class="price-range">
-					<input type="range" class="form-range" min="0" max="1000" id="priceRange">
-					<div class="d-flex justify-content-between">
-						<span>₹0</span>
-						<span id="priceValue">₹500</span>
-						<span>₹1000</span>
-					</div>
-				</div>
-			</div>
-	
-			<!-- Categories -->
-			<div class="filter-section">
+  <%- include('../partials/Header.ejs') %>
 
-				<h6 class="filter-title">Categories</h6>
-				<% data.forEach(item => { %>
-					<div class="form-check mb-2">
-					  <input class="form-check-input category" type="checkbox" id="sort-category" value="<%= item.id%>">
-					  <label class="form-check-label" for="sort-category"><%= item.category %></label>
-					</div>
-				  <% }) %>
-				  
-				
-			</div>
-	
-			<!-- Sort By -->
-			<div class="filter-section">
-				<h6 class="filter-title">Sort By</h6>
-				<select class="form-select" id="sortBy"> <!-- Added id="sortBy" -->
-					<option value="LOW">Price: Low to High</option>
-					<option value="HIGH">Price: High to Low</option>
-					<option value="NEWEST">Newe Arrivals</option>
-					<option value="A_TO_Z">Aa to Zz</option>
-					<option value="Z_TO_A">Zz to Aa</option>
-					<!-- <option value="POPULARITY">Popularity</option> -->
-				  </select>
-				  
-			</div>
-	
-			<!-- Availability -->
-			<!-- <div class="filter-section">
-				<h6 class="filter-title">Availability</h6>
-				<div class="form-check mb-2">
-					<input class="form-check-input" type="radio" name="availability" id="inStock">
-					<label class="form-check-label" for="inStock">In Stock</label>
-				</div>
-				<div class="form-check">
-					<input class="form-check-input" type="radio" name="availability" id="allItems">
-					<label class="form-check-label" for="allItems">All Items</label>
-				</div>
-			</div> -->
-		</div>
-	</div>
-	
-	<!-- Fixed Button Container -->
-	<div class="button-container">
-		<button id="applyFiltersBtn" class="apply-btn">Apply Filters</button>
-	</div>
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Shop</h1>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="search-container">
-			<div class="search-wrapper">
-			  <input type="text" id="search-input" placeholder="Search..." oninput="handleSearch()">
-			  <button class="search-button">
-				<svg class="search-icon" viewBox="0 0 24 24">
-				  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-				</svg>
-			  </button>
-			</div>
-		  </div>
-	</div>
-	<!-- end breadcrumb section -->
-	<button class="sidebar-toggle" id="sidebarToggle">
-		<i class="fas fa-filter"></i> Filters
-	</button>
-	<div class="overlay" id="overlay"></div>
-	<!-- products -->
-	<div class="product-section mt-150 mb-150"style="display: flex;flex-wrap: wrap;padding: Bottom 10%;;">
-		<div class="container" >
+  <div class="toast-container" id="toastContainer"></div>
 
-			<div class="row">
-                <div class="col-md-12">
-                    <div class="product-filters">
-                        <ul>
-                           <li><a style="color: #f28123;" class="active" href="/shop">All</a></li> 
-						   <% listedCategory.forEach(item=>{ %>
-                           <li><a style="color: #f28123;" href="/shop?category=<%=item._id%>"><%=item.category %></a></li> 
-						<% })%>
-                            
-                        </ul>
-                    </div>
-                </div>
+  <div class="search-area">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <span class="close-btn"><i class="fas fa-window-close"></i></span>
+          <div class="search-bar">
+            <div class="search-bar-tablecell">
+              <h3>Search For:</h3>
+              <input type="text" placeholder="Keywords">
+              <button type="submit">Search <i class="fas fa-search"></i></button>
             </div>
-			<div style="display: flex;flex-direction: column; align-items: center; "><h4 style="color: grey;font-weight:500 ;"><%=message%></h4></div>
-			<div class="row product-lists" id="prodo" >
-				
-				<% products.forEach(item => { %>
-				  
-					<div>
-						<div class="product-grid">
-							<div class="single-product-item">
-							  <!-- Your current single-product-item HTML goes here -->
-							  <!-- Example of one product -->
-							  <div style="width: 300px;" class="product-image">
-								<div id="stop" style="position: absolute; top: 35px; right: 35px; z-index: 2;">
-									<i style="font-size: 20px;"
-										id="wishlistIcon1-<%=item._id%>" 
-										
-										class="bi <%= item.isInWishlist ? 'bi-heart-fill text-danger' : 'bi-heart' %>" onclick="wishList('<%= item._id %>')">
-									</i>
-									
-								</div>	
-								<a href="/product/<%= item._id %>">
-								  <img src="/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
-								  <% if (item.Offer.OfferPrice > 0 && item.RegulerPrice > 0) { %> 
-									<% let offer = Math.round(((item.RegulerPrice - item.Offer.OfferPrice) / item.RegulerPrice) * 100); %>
-									<% if(offer>0){%> 
-									<div style="position: absolute; top: 25px; left: 25px; background-color: green; border-radius: 5px; padding: 8px;">
-									  <span style="color: rgb(255, 255, 255); font-weight: 600;">
-										<%= offer %>% OFF
-									  </span>
-									</div>
-									<%}%>	
-								  <% } %>
-								</a>
-							  </div>
-							  <div style=" display: flex; flex-direction: column;margin-left: 15px; margin-right: 15px;">
-								<!-- Add your product content here -->
-								<h3><%= item.productTitle %></h3>
-								<span>
-								<div style="display: flex; flex-direction: column;">
-								  <% if (item.Offer.OfferPrice>0) { %>
-									<div style="display: flex;justify-content: space-between;">
-									<p style="color: gray; margin: 5px 0;">
-									  <span>Per Kg</span>
-									  <del><%= item.RegulerPrice %></del>₹
-									</p><span><h3 style="color: green; margin: 5px 0;">Offer: <%= item.Offer.OfferPrice %> ₹</h3></span>
-								  </div>
-								  	
-								  <% } else { %>
-									<p style="margin: 5px 0; font-size: 22px;">Per Kg <span style="font-weight: bold;"><%= item.RegulerPrice %></span>₹</p>
-								  <% } %>
-								  <div>
-								 </span>
-									<!-- Stock Status -->
-									<% if (item.totalStock > 10) { %>
-									  <div>
-										<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
-										  In Stock: <%= item.totalStock %> kg
-										</span>
-									  </div>
-									<% } else if (item.totalStock > 0) { %>
-									  <div>
-										<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
-										  Low Stock: <%= item.totalStock %> kg
-										</span>
-									  </div>
-									<% } else { %>
-									  <div>
-										<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
-										  Out of Stock
-										</span>
-									  </div>
-									<% } %>
-								  </div>
-								</div>
-								<div style="display: flex; flex-direction: column; justify-content: center; padding: 3px;">
-									<% if (item.totalStock > 0) { %>
-										<button class="cart-btn" onclick="pass('<%=item.id%>','<%=item.productTitle%>','<%=item.RegulerPrice%>','<%=item.OfferPrice%>')">
-										  <i class="fas fa-shopping-cart"></i> Add to Cart
-										</button>
-									  <% } else { %>
-										<a href="#" class="cart-btn disabled" style="pointer-events: none; opacity: 0.5; background-color: rgb(251, 179, 179); color: rgb(255, 0, 0);">
-										  <i class="fas fa-shopping-cart"></i> Unavailable
-										</a>
-									  <% } %>
-								  </div>
-							  </div>
-							</div>
-							<!-- Repeat for other products -->
-						  </div>
-						  
-					
-				  </div>
-				 
-				  <% }) %>
-		 	  </div>
-	    	</div>
-		
-		
-	</div>
-	<!-- end products -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-	<div class="row" style="padding-bottom: 20px;">
-		<div class="col-lg-12 text-center">
-			<div class="pagination-wrap">
-				
-				<ul>
-					<li style="border-radius: 20px;"><% if (currentPage > 1) { %>
-						<a href="/shop?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
-							Previous
-						</a>
-					<% } %></li>
-					<%= console.log("Current Page: ", currentPage) %>
-					<%= console.log("Total Pages: ", totalPages) %>
-					
-					<% 
-                    const maxButtons = 3;	
-                    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-                    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-    
-                  
-                    if (endPage - startPage + 1 < maxButtons) {
-                        startPage = Math.max(1, endPage - maxButtons + 1);
-                    }
-                %>
-    
-					<li><% for (let i = startPage; i <= endPage; i++) { %>
-						<a href="/shop?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
-							<%= i %>
-						</a>
-					<% } %></li>
+  <div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-					<li><% if (currentPage < totalPages) { %>
-                    <a href="/shop?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
-                        Next
-                    </a>
-                <% } %></li>
-					
-				</ul>
-			</div>
-		</div>
-	</div>
-	<!-- logo carousel -->
-	<%-include('../partials/footer.ejs')%>
-<script src="/showNotification.js"></script>
-<script src="/js/shop.js"></script>	
-	
-	
-	<!-- jquery -->
-	<script src="/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="/js/jquery.magnific-popup.min.js"></script>
-	<!-- mean menu -->
-	<script src="/js/jquery.meanmenu.min.js"></script>
-	<!-- sticker js -->
-	<script src="/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="/js/main.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <div class="overlay" id="overlay"></div>
+  <aside class="filter-panel" id="filterPanel">
+    <div class="filter-head">
+      <h3>Filters</h3>
+      <button class="close-filter-btn" id="closeFilterBtn" aria-label="Close filters">&times;</button>
+    </div>
+    <div class="filter-body">
+      <div>
+        <p class="filter-title">Price Range</p>
+        <input type="range" class="form-range" min="0" max="1000" value="500" id="priceRange">
+        <div class="range-meta">
+          <span>&#8377;0</span>
+          <span id="priceValue">&#8377;500</span>
+          <span>&#8377;1000</span>
+        </div>
+      </div>
 
-	
+      <div>
+        <p class="filter-title">Categories</p>
+        <% data.forEach(function(item) { %>
+          <div class="form-check mb-2">
+            <input class="form-check-input category-check" type="checkbox" id="cat-<%= item._id %>" value="<%= item.category %>">
+            <label class="form-check-label" for="cat-<%= item._id %>"><%= item.category %></label>
+          </div>
+        <% }) %>
+      </div>
+
+      <div>
+        <p class="filter-title">Sort</p>
+        <select class="form-select" id="sortBy">
+          <option value="">Default</option>
+          <option value="LOW">Price: Low to High</option>
+          <option value="HIGH">Price: High to Low</option>
+          <option value="NEWEST">Newest Arrivals</option>
+          <option value="A_TO_Z">A to Z</option>
+          <option value="Z_TO_A">Z to A</option>
+        </select>
+      </div>
+
+      <button id="applyFiltersBtn" class="apply-btn">Apply Filters</button>
+    </div>
+  </aside>
+
+  <section class="shop-shell">
+    <div class="container">
+      <div class="shop-head">
+        <h1>Fresh Picks For You</h1>
+        <p>Explore quality fruits and dairy with clean pricing and quick add-to-cart.</p>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <input type="text" id="search-input" placeholder="Search by product, category, or brand">
+            <i class="fas fa-search"></i>
+          </div>
+          <button class="filter-open-btn" id="filterToggleBtn"><i class="fas fa-sliders-h"></i> Filters</button>
+        </div>
+
+        <div class="quick-cats">
+          <a class="<%= !Category ? 'active' : '' %>" href="/shop">All</a>
+          <% listedCategory.forEach(function(item) { %>
+            <a class="<%= Category && Category._id && String(Category._id) === String(item._id) ? 'active' : '' %>" href="/shop?category=<%= item._id %>"><%= item.category %></a>
+          <% }) %>
+        </div>
+      </div>
+
+      <p class="list-note" id="shopMessage"><%= message || '' %></p>
+      <div class="products-grid" id="productsContainer">
+        <% products.forEach(function(item) { %>
+          <article class="product-card">
+            <div class="product-thumb">
+              <% if (item.Offer && item.Offer.OfferPrice > 0 && item.RegulerPrice > 0) { %>
+                <% const offer = Math.round(((item.RegulerPrice - item.Offer.OfferPrice) / item.RegulerPrice) * 100); %>
+                <% if (offer > 0) { %>
+                  <span class="offer-tag"><%= offer %>% OFF</span>
+                <% } %>
+              <% } %>
+              <button class="wishlist-btn <%= item.isInWishlist ? 'is-active' : '' %>" id="wishlistIcon-<%= item._id %>" onclick="wishList('<%= item._id %>')" aria-label="Toggle wishlist">
+                <i class="<%= item.isInWishlist ? 'fas fa-heart' : 'far fa-heart' %>"></i>
+              </button>
+              <a href="/product/<%= item._id %>">
+                <img src="/images/<%= item.primaryImage %>" alt="<%= item.productTitle %>">
+              </a>
+            </div>
+
+            <div class="product-content">
+              <h3 class="product-title"><%= item.productTitle %></h3>
+
+              <div class="price-block">
+                <% if (item.Offer && item.Offer.OfferPrice > 0) { %>
+                  <span class="price-now">&#8377;<%= item.Offer.OfferPrice %></span>
+                  <span class="price-old">&#8377;<%= item.RegulerPrice %></span>
+                <% } else { %>
+                  <span class="price-now">&#8377;<%= item.RegulerPrice %></span>
+                <% } %>
+              </div>
+
+              <% if (item.totalStock > 10) { %>
+                <span class="stock-pill stock-in">In Stock: <%= item.totalStock %> kg</span>
+              <% } else if (item.totalStock > 0) { %>
+                <span class="stock-pill stock-low">Low Stock: <%= item.totalStock %> kg</span>
+              <% } else { %>
+                <span class="stock-pill stock-out">Out of Stock</span>
+              <% } %>
+
+              <button class="cart-btn" onclick="addToCart('<%= item._id %>')" <%= item.totalStock > 0 ? '' : 'disabled' %>>
+                <i class="fas fa-shopping-cart"></i> <%= item.totalStock > 0 ? 'Add to Cart' : 'Unavailable' %>
+              </button>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+
+      <% if (totalPages > 1) { %>
+        <div class="pagination-wrap">
+          <ul>
+            <% if (currentPage > 1) { %>
+              <li><a href="/shop?page=<%= currentPage - 1 %>">Prev</a></li>
+            <% } %>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li><a class="<%= i === currentPage ? 'active' : '' %>" href="/shop?page=<%= i %>"><%= i %></a></li>
+            <% } %>
+            <% if (currentPage < totalPages) { %>
+              <li><a href="/shop?page=<%= currentPage + 1 %>">Next</a></li>
+            <% } %>
+          </ul>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <script src="/showNotification.js"></script>
+  <script src="/js/shop.js"></script>
+  <script src="/js/jquery-1.11.3.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.countdown.js"></script>
+  <script src="/js/jquery.isotope-3.0.6.min.js"></script>
+  <script src="/js/waypoints.js"></script>
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.magnific-popup.min.js"></script>
+  <script src="/js/jquery.meanmenu.min.js"></script>
+  <script src="/js/sticker.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>

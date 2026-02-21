@@ -1,28 +1,74 @@
-//  for apply filter and search
-document
-  .getElementById("applyFiltersBtn")
-  .addEventListener("click", async function () {
-    await handleSearch();
-  });
+const dom = {
+  applyFiltersBtn: document.getElementById("applyFiltersBtn"),
+  searchInput: document.getElementById("search-input"),
+  productsContainer: document.getElementById("productsContainer"),
+  shopMessage: document.getElementById("shopMessage"),
+  sortBy: document.getElementById("sortBy"),
+  priceRange: document.getElementById("priceRange"),
+  priceValue: document.getElementById("priceValue"),
+  filterPanel: document.getElementById("filterPanel"),
+  overlay: document.getElementById("overlay"),
+  filterToggleBtn: document.getElementById("filterToggleBtn"),
+  closeFilterBtn: document.getElementById("closeFilterBtn"),
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  bindFilters();
+});
+
+function bindFilters() {
+  if (dom.applyFiltersBtn) {
+    dom.applyFiltersBtn.addEventListener("click", async () => {
+      await handleSearch();
+      toggleFilter(false);
+    });
+  }
+
+  if (dom.searchInput) {
+    dom.searchInput.addEventListener("keydown", async (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        await handleSearch();
+      }
+    });
+  }
+
+  if (dom.priceRange && dom.priceValue) {
+    dom.priceRange.addEventListener("input", (event) => {
+      dom.priceValue.textContent = `\u20B9${event.target.value}`;
+    });
+  }
+
+  if (dom.filterToggleBtn) {
+    dom.filterToggleBtn.addEventListener("click", () => toggleFilter(true));
+  }
+
+  if (dom.closeFilterBtn) {
+    dom.closeFilterBtn.addEventListener("click", () => toggleFilter(false));
+  }
+
+  if (dom.overlay) {
+    dom.overlay.addEventListener("click", () => toggleFilter(false));
+  }
+}
+
+function toggleFilter(open) {
+  if (!dom.filterPanel || !dom.overlay) {
+    return;
+  }
+  dom.filterPanel.classList.toggle("active", open);
+  dom.overlay.classList.toggle("active", open);
+}
 
 async function handleSearch() {
-  const query = document.getElementById("search-input").value.trim();
-  const categories = document.querySelectorAll(".form-check-input");
-  const sortBy = document.getElementById("sortBy");
-  const priceRange = document.getElementById("priceRange");
+  const query = dom.searchInput ? dom.searchInput.value.trim() : "";
+  const selectedCategories = Array.from(
+    document.querySelectorAll(".category-check:checked"),
+  ).map((checkbox) => checkbox.value);
+  const selectedSortBy = dom.sortBy ? dom.sortBy.value : "";
+  const selectedPriceRange = dom.priceRange ? dom.priceRange.value : "";
 
-  console.log("query", query);
-
-  const selectedCategories = Array.from(categories)
-    .filter((checkbox) => checkbox.checked)
-    .map((checkbox) => checkbox.value);
-
-  console.log("selectedCategories:", selectedCategories);
-
-  const selectedSortBy = sortBy.value;
-  console.log("selectedSortBy:", selectedSortBy);
-
-  let params = new URLSearchParams();
+  const params = new URLSearchParams();
 
   if (query) {
     params.append("search", query);
@@ -32,184 +78,153 @@ async function handleSearch() {
     params.append("selectedCategories", selectedCategories.join(","));
   }
 
-  if (priceRange) {
-    params.append("priceRange", priceRange.value);
-  }
-
   if (selectedSortBy) {
     params.append("sortOrder", selectedSortBy);
   }
 
-  const url = `/search?${params.toString()}`;
+  if (selectedPriceRange) {
+    params.append("priceRange", selectedPriceRange);
+  }
 
   try {
-    const response = await fetch(url);
-    const products = await response.json();
+    const response = await fetch(`/search?${params.toString()}`);
+    const payload = await response.json();
 
-    console.log(products);
-    if (!products.length) {
-      return displayNoProduct();
+    if (Array.isArray(payload)) {
+      displayProducts(payload);
+      return;
     }
-    displayProduct(products);
+
+    if (payload && payload.message) {
+      displayProducts([]);
+      return;
+    }
+
+    displayProducts([]);
   } catch (error) {
     console.error("Error fetching search results:", error);
-    document.querySelector(".product-lists").innerHTML =
-      "<p>Error fetching search results.</p>";
-  }
-}
-
-//   for display fetched product
-
-async function fetchAllproduct() {
-  console.log("fetch");
-
-  try {
-    const response = await fetch("/ALL");
-    console.log("respo", response);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    if (dom.shopMessage) {
+      dom.shopMessage.textContent = "Could not load filtered results.";
     }
-    const products = await response.json();
-    displayProduct(products.products);
-  } catch (error) {
-    console.error("Error fetching products:", error.message);
-    document.querySelector(".product-lists").innerHTML =
-      "<p>Error fetching all products.</p>";
   }
 }
 
-function displayProduct(products) {
-  console.log("produc", products);
-
-  const productList = document.querySelector(".product-lists");
-  if (products.length === 0) {
-    productList.innerHTML = '<h4 style="color:grey;">No products found.</h4>';
+function displayProducts(products) {
+  if (!dom.productsContainer) {
     return;
   }
 
-  productList.innerHTML = products
-    .map(
-      (item) => `
-        <div class="col-md-4 product-item" style=' overflow: hidden;'>
-			
-		  
-            <div class="single-product-item">
-                <div style="width: 280px;" class="product-image">
-                    <a href="/product/${item._id}">
-                        <img src="/images/${item.primaryImage}" alt="${item.productTitle}">
-                        ${
-                          item.OfferPrice > 0
-                            ? `<div style="position: absolute; top: 5px; left: 5px; background-color: green; border-radius: 2px; padding: 5px;">
-                            <span style="color: rgb(255, 255, 255); font-weight: 600;">${Math.round(((item.RegulerPrice - item.OfferPrice) / item.RegulerPrice) * 100)}% OFF</span>
-                        </div>`
-                            : ""
-                        }
-                    </a>
-                </div>
-                <div style="display: flex; flex-direction: column;margin-left: 15px; margin-right: 15px;">
-                    <h3>${item.productTitle}</h3>
-                    <div style='display flex';>
-                        ${
-                          item.OfferPrice
-                            ? `<p style="color: gray;">Per Kg <del>${item.RegulerPrice}</del>₹</p>
-                        <h3 style="color: green;">Offer: ${item.OfferPrice} ₹</h3>`
-                            : `<p>Per Kg ${item.RegulerPrice}₹</p>`
-                        }
-                    </div>
-                    <div>
-    ${
-      item.totalStock > 10
-        ? `<span class="inline-block px-3 py-2 text-xs bg-green-100 text-green-800 rounded">
-             In Stock: ${item.totalStock}
-           </span>`
-        : item.Stock > 0
-          ? `<span class="inline-block px-3 py-2 text-xs bg-yellow-100 text-yellow-800 rounded">
-             Low Stock: ${item.totalStock}
-           </span>`
-          : `<span class="inline-block px-3 py-2 text-xs bg-red-100 text-red-800 rounded">
-             Out of Stock
-           </span>`
+  if (!products || products.length === 0) {
+    dom.productsContainer.innerHTML = "";
+    if (dom.shopMessage) {
+      dom.shopMessage.textContent = "No products found.";
     }
-</div>
+    return;
+  }
 
-                </div>
-                <div>
-                    <button class="cart-btn" onclick="pass('<%=item.id%>','<%=item.productTitle%>','<%=item.RegulerPrice%>','<%=item.OfferPrice%>')">
-										  <i class="fas fa-shopping-cart"></i> Add to Cart
-										</button>
-                </div>
-            </div>
-        </div>
-    `,
-    )
-    .join("");
+  if (dom.shopMessage) {
+    dom.shopMessage.textContent = "";
+  }
+
+  dom.productsContainer.innerHTML = products.map((item) => productCardTemplate(item)).join("");
 }
 
-function displayNoProduct() {
-  const productList = document.querySelector(".product-lists");
-  productList.innerHTML =
-    " <h4 style='color:grey; margin-left:50px;' >No products found.</h4>";
+function productCardTemplate(item) {
+  const title = escapeHtml(item.productTitle || "Product");
+  const image = escapeHtml(item.primaryImage || "");
+  const productId = item._id || item.id;
+  const regularPrice = Number(item.RegulerPrice || 0);
+  const offerPrice = Number(
+    item.OfferPrice || (item.Offer && item.Offer.OfferPrice) || 0,
+  );
+  const displayPrice = offerPrice > 0 ? offerPrice : regularPrice;
+  const totalStock = Number(item.totalStock || item.Stock || 0);
+  const wishlistClass = item.isInWishlist ? "is-active" : "";
+  const heartIcon = item.isInWishlist ? "fas fa-heart" : "far fa-heart";
+
+  let stockHtml = '<span class="stock-pill stock-out">Out of Stock</span>';
+  if (totalStock > 10) {
+    stockHtml = `<span class="stock-pill stock-in">In Stock: ${totalStock} kg</span>`;
+  } else if (totalStock > 0) {
+    stockHtml = `<span class="stock-pill stock-low">Low Stock: ${totalStock} kg</span>`;
+  }
+
+  let offerTag = "";
+  if (offerPrice > 0 && regularPrice > 0 && regularPrice > offerPrice) {
+    const discount = Math.round(((regularPrice - offerPrice) / regularPrice) * 100);
+    if (discount > 0) {
+      offerTag = `<span class="offer-tag">${discount}% OFF</span>`;
+    }
+  }
+
+  const priceHtml =
+    offerPrice > 0
+      ? `<span class="price-now">\u20B9${offerPrice}</span><span class="price-old">\u20B9${regularPrice}</span>`
+      : `<span class="price-now">\u20B9${regularPrice}</span>`;
+
+  return `
+    <article class="product-card">
+      <div class="product-thumb">
+        ${offerTag}
+        <button class="wishlist-btn ${wishlistClass}" id="wishlistIcon-${productId}" onclick="wishList('${productId}')" aria-label="Toggle wishlist">
+          <i class="${heartIcon}"></i>
+        </button>
+        <a href="/product/${productId}">
+          <img src="/images/${image}" alt="${title}">
+        </a>
+      </div>
+      <div class="product-content">
+        <h3 class="product-title">${title}</h3>
+        <div class="price-block">${priceHtml}</div>
+        ${stockHtml}
+        <button class="cart-btn" onclick="addToCart('${productId}')" ${totalStock > 0 ? "" : "disabled"}>
+          <i class="fas fa-shopping-cart"></i> ${totalStock > 0 ? "Add to Cart" : "Unavailable"}
+        </button>
+      </div>
+    </article>
+  `;
 }
 
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-const sidebarToggle = document.getElementById("sidebarToggle");
-const closeBtn = document.getElementById("closeBtn");
-const priceRange = document.getElementById("priceRange");
-const priceValue = document.getElementById("priceValue");
-
-function toggleSidebar() {
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
-  sidebarToggle.classList.toggle("hidden");
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
-sidebarToggle.addEventListener("click", toggleSidebar);
-closeBtn.addEventListener("click", toggleSidebar);
-overlay.addEventListener("click", toggleSidebar);
-
-priceRange.addEventListener("input", (e) => {
-  priceValue.textContent = `₹${e.target.value}`;
-});
-
-/////////////|| ADD TO CART ||///////////////////////
-
-function pass(productId, name, Reguler, Offer) {
-  console.log(productId, name, Reguler, Offer);
-
+function addToCart(productId) {
   fetch("/api/cart/items", {
-    method: "post",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       productId,
-      name,
-      Reguler,
-      Offer,
+      quantity: 1,
     }),
   })
     .then((res) => res.json())
     .then((data) => {
-      if (data.login == false) {
-        location.href = "/login";
+      if (data.login === false) {
+        window.location.href = "/login";
+        return;
       }
+
       if (data.success) {
-        showToast(data.message, "success");
+        showToast(data.message || "Added to cart", "success");
       } else {
-        showToast(data.message, "error");
+        showToast(data.message || "Could not add item to cart", "error");
       }
+    })
+    .catch((error) => {
+      console.error("Cart error:", error);
+      showToast("Something went wrong.", "error");
     });
 }
 
 function wishList(val) {
-  const wishlistIcon = document.getElementById("wishlistIcon1");
-
-  console.log("po");
-
-  // const val = wishlistIcon.getAttribute('data-id');
-
   fetch("/api/wishlist/items/toggle", {
     method: "POST",
     headers: {
@@ -219,26 +234,34 @@ function wishList(val) {
   })
     .then((res) => res.json())
     .then((data) => {
-      if (data.success) {
-        showToast(data.message, "success");
-        const wishlistIcon1 = document.getElementById(`wishlistIcon1-${val}`);
-        const countW = document.getElementById("countW");
-        if (parseInt(data.aa) >= 0) {
-          countW.innerText = data.aa;
+      const iconButton = document.getElementById(`wishlistIcon-${val}`);
+      const countW = document.getElementById("countW");
+
+      if (!data.success) {
+        showToast(data.message || "Wishlist update failed.", "error");
+        return;
+      }
+
+      showToast(data.message || "Wishlist updated.", "success");
+
+      if (iconButton) {
+        iconButton.classList.toggle("is-active", Boolean(data.isWishList));
+        const icon = iconButton.querySelector("i");
+        if (icon) {
+          icon.className = data.isWishList ? "fas fa-heart" : "far fa-heart";
         }
-        if (data.isWishList) {
-          wishlistIcon1.classList.add("bi-heart-fill", "text-danger");
-          wishlistIcon1.classList.remove("bi-heart");
-        } else {
-          wishlistIcon1.classList.add("bi-heart");
-          wishlistIcon1.classList.remove("bi-heart-fill", "text-danger");
-        }
-      } else {
-        showToast(data.message, "error");
+      }
+
+      if (countW && Number.isFinite(Number(data.aa))) {
+        countW.innerText = data.aa;
       }
     })
     .catch((error) => {
-      console.error("Error:", error);
-      showToat("Something went wrong!", "error");
+      console.error("Wishlist error:", error);
+      showToast("Something went wrong.", "error");
     });
 }
+
+window.handleSearch = handleSearch;
+window.addToCart = addToCart;
+window.wishList = wishList;
