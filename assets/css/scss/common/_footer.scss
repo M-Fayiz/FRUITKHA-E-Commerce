@@ -61,7 +61,7 @@ h2.widget-title {
   }
 
   &.subscribe form {
-    input[type=email] {
+    input[type="email"] {
       border: none;
       background-color: #012738;
       width: 78%;
@@ -92,7 +92,7 @@ h2.widget-title {
   background-color: $text-color;
   border-top: 1px solid #232a35;
 
-  p{
+  p {
     margin: 0;
     color: #fff;
     opacity: 0.7;

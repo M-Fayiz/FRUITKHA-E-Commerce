@@ -356,13 +356,23 @@ table .form-check {
   opacity: 0;
   visibility: hidden;
   background-color: rgba(34, 34, 34, 0.6);
-  -webkit-transition: opacity 0.2s linear, visibility 0.1s, width 1s ease-in;
-  transition: opacity 0.2s linear, visibility 0.1s, width 1s ease-in;
+  -webkit-transition:
+    opacity 0.2s linear,
+    visibility 0.1s,
+    width 1s ease-in;
+  transition:
+    opacity 0.2s linear,
+    visibility 0.1s,
+    width 1s ease-in;
 }
 
 .screen-overlay.show {
-  -webkit-transition: opacity 0.5s ease, width 0s;
-  transition: opacity 0.5s ease, width 0s;
+  -webkit-transition:
+    opacity 0.5s ease,
+    width 0s;
+  transition:
+    opacity 0.5s ease,
+    width 0s;
   opacity: 1;
   width: 100%;
   visibility: visible;
@@ -4309,11 +4319,18 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
     -webkit-transform: translateX(-100%);
     transform: translateX(-100%);
     overflow-x: hidden;
-    -webkit-transition: visibility 0.2s ease-in-out,
+    -webkit-transition:
+      visibility 0.2s ease-in-out,
       -webkit-transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, transform 0.2s ease-in-out,
+    transition:
+      visibility 0.2s ease-in-out,
+      -webkit-transform 0.2s ease-in-out;
+    transition:
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+    transition:
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out,
       -webkit-transform 0.2s ease-in-out;
   }
   .navbar-aside .aside-top .logo {
@@ -4338,11 +4355,18 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
     width: 80%;
     overflow-y: scroll;
     overflow-x: hidden;
-    -webkit-transition: visibility 0.2s ease-in-out,
+    -webkit-transition:
+      visibility 0.2s ease-in-out,
       -webkit-transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, transform 0.2s ease-in-out;
-    transition: visibility 0.2s ease-in-out, transform 0.2s ease-in-out,
+    transition:
+      visibility 0.2s ease-in-out,
+      -webkit-transform 0.2s ease-in-out;
+    transition:
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+    transition:
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out,
       -webkit-transform 0.2s ease-in-out;
   }
   .mobile-offcanvas.show {

@@ -1,15 +1,14 @@
-const dotenv=require('dotenv')
+const dotenv = require("dotenv");
 
-dotenv.config()
+dotenv.config();
 
-let envVariable={
-    PORT:process.env.PORT,
-    MONGO_URL:process.env.MONGO_URL,
-    GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET,
-    JWT_SECRET:process.env.JWT_SECRET,
-    callbackURL:process.env.callbackURL
-}
+let envVariable = {
+  PORT: process.env.PORT,
+  MONGO_URL: process.env.MONGO_URL,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  JWT_SECRET: process.env.JWT_SECRET,
+  callbackURL: process.env.callbackURL,
+};
 
-
-module.exports=envVariable   
+module.exports = envVariable;

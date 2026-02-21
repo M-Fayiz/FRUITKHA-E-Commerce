@@ -8,8 +8,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // 🔥 CLEAR OLD ERRORS FIRST
   // ================================
   result.innerHTML = "";
-  document.querySelectorAll(".error").forEach(el => el.innerHTML = "");
-  document.getElementById('firstNameerror').innerHTML = "";
+  document.querySelectorAll(".error").forEach((el) => (el.innerHTML = ""));
+  document.getElementById("firstNameerror").innerHTML = "";
 
   // ================================
   // GET VALUES
@@ -26,7 +26,14 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // ================================
   // EMPTY FIELD CHECK
   // ================================
-  if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !phone ||
+    !password ||
+    !confirmPassword
+  ) {
     result.innerHTML = "Please fill out all required fields correctly";
     isValid = false;
   }
@@ -35,12 +42,14 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // NAME VALIDATION
   // ================================
   if (firstName && !/^[A-Za-z ]+$/.test(firstName)) {
-    document.getElementById('firstNameerror').innerHTML = 'First Name should contain only letters';
+    document.getElementById("firstNameerror").innerHTML =
+      "First Name should contain only letters";
     isValid = false;
   }
 
   if (lastName && !/^[A-Za-z ]+$/.test(lastName)) {
-    document.getElementById('lasterror').innerHTML = 'Last Name should contain only letters';
+    document.getElementById("lasterror").innerHTML =
+      "Last Name should contain only letters";
     isValid = false;
   }
 
@@ -48,7 +57,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // EMAIL VALIDATION
   // ================================
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    document.getElementById('EMIALerror').innerHTML = 'Enter a valid email';
+    document.getElementById("EMIALerror").innerHTML = "Enter a valid email";
     isValid = false;
   }
 
@@ -56,7 +65,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // INDIAN PHONE VALIDATION
   // ================================
   if (phone && !/^[6-9]\d{9}$/.test(phone)) {
-    document.getElementById('PHONEerror').innerHTML = 'Enter valid 10 digit Indian number';
+    document.getElementById("PHONEerror").innerHTML =
+      "Enter valid 10 digit Indian number";
     isValid = false;
   }
 
@@ -64,8 +74,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // PASSWORD VALIDATION (ONE CLEAN RULE)
   // ================================
   if (password && !/^(?=.*[0-9])(?=.*[!@#$%^&]).{8,}$/.test(password)) {
-    document.getElementById('Passworderror').innerHTML =
-      'Password must be 8+ characters with a number & special character';
+    document.getElementById("Passworderror").innerHTML =
+      "Password must be 8+ characters with a number & special character";
     isValid = false;
   }
 
@@ -73,7 +83,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // CONFIRM PASSWORD
   // ================================
   if (password !== confirmPassword) {
-    document.getElementById('Confirmerror').innerHTML = "Passwords do not match";
+    document.getElementById("Confirmerror").innerHTML =
+      "Passwords do not match";
     isValid = false;
   }
 
@@ -111,7 +122,6 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     } else {
       showToast(data.message || "Something went wrong", "error");
     }
-
   } catch (err) {
     console.log(err);
     showToast("Server error. Try again later.", "error");

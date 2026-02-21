@@ -11,9 +11,9 @@ async function generateReport() {
   const endDate = document.getElementById("endDate").value;
 
   const quickFilter = document.getElementById("quickFilter").value;
-  if(startDate>endDate){
-      return showToast('Invalid startDate or endDate','error');
-    }
+  if (startDate > endDate) {
+    return showToast("Invalid startDate or endDate", "error");
+  }
   try {
     const response = await fetch("/admin/graph", {
       method: "POST",
@@ -26,19 +26,19 @@ async function generateReport() {
     const data = await response.json();
 
     if (data.success) {
-      const chartData = data.report; 
+      const chartData = data.report;
       const category = data.category;
-      const categoryName=data.hello
+      const categoryName = data.hello;
       const sales = data.monthlySales;
-    
-      // Ensure data is correctly populated
-      productNames = chartData.map(item => item._id);
-      productSales = chartData.map(item => item.totalsales);
-      categoryNames = categoryName
-      categorySales = category.map(item => item.TTLsales);
 
-      const labels = sales.map(item => item._id);
-      const salesData = sales.map(item => item.totalSales);
+      // Ensure data is correctly populated
+      productNames = chartData.map((item) => item._id);
+      productSales = chartData.map((item) => item.totalsales);
+      categoryNames = categoryName;
+      categorySales = category.map((item) => item.TTLsales);
+
+      const labels = sales.map((item) => item._id);
+      const salesData = sales.map((item) => item.totalSales);
 
       // Render Product Sales Bar Chart
       const ctx = document.getElementById("chartCanvas").getContext("2d");
@@ -86,33 +86,34 @@ async function generateReport() {
         type: "line", // Line chart type
         data: {
           labels: labels,
-          datasets: [{
-            label: "Daily Revenue",
-            data: salesData, // Total sales data for line chart
-            borderColor: "rgba(75, 192, 192, 1)", 
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-          }]
+          datasets: [
+            {
+              label: "Daily Revenue",
+              data: salesData, // Total sales data for line chart
+              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+            },
+          ],
         },
         options: {
           responsive: true,
           plugins: {
-            legend: { display: true, position: 'top' },
+            legend: { display: true, position: "top" },
           },
           scales: {
-            x: { 
-              title: { display: true, text: "Date" }
+            x: {
+              title: { display: true, text: "Date" },
             },
-            y: { 
-              title: { display: true, text: "Revenue (₹)" } 
-            }
-          }
-        }
+            y: {
+              title: { display: true, text: "Revenue (₹)" },
+            },
+          },
+        },
       });
 
-      
       switchChart("product");
     }
   } catch (error) {

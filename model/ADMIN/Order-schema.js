@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
 const orderSchema = new mongoose.Schema(
@@ -7,10 +7,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       unique: true,
       index: true,
-   },
+    },
     UserID: {
       type: ObjectId,
-      ref: 'user',
+      ref: "user",
       required: true,
       index: true,
     },
@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
       {
         product: {
           type: ObjectId,
-          ref: 'products',
+          ref: "products",
           required: true,
         },
         quantity: {
@@ -33,19 +33,18 @@ const orderSchema = new mongoose.Schema(
         TOTAL: {
           type: Number,
         },
-        return:{
-          req:{type:Boolean,default:false},
-          reason:String,
-          image:{type:String},
-          adminStatus:
-          {
-            status:{type:Boolean,default:false},
-            response:{type:String,num:['Pending','Approved','Rejected'],
-              default:'Pending'}
-            
-            
-          }
-         
+        return: {
+          req: { type: Boolean, default: false },
+          reason: String,
+          image: { type: String },
+          adminStatus: {
+            status: { type: Boolean, default: false },
+            response: {
+              type: String,
+              num: ["Pending", "Approved", "Rejected"],
+              default: "Pending",
+            },
+          },
         },
         // cancel:{
         //   req:{type:Boolean,default:false},
@@ -54,16 +53,22 @@ const orderSchema = new mongoose.Schema(
         //     type:Boolean,
         //     default:false
         //   }
-          
+
         // },
-        discountValue:{type:Number},
-        refundAmound:{type:Number,default:0},
+        discountValue: { type: Number },
+        refundAmound: { type: Number, default: 0 },
         status: {
           type: String,
-          enum: ['Pending'  , 'Shipped','Out for Delivery', 'Delivered','Cancelled', 'Returned'],
-          default: 'Pending',
+          enum: [
+            "Pending",
+            "Shipped",
+            "Out for Delivery",
+            "Delivered",
+            "Cancelled",
+            "Returned",
+          ],
+          default: "Pending",
         },
-       
       },
     ],
     subTotal: {
@@ -79,65 +84,73 @@ const orderSchema = new mongoose.Schema(
       code: { type: String },
       discountValue: { type: Number, default: 0 },
     },
-    GST:{type:Number},
+    GST: { type: Number },
     Final_Amount: {
       type: Number,
       // required: true,
     },
-     Return:{
-      req:{type:Boolean,default:false},
-      reason:{type:String},
-      image:{type:String},
-      admin:{
-        status:{type:Boolean,default:false},
-        response:{type:String,
-        enum:['Pending','Approved','Rejected'],
-        default:'Pending'
-        }
-      }
-     },
-     Datess:{
-      DeliveryDate:{type:Date},
-      expiryDate: { 
-        type: Date, 
-     }
+    Return: {
+      req: { type: Boolean, default: false },
+      reason: { type: String },
+      image: { type: String },
+      admin: {
+        status: { type: Boolean, default: false },
+        response: {
+          type: String,
+          enum: ["Pending", "Approved", "Rejected"],
+          default: "Pending",
+        },
+      },
+    },
+    Datess: {
+      DeliveryDate: { type: Date },
+      expiryDate: {
+        type: Date,
+      },
     },
     orderStatus: {
       type: String,
-      enum: ['Pending'  , 'Shipped','Out for Delivery', 'Delivered','Cancelled', 'Returned'],
-      default: 'Pending',
+      enum: [
+        "Pending",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered",
+        "Cancelled",
+        "Returned",
+      ],
+      default: "Pending",
     },
     payment: {
       type: String,
-      enum: ['wallet', 'COD', 'razorpay'],
+      enum: ["wallet", "COD", "razorpay"],
       required: true,
     },
     paymentStatus: {
       type: String,
-      enum: ['Pending', 'Completed', 'Refund','Failed'],
-      default: 'Pending',
+      enum: ["Pending", "Completed", "Refund", "Failed"],
+      default: "Pending",
     },
-    RazorPay:{
-       razorpay_order_id :{type:String},
-       razorpay_payment_id:{ type:String},
-       razorpay_signature: { type: String },
- 
+    RazorPay: {
+      razorpay_order_id: { type: String },
+      razorpay_payment_id: { type: String },
+      razorpay_signature: { type: String },
     },
-    Request:{
-       reqstStatus:{
-        Cancel:{type:Boolean,default:false},
-        Return:{type:Boolean,default:false},
-       },
-       reason:{type:String},
-       admin:{
-        status:{type:Boolean,default:false},
-        response:{type:String,
-        enum:['Pending','Approved','Rejected'],
-        default:'Pending'
-        }
-      }
+    Request: {
+      reqstStatus: {
+        Cancel: { type: Boolean, default: false },
+        Return: { type: Boolean, default: false },
+      },
+      reason: { type: String },
+      admin: {
+        status: { type: Boolean, default: false },
+        response: {
+          type: String,
+          enum: ["Pending", "Approved", "Rejected"],
+          default: "Pending",
+        },
+      },
     },
-    
+
     addressId: {
       type: Object,
       required: true,
@@ -145,27 +158,29 @@ const orderSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
-orderSchema.pre('save', function (next) {
+orderSchema.pre("save", function (next) {
   let subTotal = 0;
   this.Products.forEach((product) => {
-    if (product.status !== 'Cancelled'&& product.status!=='Returned') {
+    if (product.status !== "Cancelled" && product.status !== "Returned") {
       product.TOTAL = product.Price * product.quantity;
       subTotal += product.TOTAL;
     }
-  })
-  const allProductsReturned = this.Products.every((product) => product.status === 'Returned' )
-  if(allProductsReturned){
-    order.orderStatus = 'Returned';
-    order.Shipping = 0; 
+  });
+  const allProductsReturned = this.Products.every(
+    (product) => product.status === "Returned",
+  );
+  if (allProductsReturned) {
+    order.orderStatus = "Returned";
+    order.Shipping = 0;
   }
-  this.GST=Math.round(0.12*subTotal)
+  this.GST = Math.round(0.12 * subTotal);
   this.subTotal = subTotal;
-  this.Final_Amount = this.subTotal + this.GST+this.Shipping - this.Coupon.discountValue;
+  this.Final_Amount =
+    this.subTotal + this.GST + this.Shipping - this.Coupon.discountValue;
 
   next();
 });
 
-
-module.exports = mongoose.model('order', orderSchema);
+module.exports = mongoose.model("order", orderSchema);

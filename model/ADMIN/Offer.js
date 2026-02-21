@@ -1,39 +1,33 @@
-const mongoose=require('mongoose')
-const { ObjectId } = mongoose.Schema.Types; 
-const PRODUCT=require('./product')
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
+const PRODUCT = require("./product");
 
+const offer = new mongoose.Schema({
+  offer: {
+    type: Number,
+  },
+  productId: {
+    type: ObjectId,
+    ref: "products",
+  },
+  categoryId: {
+    type: ObjectId,
+    ref: "categories",
+  },
+  description: {
+    type: String,
+  },
+  CreatedAt: {
+    type: Date,
+    required: true,
+  },
+  status: { type: String, enum: ["Active", "Expired"], default: "Active" },
+  expiredAt: {
+    type: Date,
+    required: true,
+  },
+});
 
-const offer=new mongoose.Schema({
-
-    offer:{
-        type:Number,
-    },
-    productId:{
-      type: ObjectId, 
-      ref: 'products',
-    },
-    categoryId:{
-        type: ObjectId, 
-        ref: 'categories',
-    },
-    description:{
-        type:String
-    },
-    CreatedAt:{
-        type: Date,
-        required:true
-    },
-    status:{ type: String, enum: ['Active', 'Expired'], default: 'Active' },
-    expiredAt: {
-        type: Date,
-        required: true,
-         
-    }
-})
-
-
-const Offer =
-  mongoose.models.Offer ||
-  mongoose.model('Offer', offer);
+const Offer = mongoose.models.Offer || mongoose.model("Offer", offer);
 
 module.exports = Offer;

@@ -1,7 +1,7 @@
 const WALLET_TRANSACTION_TYPE = {
-  CREDIT: 'credit',
-}
+  CREDIT: "credit",
+};
 
 module.exports = {
   WALLET_TRANSACTION_TYPE,
-}
+};

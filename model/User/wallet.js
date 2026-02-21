@@ -1,18 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
-
 
 const transactionSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['credit', 'debit'],
+      enum: ["credit", "debit"],
       required: true,
     },
     amount: {
       type: Number,
       required: true,
-      min: [0, 'Amount must be positive'],
+      min: [0, "Amount must be positive"],
     },
     date: {
       type: Date,
@@ -20,16 +19,15 @@ const transactionSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
-
 
 const walletSchema = new mongoose.Schema(
   {
     userId: {
       type: ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
     balance: {
       type: Number,
@@ -41,24 +39,23 @@ const walletSchema = new mongoose.Schema(
       default: [],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-
-walletSchema.pre('save', function (next) {
+walletSchema.pre("save", function (next) {
   let credit = 0;
   let debit = 0;
 
   this.transactions.forEach((trn) => {
-    if (trn.type === 'credit') {
+    if (trn.type === "credit") {
       credit += trn.amount;
-    } else if (trn.type === 'debit') {
+    } else if (trn.type === "debit") {
       debit += trn.amount;
     }
   });
 
-  this.balance = Math.floor(credit - debit)
+  this.balance = Math.floor(credit - debit);
   next();
 });
 
-module.exports = mongoose.model('Wallet', walletSchema);
+module.exports = mongoose.model("Wallet", walletSchema);

@@ -25,7 +25,8 @@
   z-index: 1;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -150,7 +151,7 @@ input[type="submit"] {
 .single-homepage-slider {
   background-size: cover;
   background-position: center;
-  background-color: #020C0E;
+  background-color: #020c0e;
   position: relative;
   z-index: 1;
 
@@ -167,7 +168,8 @@ input[type="submit"] {
   }
 }
 
-div.owl-controls, .owl-controls div {
+div.owl-controls,
+.owl-controls div {
   height: auto;
   top: 50%;
   color: $primary-color;

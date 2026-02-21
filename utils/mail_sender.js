@@ -4,38 +4,37 @@ require("dotenv").config();
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user:process.env.passEmail,
+    user: process.env.passEmail,
     pass: process.env.passKey,
   },
 });
 
-const sendMail = async (email,otp)=>{
-  try{
+const sendMail = async (email, otp) => {
+  try {
     await transporter.sendMail({
-      from:process.env.passEmail,
-      to:email,
-      subject:'Test',
-      text:`Your otp is ${otp}`
-    })
-  }catch(err){
-    console.log('Otp send failed',err)
+      from: process.env.passEmail,
+      to: email,
+      subject: "Test",
+      text: `Your otp is ${otp}`,
+    });
+  } catch (err) {
+    console.log("Otp send failed", err);
   }
-}
+};
 
 const sendForgotPasswordMail = async (email, resetToken) => {
   const resetLink = `${process.env.resetLink}?token=${resetToken}`;
   try {
     await transporter.sendMail({
-      from:process.env.passEmail,
+      from: process.env.passEmail,
       to: email,
-      subject: 'Password Reset Request',
+      subject: "Password Reset Request",
       text: `You requested a password reset. Click the link below to reset your password: \n\n${resetLink}\n\nIf you didn't request this, please ignore this email.`,
     });
     console.log("Forgot Password email sent successfully!");
   } catch (err) {
-    console.log('Failed to send Forgot Password email', err);
+    console.log("Failed to send Forgot Password email", err);
   }
 };
 
 module.exports = { sendMail, sendForgotPasswordMail };
-
