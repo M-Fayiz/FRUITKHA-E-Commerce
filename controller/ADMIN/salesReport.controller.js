@@ -2,6 +2,7 @@ const ORDER=require('../../model/ADMIN/order-schema')
 const product = require('../../model/ADMIN/product')
 const httpStatusCode = require('../../constant/httpStatusCode')
 const httpResponse = require('../../constant/httpResponse')
+const { buildCreatedAtFilter } = require('../../utils/dateFilter.util')
 
 const salesReport = async (req, res) => {
   console.log('get in sales report');
@@ -13,49 +14,7 @@ const salesReport = async (req, res) => {
     }
     
     
-    let filters = {};
-
-    if (quickFilter === 'custom') {
-      if (startDate && endDate) {
-       
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        
-        if (isNaN(start) || isNaN(end)) {
-          return res.status(httpStatusCode.BAD_REQUEST).send(httpResponse.INVALID_DATE_RANGE);
-        }
-        
-       
-        filters = {
-          createdAt: {
-            $gte: start,
-            $lte: end,
-          },
-        };
-      } 
-    }
-    
-    else if (quickFilter === '1Day') {
-      const today = new Date();
-      const oneDayAgo = new Date(today.getTime() - (24 * 60 * 60 * 1000)); 
-      filters = {
-        createdAt: { $gte: oneDayAgo },
-      };
-    } else if (quickFilter === '1Week') {
-      const today = new Date();
-      const oneWeekAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000)); 
-      filters = {
-        createdAt: { $gte: oneWeekAgo },
-      };
-    } else if (quickFilter === '1Month') {
-      const today = new Date();
-      const oneMonthAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000)); 
-      filters = {
-        createdAt: { $gte: oneMonthAgo },
-      };
-    } else if (quickFilter === 'all') {
-      filters = {}; 
-    } 
+    const filters = buildCreatedAtFilter({ quickFilter, startDate, endDate })
     
     console.log('Filters:', filters);
 

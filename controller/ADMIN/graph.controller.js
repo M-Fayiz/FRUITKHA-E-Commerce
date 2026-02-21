@@ -2,42 +2,14 @@ const ORDER=require('../../model/admin/order-schema')
 const categorry=require('../../model/admin/category')
 const httpStatusCode = require('../../constant/httpStatusCode')
 const httpResponse = require('../../constant/httpResponse')
+const { buildCreatedAtFilter } = require('../../utils/dateFilter.util')
 
 const graph=async(req,res)=>{
  
      const {startDate,endDate,quickFilter}=req.body
      try {
 
-        let filters = {};
-
-        if (quickFilter === '1Day') {
-          const today = new Date();
-          const oneDayAgo = new Date(today.getTime() - (24 * 60 * 60 * 1000)); 
-          filters = {
-            createdAt: { $gte: oneDayAgo },
-          };
-        } else if (quickFilter === '1Week') {
-          const today = new Date();
-          const oneWeekAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000)); 
-          filters = {
-            createdAt: { $gte: oneWeekAgo },
-          };
-        } else if (quickFilter === '1Month') {
-          const today = new Date();
-          const oneMonthAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000)); 
-          filters = {
-            createdAt: { $gte: oneMonthAgo },
-          };
-        } else if (quickFilter === 'all') {
-          filters = {}; 
-        } else if (startDate && endDate) {
-          filters = {
-            createdAt: {
-              $gte: new Date(startDate),
-              $lte: new Date(endDate),
-            },
-          };
-        }
+        const filters = buildCreatedAtFilter({ quickFilter, startDate, endDate })
         
 
             const report = await ORDER.aggregate([

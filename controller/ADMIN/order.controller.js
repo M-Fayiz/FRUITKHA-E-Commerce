@@ -1,9 +1,13 @@
 const ORDER=require('../../model/admin/order-schema')
 const PRODUCT=require('../../model/admin/product')
-const WALLET=require('../../model/user/wallet')
-const notify=require('../../model/user/notification')
 const httpStatusCode = require('../../constant/httpStatusCode')
 const httpResponse = require('../../constant/httpResponse')
+const { ORDER_STATUS, RETURN_ACTION, RETURN_ADMIN_RESPONSE } = require('../../constant/status/orderStatus')
+const { PAYMENT_METHOD, PAYMENT_STATUS } = require('../../constant/status/paymentStatus')
+const { NOTIFICATION_STATUS } = require('../../constant/status/notificationStatus')
+const { sendNotification } = require('../../utils/notification.util')
+const { refundWallet } = require('../../utils/wallet.util')
+const { calculateRefundAndAdjustments } = require('../../utils/order.util')
 
 const order=async(req,res)=>{
     console.log('order list')
@@ -40,14 +44,13 @@ res.render('admin/orders', {
 }
     
 }
-// , 'Cancelled', 'Cancelled'
 const validTransitions = {
-    Pending: ['Shipped'],
-    Shipped: ['Out for Delivery'],
-    'Out for Delivery': ['Delivered'],
-    Delivered: ['Returned'],
-    Returned:[],
-    Cancelled:[]
+    [ORDER_STATUS.PENDING]: [ORDER_STATUS.SHIPPED],
+    [ORDER_STATUS.SHIPPED]: [ORDER_STATUS.OUT_FOR_DELIVERY],
+    [ORDER_STATUS.OUT_FOR_DELIVERY]: [ORDER_STATUS.DELIVERED],
+    [ORDER_STATUS.DELIVERED]: [ORDER_STATUS.RETURNED],
+    [ORDER_STATUS.RETURNED]:[],
+    [ORDER_STATUS.CANCELLED]:[]
 }
 
 const details=async(req,res)=>{
@@ -80,19 +83,19 @@ const OrderStatus = async (req, res) => {
 
       order.orderStatus = Status
       order.Products.forEach(product => {
-        if (product.status !== 'Cancelled') { 
+        if (product.status !== ORDER_STATUS.CANCELLED) {
           product.status = Status
         }
       })
 
-        await sendNotification( req.session.user, `Your Order has been ${Status}.`,'success');
-      if (order.orderStatus === 'Delivered') {
+        await sendNotification(req.session.user, `Your Order has been ${Status}.`, NOTIFICATION_STATUS.SUCCESS);
+      if (order.orderStatus === ORDER_STATUS.DELIVERED) {
           // order.Products.forEach(product => {
           //     product.status = 'Delivered'
               
           // })
-          if(order.payment==='COD'){
-            order.paymentStatus='Completed'
+          if(order.payment===PAYMENT_METHOD.COD){
+            order.paymentStatus=PAYMENT_STATUS.COMPLETED
           }
 
           order.Datess.DeliveryDate = new Date();
@@ -135,19 +138,19 @@ const handleProductAction = async (req, res) => {
     product.status = status;
   
 
-    if (status === 'Cancelled') {
+    if (status === ORDER_STATUS.CANCELLED) {
       product.cancel = { req: true, reason };
     }
 
     const calculation = calculateRefundAndAdjustments(order, product);
    
 
-    if (status === 'Cancelled') {
+    if (status === ORDER_STATUS.CANCELLED) {
       await ORDER.findOneAndUpdate(
         { _id: orderId, 'Products.product': productId },
         {
           $set: {
-            'Products.$.status': 'Cancelled',
+            'Products.$.status': ORDER_STATUS.CANCELLED,
             'Products.$.refundAmount':calculation.refundAmount,
             subTotal: calculation.remainingSubTotal,
             GST:calculation.remainingGst,
@@ -165,15 +168,15 @@ const handleProductAction = async (req, res) => {
               await productDetails.save()
             }
 
-    await sendNotification(req.session.user, `Product ${status.toLowerCase()} successfully.`, 'success');
+    await sendNotification(req.session.user, `Product ${status.toLowerCase()} successfully.`, NOTIFICATION_STATUS.SUCCESS);
 
-    if (status === 'Cancelled' && (order.payment === 'razorpay' || order.payment === 'wallet')) {
+    if (status === ORDER_STATUS.CANCELLED && (order.payment === PAYMENT_METHOD.RAZORPAY || order.payment === PAYMENT_METHOD.WALLET)) {
       await refundWallet(order.UserID, calculation.refundAmount);
     }
 
-    const allProductsCancelled = order.Products.every((p) => p.status === 'Cancelled');
+    const allProductsCancelled = order.Products.every((p) => p.status === ORDER_STATUS.CANCELLED);
     if (allProductsCancelled) {
-      order.orderStatus = 'Cancelled';
+      order.orderStatus = ORDER_STATUS.CANCELLED;
       order.Shipping = 0;
       order.GST=0
       order.Final_Amount = 0;
@@ -209,7 +212,7 @@ const ReturnHandle = async (req, res) => {
       return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ORDER_NOT_FOUND });
     }
 
-    if (selected === 'Approve') {
+    if (selected === RETURN_ACTION.APPROVE) {
     
      
       if (itemId) {
@@ -220,8 +223,8 @@ const ReturnHandle = async (req, res) => {
         }
 
         const product = order.Products[productIndex];
-        product.return.adminStatus = { status: true, response: 'Approved' };
-        product.status = 'Returned';
+        product.return.adminStatus = { status: true, response: RETURN_ADMIN_RESPONSE.APPROVED };
+        product.status = ORDER_STATUS.RETURNED;
 
         const calculation = calculateRefundAndAdjustments(order, product);
  
@@ -231,7 +234,7 @@ const ReturnHandle = async (req, res) => {
           { _id: orderId, 'Products._id': itemId },
           {
             $set: {
-              'Products.$.status': 'Returned',
+              'Products.$.status': ORDER_STATUS.RETURNED,
              'Products.$.refundAmount': calculation.refundAmount,
               'Products.$.return.adminStatus': product.return.adminStatus,
               subTotal: calculation.remainingSubTotal,
@@ -244,12 +247,12 @@ const ReturnHandle = async (req, res) => {
           }
         );
 
-        await sendNotification(req.session.user, 'Product approved and marked as returned.', 'success');
+        await sendNotification(req.session.user, 'Product approved and marked as returned.', NOTIFICATION_STATUS.SUCCESS);
         return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_MARKED_RETURNED });
       } else if(!itemId) {
       
         order.Products.forEach((product) => {
-          if (product.status !== 'Cancelled') product.status = 'Returned';
+          if (product.status !== ORDER_STATUS.CANCELLED) product.status = ORDER_STATUS.RETURNED;
         });
 
         const refundAmount = order.Final_Amount - order.Shipping;
@@ -261,23 +264,23 @@ const ReturnHandle = async (req, res) => {
               subTotal: 0,
               Final_Amount: 40,
               GST:0,
-              orderStatus: 'Returned',
+              orderStatus: ORDER_STATUS.RETURNED,
               'Request.admin.status': true,
-              'Request.admin.response': 'Approved',
-              paymentStatus: 'Refund',
+              'Request.admin.response': RETURN_ADMIN_RESPONSE.APPROVED,
+              paymentStatus: PAYMENT_STATUS.REFUND,
               'Coupon.discountValue': 0,
             },
           }
         );
 
         await refundWallet(order.UserID, refundAmount);
-        await sendNotification(req.session.user, 'Order approved and marked as returned.', 'success');
+        await sendNotification(req.session.user, 'Order approved and marked as returned.', NOTIFICATION_STATUS.SUCCESS);
         return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_MARKED_RETURNED });
       }
   
     }
     
-    if (selected === 'Cancel') {
+    if (selected === RETURN_ACTION.CANCEL) {
      
       if (itemId) {
         const productIndex = order.Products.findIndex((p) => p._id.toString() === itemId);
@@ -289,12 +292,13 @@ const ReturnHandle = async (req, res) => {
           { _id: orderId, 'Products._id': itemId },
           {
             $set: {
-              'Products.$.return.adminStatus': { status: false, response: 'Rejected' },
+              'Products.$.return.adminStatus': { status: false, response: RETURN_ADMIN_RESPONSE.REJECTED },
+              
             },
           }
         );
 
-        await sendNotification(req.session.user, 'Product return request rejected.', 'error');
+        await sendNotification(req.session.user, 'Product return request rejected.', NOTIFICATION_STATUS.ERROR);
         return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_RETURN_REJECTED });
       } else {
         
@@ -303,12 +307,12 @@ const ReturnHandle = async (req, res) => {
           {
             $set: {
               'Request.admin.status': false,
-              'Request.admin.response': 'Rejected',
+              'Request.admin.response': RETURN_ADMIN_RESPONSE.REJECTED,
             },
           }
         );
 
-        await sendNotification(req.session.user, 'Order return request rejected.', 'error');
+        await sendNotification(req.session.user, 'Order return request rejected.', NOTIFICATION_STATUS.ERROR);
         return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_RETURN_REJECTED });
       }
     }
@@ -317,85 +321,6 @@ const ReturnHandle = async (req, res) => {
     return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.RETURN_HANDLE_ERROR });
   }
 };
-
-  
-
-
-  const sendNotification = async (userId, message, status ) => {
-    try {
-      const current = new Date();
-      let Notify = await notify.findOne({ UserId: userId });
-      if (Notify) {
-        Notify.notification.push({ message, status, createdAt: current });
-        await Notify.save();
-      } else {
-        Notify = new notify({
-          UserId: userId,
-          notification: [{ message, status, createdAt: current }],
-        });
-        await Notify.save();
-      }
-    } catch (error) {
-      console.error('Error sending notification:', error.message);
-    }
-  };
-
-  const refundWallet = async (userId, amount) => {
-    try {
-      let wallet = await WALLET.findOne({ userId });
-      if (wallet) {
-        wallet.transactions.push({ type: 'credit', amount });
-        await wallet.save();
-      } else {
-        wallet = new WALLET({
-          userId,
-          transactions: [{ type: 'credit', amount }],
-        });
-        await wallet.save();
-      }
-      return { success: true };
-    } catch (error) {
-   
-      return { success: false, message: httpResponse.WALLET_UPDATE_FAILED };
-    }
-  };
- 
-
-  const calculateRefundAndAdjustments = (order, product) => {
-      
-      const initialSubTotal = order.subTotal;
-      const initialDiscount = order.Coupon.discountValue;
-      const intialGst=order.GST
-
-      const allProductsReturned = order.Products.every((product) => product.status === 'Returned');
-      const shipping = allProductsReturned ? 0 : order.Shipping;
-
-  
-      const productGSTshare=Math.round((intialGst/initialSubTotal)*product.TOTAL)
-    
-      const productDiscountShare = Math.round((initialDiscount / initialSubTotal) * product.TOTAL);
-      const refundAmount = product.TOTAL+productGSTshare - productDiscountShare;
-
-    const remainingGst=Math.round(intialGst-productGSTshare)
-    const remainingSubTotal = Math.max(0, initialSubTotal - product.TOTAL);
-    const remainingDiscount = Math.round(initialDiscount - productDiscountShare);
-    const finalAmount = Math.max(0, remainingSubTotal + remainingGst+shipping - remainingDiscount);
-    
-   
-    return {
-      refundAmount: Math.round(refundAmount),
-      orderStatus: allProductsReturned ? 'Returned' : order.orderStatus,
-      
-      remainingSubTotal,
-      remainingDiscount,
-      finalAmount,
-      shipping,
-      remainingGst
-    };
-  };
-  
-
-
 module.exports={
     order,
     details,

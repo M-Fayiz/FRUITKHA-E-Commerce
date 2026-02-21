@@ -3,6 +3,7 @@ const USER=require('../../model/user/userModel')
 const CART=require('../../model/user/CART')
 const httpStatusCode = require('../../constant/httpStatusCode')
 const httpResponse = require('../../constant/httpResponse')
+const { COUPON_STATUS, COUPON_TYPE } = require('../../constant/status/couponStatus')
 
 
 const coupon=async(req,res)=>{
@@ -52,7 +53,7 @@ const addCoupon=async(req,res)=>{
     })
    const data=await result.save()
    if(data){
-    return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.COUPON_ADDED})
+    return res.status(httpStatusCode.CREATED).json({success:true,message:httpResponse.COUPON_ADDED})
    }
  
    } catch (error) {
@@ -97,7 +98,7 @@ const editCoupon = async (req, res) => {
             usedPerUser,
             minCartValue,
             maxDiscount,
-            status:'Active'
+            status: COUPON_STATUS.ACTIVE
         },{new:true});
      
         
@@ -133,27 +134,27 @@ const couponValidate = async (req, res) => {
   
   
   
-      if (result.status !== "Active") {
+      if (result.status !== COUPON_STATUS.ACTIVE) {
         return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.Coupon_not_active });
       }
       
       const now = new Date();
       if (now < result.startDate ||now > result.endDate) {
-        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "This coupon is expired or not active yet." });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.COUPON_DATE_INVALID });
       }
   
       if (result.maxUses > 0 && result.uses >= result.maxUses) {
-        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "This coupon has been fully redeemed." });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.COUPON_MAX_REDEEMED });
       }
   
       const user = await USER.findById(userId);
       if (!user) {
-        return res.status(404).json({ success: false, message: "User not found." });
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.USER_NOT_FOUND });
       }
   
       const cart = await CART.findOne({ UserID: userId });
       if (!cart) {
-        return res.status(404).json({ success: false, message: "Cart not found." });
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CART_NOT_FOUND });
       }
   
       const existingCoupon = user.usedCoupon.find(
@@ -164,7 +165,7 @@ const couponValidate = async (req, res) => {
         if (existingCoupon.usageCount >= result.usedPerUser) {
           return res.status(httpStatusCode.BAD_REQUEST).json({
             success: false,
-            message: "You have already used this coupon the maximum allowed times.",
+            message: httpResponse.COUPON_USER_MAX_USED,
           });
         }
         existingCoupon.usageCount += 1; 
@@ -178,19 +179,19 @@ const couponValidate = async (req, res) => {
       if (result.minCartValue && TOTAL < result.minCartValue) {
         return res.status(httpStatusCode.BAD_REQUEST).json({
           success: false,
-          message: `Minimum cart value must be at least ${result.minCartValue}.`,
+          message: httpResponse.MIN_CART_VALUE_REQUIRED(result.minCartValue),
         });
       }
   
       let discount = 0;
-      if (result.Type === "Percentage") {
+      if (result.Type === COUPON_TYPE.PERCENTAGE) {
         discount = (TOTAL * result.Value) / 100;
         if (result.maxDiscount && discount > result.maxDiscount) {
           discount = result.maxDiscount;
        }
-      } else if (result.Type === "Fixed") {
+      } else if (result.Type === COUPON_TYPE.FIXED) {
         discount = result.Value;
-      } else if (result.Type === "shipping_Offer") {
+      } else if (result.Type === COUPON_TYPE.SHIPPING_OFFER) {
         discount = 40;
       }
   
@@ -204,7 +205,7 @@ const couponValidate = async (req, res) => {
   
       result.Uses += 1;
       if (result.maxUses > 0 && result.uses >= result.maxUses) {
-        result.status = "Expired";
+        result.status = COUPON_STATUS.EXPIRED;
       }
   
       await result.save();
@@ -213,12 +214,12 @@ const couponValidate = async (req, res) => {
   
       return res.status(httpStatusCode.OK).json({
         success: true,
-        message: "Coupon applied successfully!",
+        message: httpResponse.COUPON_APPLIED,
         discount,
       });
     } catch (error) {
       console.error(error);
-      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: "Internal Server Error", error: error.message });
+      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR, error: error.message });
     }
   };
   
@@ -231,19 +232,19 @@ const remove = async (req, res) => {
   
       const user = await USER.findById(userId);
       if (!user) {
-        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'User Not Found' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.USER_NOT_FOUND_CAP });
       }
   
       const couponIndex = user.usedCoupon.findIndex(c => c.coupon.toString() === couponId.toString());
       if (couponIndex === -1) {
-        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'Coupon not found in user history.' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.COUPON_HISTORY_NOT_FOUND });
       }
   
       user.usedCoupon.splice(couponIndex, 1);
   
       const cart = await CART.findOne({ UserID: userId });
       if (!cart) {
-        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'Cart not found.' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.CART_NOT_FOUND_DOT });
       }
   
       cart.Discount = { discount_amount: 0, discountId: null };
@@ -254,12 +255,12 @@ const remove = async (req, res) => {
   
       return res.status(httpStatusCode.OK).json({
         success: true,
-        message: 'Coupon removed successfully. Discount has been reset.',
+        message: httpResponse.COUPON_REMOVED,
         cart,
       });
     } catch (error) {
       console.error(error.message);
-      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: 'Internal Server Error', error: error.message });
+      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR, error: error.message });
     }
 };
   
@@ -269,7 +270,7 @@ const deletCoupon=async(req,res)=>{
       try {
         const result=await COUPON.findByIdAndDelete(couponId)
         if(result){
-          return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.ITEM_NOT_FOUND('coupon','removed')})
+          return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.UPDATED_SUCCESSFULLY('Coupon','removed')})
         }
       } catch (error) {
         console.log(error.message)
