@@ -46,7 +46,7 @@ function pass(productId, name, Reguler, Offer) {
   console.log("GET IN PASS DATA");
   console.log(productId, name, Reguler, quantity);
 
-  fetch("/addCart", {
+  fetch("/api/cart/items", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +83,7 @@ wishlistIcon.addEventListener("click", () => {
   const isInWishlist = wishlistIcon.classList.contains("bi-heart-fill");
   const val = wishlistIcon.getAttribute("data-id");
 
-  fetch("/toggleWishList", {
+  fetch("/api/wishlist/items/toggle", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

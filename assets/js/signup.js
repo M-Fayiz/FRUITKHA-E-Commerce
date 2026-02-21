@@ -20,7 +20,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   const phone = form.querySelector("#phone").value.trim();
   const password = form.querySelector("#password").value.trim();
   const confirmPassword = form.querySelector("#confirmPassword").value.trim();
-
+  console.log('phone number :',phone)
   let isValid = true;
 
   // ================================
@@ -100,7 +100,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   // API CALL
   // ================================
   try {
-    const response = await fetch("/genarateOTP", {
+    const response = await fetch("/api/auth/otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -58,4 +58,4 @@ walletSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("Wallet", walletSchema);
+module.exports =   mongoose.models.Wallet ||mongoose.model("Wallet", walletSchema);

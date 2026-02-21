@@ -23,14 +23,12 @@ async function cancelOrder(orderId) {
   console.log(orderId);
 
   try {
-    const response = await fetch("/order-cancel", {
+    const response = await fetch(`/api/orders/${orderId}/cancel`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        orderId,
-      }),
+      body: JSON.stringify({}),
     });
 
     const data = await response.json();
@@ -88,12 +86,10 @@ document.getElementById("return-form").addEventListener("submit", (e) => {
     return showToast("Please Insert Required Fields", "error");
   }
   const formData = new FormData();
-  formData.append("orderId", orderId);
-
   formData.append("Reason", Reason);
   formData.append("prodctImage", prodctImage);
 
-  fetch("/return-Order", {
+  fetch(`/api/orders/${orderId}/returns`, {
     method: "post",
     body: formData,
   })

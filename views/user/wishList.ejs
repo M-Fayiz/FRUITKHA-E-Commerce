@@ -361,15 +361,8 @@ body {
     
     console.log(productId, item);
     
-    fetch('/remove-wishList', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            productId,
-            item
-        })
+    fetch(`/api/wishlist/items/${item}`, {
+        method: 'DELETE',
     })
     .then(res => res.json()) 
     .then(data => {

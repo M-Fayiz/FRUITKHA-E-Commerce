@@ -28,12 +28,12 @@ document.getElementById("closeModal").addEventListener("click", function () {
 function toggleItemStatus(itemId, condition) {
   console.log("working");
   console.log(itemId, condition);
-  fetch("/admin/categoryStatus", {
+  fetch(`/admin/api/categories/${itemId}/status`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
     },
-    body: JSON.stringify({ itemId, condition }),
+    body: JSON.stringify({ condition }),
   })
     .then((res) => res.json())
     .then((data) => {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
           formData.append("productId", productId);
           console.log("nbnm");
 
-          fetch("/admin/EditCategory", {
+          fetch(`/admin/api/categories/${productId}`, {
             method: "PATCH",
             body: formData,
           })
@@ -186,7 +186,7 @@ document.getElementById("form-category").addEventListener("submit", (e) => {
   formData.append("image", file);
 
   try {
-    fetch("/admin/addCategory", {
+    fetch("/admin/api/categories", {
       method: "post",
       body: formData,
     })

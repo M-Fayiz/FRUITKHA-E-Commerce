@@ -25,7 +25,7 @@ function cancelFromButton(buttonElement) {
 async function cancel(itemId, orderId, productId, quantity) {
   console.log("In cancel function:", itemId, orderId, productId, quantity);
 
-  const response = await fetch("/cancel-order", {
+  const response = await fetch(`/api/orders/${orderId}/items/${productId}/cancel`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +103,7 @@ function returnItem(element) {
     formData.append("productImage", productImage);
 
     console.log(orderId, productId, Reason);
-    fetch("/req-return", {
+    fetch(`/api/orders/${orderId}/items/${productId}/returns`, {
       method: "post",
 
       body: formData,
@@ -138,7 +138,7 @@ if (retryBtn) {
 
     try {
       // Step 1: Fetch Razorpay order details for retry
-      const response = await fetch("/retry-payment", {
+      const response = await fetch("/api/payments/retry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +170,7 @@ if (retryBtn) {
         order_id: razorpayOrder.id,
         handler: async function (response) {
           try {
-            const verifyResponse = await fetch("/verify-payment", {
+            const verifyResponse = await fetch("/api/payments/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

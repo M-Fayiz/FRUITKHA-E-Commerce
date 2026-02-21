@@ -59,7 +59,7 @@ document
       resultDiv.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
     }
 
-    fetch("/addADRS", {
+    fetch("/api/addresses", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -141,12 +141,8 @@ function resetFields() {
 // DELET ADDRESS // DELET ADDRESS // DELET ADDRESS // DELET ADDRESS
 
 function deleteAddress(adrsID) {
-  fetch("/delete-Adres", {
+  fetch(`/api/addresses/${adrsID}`, {
     method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ adrsID }),
   })
     .then((res) => res.json())
     .then((data) => {
@@ -229,7 +225,7 @@ function editAddress(
               `<p class="text-success">Validation Successful! All details match.</p>`;
 
             // Make PATCH request to update the address
-            await fetch("/editADRS", {
+            await fetch(`/api/addresses/${user}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",
@@ -242,7 +238,6 @@ function editAddress(
                 City: editCity,
                 State: editState,
                 Mark: editLandmark,
-                user: user,
               }),
             })
               .then((res) => res.json())

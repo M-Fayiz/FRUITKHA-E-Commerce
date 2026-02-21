@@ -4,6 +4,7 @@ const Auth = require("../../middleware/auth");
 const upload = require("../../utils/multer");
 const userOrderController = require("../../controller/user/userOrder.controller");
 const adminOrderController = require("../../controller/admin/order.controller");
+const { ORDER_API } = require("../../constant/api/order.api");
 
 router.get(
   "/orderList",
@@ -17,18 +18,32 @@ router.get(
   userOrderController.orderDetails,
 );
 
-router.post("/cancel-order", adminOrderController.handleProductAction);
-router.post("/order-cancel", userOrderController.CANCELallORDER);
+router.post(ORDER_API.CANCEL_ITEM(), (req, res, next) => {
+  req.body.orderId = req.params.orderId;
+  req.body.productId = req.params.productId;
+  return adminOrderController.handleProductAction(req, res, next);
+});
+router.post(ORDER_API.CANCEL(), (req, res, next) => {
+  req.body.orderId = req.params.orderId;
+  return userOrderController.CANCELallORDER(req, res, next);
+});
 
 router.post(
-  "/return-Order",
+  ORDER_API.RETURN_ORDER(),
   upload.single("prodctImage"),
-  userOrderController.ReturnOrder,
+  (req, res, next) => {
+    req.body.orderId = req.params.orderId;
+    return userOrderController.ReturnOrder(req, res, next);
+  },
 );
 router.post(
-  "/req-return",
+  ORDER_API.RETURN_ITEM(),
   upload.single("productImage"),
-  userOrderController.productReturn,
+  (req, res, next) => {
+    req.body.orderId = req.params.orderId;
+    req.body.productId = req.params.productId;
+    return userOrderController.productReturn(req, res, next);
+  },
 );
 
 module.exports = router;

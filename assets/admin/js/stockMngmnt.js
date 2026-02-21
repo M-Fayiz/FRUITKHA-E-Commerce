@@ -30,12 +30,12 @@ document.querySelectorAll(".edit-quantity-btn").forEach((button) => {
         const quantity = quantityInput.value;
         const expiryDate = expiryDateInput.value;
 
-        fetch("/admin/addStock", {
+        fetch(`/admin/api/products/${productId}/stock`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ quantity, expiryDate, productId }),
+          body: JSON.stringify({ quantity, expiryDate }),
         })
           .then((res) => res.json())
           .then((data) => {

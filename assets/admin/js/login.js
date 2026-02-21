@@ -17,7 +17,7 @@ const fetchData = async (email, password) => {
   console.log("kayariii");
 
   try {
-    const response = await fetch("/admin/verify_login", {
+    const response = await fetch("/admin/api/auth/sessions", {
       method: "post",
       headers: {
         "Content-Type": "application/json",

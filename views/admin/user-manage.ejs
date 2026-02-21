@@ -321,12 +321,12 @@
                     // Toggle user status
                     function toggleUserStatus(userId,condition, i){
             
-                        fetch("/admin/toogleUserStatus",{
+                        fetch(`/admin/api/users/${userId}/status`,{
                             method:"PATCH",
                             headers:{
                                 "Content-Type":"application/json; charset=UTF-8"
                             },
-                            body:JSON.stringify({userId,condition})
+                            body:JSON.stringify({condition})
                         })
                         .then(res=> res.json())
                         .then(data=>{

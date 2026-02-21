@@ -5,14 +5,13 @@ document.getElementById("status-form").addEventListener("submit", (e) => {
 
   console.log(Status, OrdeID);
 
-  fetch("/admin/OrderStatus", {
-    method: "PUT",
+  fetch(`/admin/api/orders/${OrderID}/status`, {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       Status,
-      OrderID,
     }),
   })
     .then((res) => res.json())
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     select.addEventListener("change", (e) => {
       const selected = select.value;
 
-      fetch("/admin/productRes", {
+      fetch("/admin/api/orders/returns/items/response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const orderId = document.getElementById("orderrrID").value;
       console.log(selected, orderId);
 
-      fetch("/admin/response", {
+      fetch("/admin/api/orders/returns/response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

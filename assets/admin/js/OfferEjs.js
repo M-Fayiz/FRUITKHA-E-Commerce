@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       toPass.productId = productId;
     }
 
-    fetch(`/admin/addOffer`, {
+    fetch(`/admin/api/offers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,12 +70,8 @@ async function clearOfferPrice(OfferID) {
   console.log(OfferID, "offerid");
 
   try {
-    const response = await fetch("/admin/clearOffer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ OfferID }),
+    const response = await fetch(`/admin/api/offers/${OfferID}`, {
+      method: "DELETE",
     });
 
     const data = await response.json();

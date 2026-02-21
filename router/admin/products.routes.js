@@ -3,11 +3,12 @@ const router = express.Router();
 const productController = require("../../controller/ADMIN/product.controller");
 const upload = require("../../utils/multer");
 const adminAuth = require("../../middleware/auth");
+const { PRODUCT_API } = require("../../constant/api/product.api");
 
 router.get("/product", adminAuth.adminAuth, productController.productForm);
 
 router.post(
-  "/addProduct",
+  PRODUCT_API.COLLECTION,
   (req, res, next) => {
     upload.array("primaryImageInput", 3)(req, res, (err) => {
       if (err) {
@@ -20,7 +21,10 @@ router.post(
 );
 
 router.get("/productList", adminAuth.adminAuth, productController.prductList);
-router.patch("/productList", productController.productList);
+router.patch(PRODUCT_API.STATUS(":itemId"), (req, res, next) => {
+  req.body.itemId = req.params.itemId;
+  return productController.productList(req, res, next);
+});
 router.get(
   "/SingleImage/:id",
   adminAuth.adminAuth,
@@ -28,7 +32,7 @@ router.get(
 );
 
 router.patch(
-  "/updateProduct",
+  PRODUCT_API.ITEM(":productId"),
   (req, res, next) => {
     upload.fields([
       { name: "primaryImage", maxCount: 1 },
@@ -41,7 +45,10 @@ router.patch(
       next();
     });
   },
-  productController.editProduct,
+  (req, res, next) => {
+    req.body.productId = req.params.productId;
+    return productController.editProduct(req, res, next);
+  },
 );
 
 module.exports = router;

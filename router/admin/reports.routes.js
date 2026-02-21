@@ -8,6 +8,6 @@ router.get(
   adminAuth.adminAuth,
   reportController.salesReport,
 );
-router.post("/get-sales-report", reportController.genorate);
+// router.post("/get-sales-report", reportController.genorate);
 
 module.exports = router;

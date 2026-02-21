@@ -71,5 +71,4 @@ const salesReport = async (req, res) => {
 
 module.exports = {
   salesReport,
-  genorate,
 };

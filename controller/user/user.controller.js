@@ -6,7 +6,7 @@ const category = require("../../model/ADMIN/category");
 const wishList = require("../../model/User/wishList");
 const PRODUCT = require("../../model/ADMIN/product");
 
-const CART = require("../../model/User/CART");
+const CART = require("../../model/user/cart");
 const notify = require("../../model/User/notification");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");

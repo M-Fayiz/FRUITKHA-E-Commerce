@@ -79,4 +79,6 @@ productModel.virtual("expiredQuantity").get(function () {
 productModel.set("toJSON", { virtuals: true });
 productModel.set("toObject", { virtuals: true });
 
-module.exports = mongoose.model("products", productModel);
+module.exports =
+  mongoose.models.Products ||
+  mongoose.model("Products", productModel);

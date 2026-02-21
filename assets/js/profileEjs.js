@@ -25,7 +25,7 @@ document.getElementById("edit-profile").addEventListener("submit", (e) => {
     isValid = false;
   }
 
-  fetch("/editProfile", {
+  fetch("/api/users/profile", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -76,7 +76,7 @@ document.getElementById("pass-form").addEventListener("submit", (e) => {
     Valid = false;
   }
 
-  fetch("/change-Password", {
+  fetch("/api/users/profile/password", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

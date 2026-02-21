@@ -18,7 +18,7 @@ document.getElementById("login_form").addEventListener("submit", (e) => {
 
 const fetchData = async (email, password) => {
   console.log("working");
-  const response = await fetch("/verify_lagin", {
+  const response = await fetch("/api/auth/sessions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

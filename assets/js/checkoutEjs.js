@@ -49,7 +49,7 @@ document.getElementById("order-form").addEventListener("submit", async (e) => {
         amount,
       };
 
-      const placeOrderResponse = await fetch("/placeOrder", {
+      const placeOrderResponse = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -64,7 +64,7 @@ document.getElementById("order-form").addEventListener("submit", async (e) => {
         throw new Error("Failed to place order");
       }
 
-      const response = await fetch("/create-order", {
+      const response = await fetch("/api/payments/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount }),
@@ -86,7 +86,7 @@ document.getElementById("order-form").addEventListener("submit", async (e) => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const verifyResponse = await fetch("/verify-payment", {
+            const verifyResponse = await fetch("/api/payments/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -158,7 +158,7 @@ document.getElementById("order-form").addEventListener("submit", async (e) => {
     const formObject = Object.fromEntries(formData.entries());
 
     try {
-      fetch("/placeOrder", {
+      fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -262,7 +262,7 @@ function editAddress(
             document.getElementById("Result").innerHTML =
               `<p class="text-success">Validation Successful! All details match.</p>`;
 
-            await fetch("/editADRS", {
+            await fetch(`/api/addresses/${user}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",
@@ -275,7 +275,6 @@ function editAddress(
                 City: editCity,
                 State: editState,
                 Mark: editLandmark,
-                user: user,
               }),
             })
               .then((res) => res.json())
@@ -319,7 +318,7 @@ document.body.addEventListener("click", (event) => {
       return;
     }
 
-    fetch("/couponDetails", {
+    fetch("/api/cart/coupon", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -354,8 +353,8 @@ document.body.addEventListener("click", (event) => {
 
     console.log("Removing coupon with ID:", couponId, "for user:", userId);
 
-    fetch("/remove-coupon", {
-      method: "POST",
+    fetch("/api/cart/coupon", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },

@@ -15,7 +15,7 @@ async function generateReport() {
     return showToast("Invalid startDate or endDate", "error");
   }
   try {
-    const response = await fetch("/admin/graph", {
+    const response = await fetch("/admin/api/analytics/sales", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,7 @@ document
     try {
       // console.log('inside try');
 
-      const response = await fetch("/resendOTP", {
+      const response = await fetch("/api/auth/otp/resend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ document
     });
 
     try {
-      const response = await fetch("/verifyOTP", {
+      const response = await fetch("/api/auth/otp/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

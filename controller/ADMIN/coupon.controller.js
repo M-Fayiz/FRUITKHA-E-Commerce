@@ -1,6 +1,6 @@
 const COUPON = require("../../model/admin/Coupon");
 const USER = require("../../model/user/userModel");
-const CART = require("../../model/user/CART");
+const CART = require("../../model/user/cart");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
 const {

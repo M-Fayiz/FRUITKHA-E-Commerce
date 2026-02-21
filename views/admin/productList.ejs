@@ -188,12 +188,12 @@
         <script>
              function toggleUserStatus(itemId,condition){
             
-            fetch("/admin/productList",{
+            fetch(`/admin/api/products/${itemId}/status`,{
                 method:"PATCH",
                 headers:{
                     "Content-Type":"application/json; charset=UTF-8"
                 },
-                body:JSON.stringify({itemId,condition})
+                body:JSON.stringify({condition})
             })
             .then(res=> res.json())
             .then(data=>{

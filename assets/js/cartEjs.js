@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const updateCartQuantity = (productId, QNTY) => {
-    fetch("/update-quantity", {
-      method: "POST",
+    fetch(`/api/cart/items/${productId}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -70,12 +70,8 @@ function remove(button) {
   const productId = button.getAttribute("data-id");
   console.log(productId);
 
-  fetch("/removeCart", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ productId }),
+  fetch(`/api/cart/items/${productId}`, {
+    method: "DELETE",
   })
     .then((res) => res.json())
     .then((data) => {

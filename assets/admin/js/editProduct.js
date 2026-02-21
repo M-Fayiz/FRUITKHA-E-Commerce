@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
 
-      fetch("/admin/updateProduct", {
+      fetch(`/admin/api/products/${productId}`, {
         method: "PATCH",
         body: formData,
       })

@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    fetch("/admin/addProduct", {
+    fetch("/admin/api/products", {
       method: "POST",
       body: formData,
     })

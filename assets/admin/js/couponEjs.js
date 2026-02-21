@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("/admin/addCoupon", {
+        const response = await fetch("/admin/api/coupons", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -109,12 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function deleteCoupon(couponId) {
-  fetch("/admin/removeCoupon", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ couponId }),
+  fetch(`/admin/api/coupons/${couponId}`, {
+    method: "DELETE",
   })
     .then((res) => res.json())
     .then((data) => {
@@ -198,13 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("/admin/editCoupon", {
+        const response = await fetch(`/admin/api/coupons/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id,
             code: editCouponCode,
             Description: EditcouponDesc,
             type: editCouponType,

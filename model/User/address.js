@@ -33,4 +33,7 @@ const address = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Address", address);
+module.exports =
+  mongoose.models.Address ||
+  mongoose.model("Address", address);
+

@@ -183,4 +183,4 @@ orderSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("order", orderSchema);
+module.exports =  mongoose.models.order || mongoose.model("order", orderSchema);

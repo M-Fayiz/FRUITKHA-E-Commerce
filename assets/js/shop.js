@@ -178,7 +178,7 @@ priceRange.addEventListener("input", (e) => {
 function pass(productId, name, Reguler, Offer) {
   console.log(productId, name, Reguler, Offer);
 
-  fetch("/addCart", {
+  fetch("/api/cart/items", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -210,7 +210,7 @@ function wishList(val) {
 
   // const val = wishlistIcon.getAttribute('data-id');
 
-  fetch("/toggleWishList", {
+  fetch("/api/wishlist/items/toggle", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
