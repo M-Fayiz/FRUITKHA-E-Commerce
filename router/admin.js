@@ -1,104 +1,16 @@
 const express = require('express')
-const Router = express.Router()
-const admin_Cntrl = require('../controller/admin/admin.controller')
-const upload = require('../utils/multer')
-const product_CNTRL = require('../controller/ADMIN/product.controller')
-const OFFER = require('../controller/admin/offer.controller')
-const ORDER = require('../controller/admin/order.controller')
-const STOCK = require('../controller/admin/stock.controller')
-const COUPON = require('../controller/admin/coupon.controller')
-const REPORT = require('../controller/admin/salesReport.controller')
-const adminAuth = require('../middleware/auth')
-const GRAPH = require('../controller/admin/graph.controller')
+const router = express.Router()
 
-// Login.,.,.,.,
-Router.get('/login', admin_Cntrl.LoadLogin)
-Router.post('/verify_login', admin_Cntrl.verifyLogin)
+router.use(require('./admin/auth.routes'))
+router.use(require('./admin/dashboard.routes'))
+router.use(require('./admin/users.routes'))
+router.use(require('./admin/categories.routes'))
+router.use(require('./admin/products.routes'))
+router.use(require('./admin/offers.routes'))
+router.use(require('./admin/orders.routes'))
+router.use(require('./admin/stock.routes'))
+router.use(require('./admin/coupons.routes'))
+router.use(require('./admin/reports.routes'))
+router.use(require('./admin/graph.routes'))
 
-// Home,.,.,.,...
-Router.get('/', adminAuth.adminAuth, admin_Cntrl.LoadHome)
-
-// User List
-Router.get('/userList', adminAuth.adminAuth, admin_Cntrl.Load_User)
-Router.patch('/toogleUserStatus', admin_Cntrl.toogleUserStatus)
-
-// For Category
-Router.post('/addCategory', upload.single('image'), admin_Cntrl.addCategory)
-Router.get('/category', adminAuth.adminAuth, admin_Cntrl.LoadCategory)
-
-Router.post('/clear-offer', admin_Cntrl.clearOffer)
-// 
-// Router.patch('/addSub',admin_Cntrl.AddSub)
-Router.patch('/categoryStatus', admin_Cntrl.categoryStatus)
-Router.patch('/EditCategory', upload.single('image'), admin_Cntrl.EditCategory)
-
-
-//  PRODUCT |  PRODUCT |  PRODUCT |
-Router.get('/product', adminAuth.adminAuth, product_CNTRL.productForm)
-Router.post('/addProduct', (req, res, next) => {
-    upload.array("primaryImageInput", 3)(req, res, (err) => {
-        if (err) {
-            return res.status(400).json({ success: false, message: err.message });
-        }
-        next();
-    });
-}, product_CNTRL.addProduct)
-
-// PRODUCT LIST ---------------
-
-Router.get('/productList', adminAuth.adminAuth, product_CNTRL.prductList)
-Router.patch('/productList', product_CNTRL.productList)
-Router.get('/SingleImage/:id', adminAuth.adminAuth, product_CNTRL.getProductDetails)
-Router.patch('/updateProduct', (req, res, next) => {
-    upload.fields([
-        { name: 'primaryImage', maxCount: 1 },
-        { name: 'additionalImage0', maxCount: 1 },
-        { name: 'additionalImage1', maxCount: 1 },
-    ])(req, res, (err) => {
-        if (err) {
-            return res.status(400).json({ success: false, message: err.message });
-        }
-        next();
-    });
-}, product_CNTRL.editProduct)
-
-
-
-
-
-//  |  OFFER  |  OFFER  |  OFFER  |  OFFER 
-Router.post('/clearOffer', OFFER.removeOFF)
-Router.post('/addOffer', OFFER.addOffer)
-Router.get('/Offer', adminAuth.adminAuth, OFFER.getOffer)
-
-// ORDER | ORDER | ORDER | ORDER ORDER ORDER 
-Router.get('/order', adminAuth.adminAuth, ORDER.order)
-Router.get('/order-details/:id', ORDER.details)
-Router.put('/OrderStatus', ORDER.OrderStatus)
-Router.post('/response', ORDER.ReturnHandle)
-Router.post('/productRes', ORDER.ReturnHandle)
-
-//  |   STOCK   |   STOCK   |   STOCK
-
-Router.get('/stock', adminAuth.adminAuth, STOCK.stock)
-Router.post('/addStock', STOCK.addQuantity)
-
-//  | COUPON | COUPON | COUPON | COUPON
-
-Router.get('/coupon', adminAuth.adminAuth, COUPON.coupon)
-Router.post('/addCoupon', COUPON.addCoupon)
-Router.patch('/editCoupon', COUPON.editCoupon)
-Router.post('/removeCoupon', COUPON.deletCoupon)
-
-// SALES REPORT  |  SALES REPORT  |  SALES REPORT
-
-Router.get('/generoteReport', adminAuth.adminAuth, REPORT.salesReport)
-
-Router.post('/get-sales-report', REPORT.genorate)
-
-// GRAPH  ||   GRAPH   ||   GRAPH   ||   GRAPH   |
-
-Router.post('/graph', adminAuth.adminAuth, GRAPH.graph)
-
-
-module.exports = Router
+module.exports = router
