@@ -59,18 +59,18 @@ const CartSchema = new Schema(
   { timestamps: true },
 );
 
-CartSchema.pre("save", function (next) {
+CartSchema.pre("save",async  function () {
   this.subTotal = this.Products.reduce((sum, product) => {
     return sum + product.quantity * product.Price;
   }, 0);
-  next();
+
 });
 
-CartSchema.pre("save", function (next) {
+CartSchema.pre("save",async  function () {
   if (this.Discount.discount_amount > this.subTotal) {
     this.Discount.discount_amount = this.subTotal;
   }
-  next();
+
 });
 
 const CART = mongoose.model("carts", CartSchema);

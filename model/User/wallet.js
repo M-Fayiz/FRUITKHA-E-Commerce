@@ -42,7 +42,7 @@ const walletSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-walletSchema.pre("save", function (next) {
+walletSchema.pre("save", async function () {
   let credit = 0;
   let debit = 0;
 
@@ -55,7 +55,7 @@ walletSchema.pre("save", function (next) {
   });
 
   this.balance = Math.floor(credit - debit);
-  next();
+ 
 });
 
 module.exports =   mongoose.models.Wallet ||mongoose.model("Wallet", walletSchema);

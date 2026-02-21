@@ -80,5 +80,5 @@ productModel.set("toJSON", { virtuals: true });
 productModel.set("toObject", { virtuals: true });
 
 module.exports =
-  mongoose.models.Products ||
-  mongoose.model("Products", productModel);
+  mongoose.models.products ||
+  mongoose.model("products", productModel);

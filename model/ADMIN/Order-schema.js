@@ -160,7 +160,7 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-orderSchema.pre("save", function (next) {
+orderSchema.pre("save", async function () {
   let subTotal = 0;
   this.Products.forEach((product) => {
     if (product.status !== "Cancelled" && product.status !== "Returned") {
@@ -180,7 +180,7 @@ orderSchema.pre("save", function (next) {
   this.Final_Amount =
     this.subTotal + this.GST + this.Shipping - this.Coupon.discountValue;
 
-  next();
+
 });
 
 module.exports =  mongoose.models.order || mongoose.model("order", orderSchema);
