@@ -10,7 +10,7 @@ const { refundWallet } = require('../../utils/wallet.util')
 const { calculateRefundAndAdjustments } = require('../../utils/order.util')
 
 const order=async(req,res)=>{
-    console.log('order list')
+
 try {
     
   const page = parseInt(req.query.page) || 1;

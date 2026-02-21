@@ -8,6 +8,9 @@ const PRODUCT=require('../../model/ADMIN/product')
 
 const CART=require('../../model/User/CART')
 const notify=require('../../model/User/notification')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
+const { COUPON_STATUS } = require('../../constant/status/couponStatus')
 
 
 const securePassword = async (password) => {
@@ -39,12 +42,12 @@ const securePassword = async (password) => {
 
       console.log('OTP sended :-',otp)
 
-      res.json({success:true,message:`OTP Sent to ${email}` })
+      res.status(httpStatusCode.OK).json({success:true,message:`OTP Sent to ${email}` })
    
     
   }catch(err){
    console.log('error',err)
-   res.json({success:false,message:err.message})
+   res.status(httpStatusCode.SERVER_ERROR).json({success:false,message:err.message})
   }
   }
 
@@ -54,7 +57,7 @@ const resendOTP = async (req, res) => {
     const {otpDATA} = req.session
  console.log('otpDATA',otpDATA)
     if (!otpDATA || !otpDATA.email) {
-      return res.json({ success: false, message: "OTP not found in session." })
+      return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.OTP_NOT_FOUND_SESSION })
     }
 
     const newOTP = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111  
@@ -64,10 +67,10 @@ const resendOTP = async (req, res) => {
     req.session.otpDATA.createdAt=Date.now
    
     console.log('RESENT OTP IS :-',newOTP)
-    res.json({ success: true, message: "OTP resent successfully" })
+    res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.OTP_RESENT })
   } catch (err) {
     console.log("Error resending OTP:", err)
-    res.json({ success: false, message: "Failed to resend OTP" })
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.OTP_RESEND_FAILED })
   }
 }
 
@@ -82,12 +85,12 @@ const verifyOTP = async (req, res) => {
   
 
     if (!otp || !EMAIL) {
-      return res.status(400).json({ success: false, message: "OTP or Email not found." })
+      return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.OTP_OR_EMAIL_NOT_FOUND })
     }
 
     
     if (!req.session.otpDATA) {
-      return res.status(404).json({ success: false, message: "No OTP session data found." })
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.OTP_SESSION_NOT_FOUND })
     }
 
     const now = Date.now()
@@ -96,7 +99,7 @@ const verifyOTP = async (req, res) => {
     
     if (now - createdAt > 5 * 60 * 1000) {
       req.session.otpDATA = null
-      return res.status(410).json({ success: false, message: 'OTP Expired!' })
+      return res.status(httpStatusCode.GONE).json({ success: false, message: httpResponse.OTP_EXPIRED })
     }
 
    
@@ -110,7 +113,7 @@ const verifyOTP = async (req, res) => {
      
 
       if (checkUser) {
-        return res.status(409).json({ success: false, message: "User already exists." })
+        return res.status(httpStatusCode.ITEM_EXIST).json({ success: false, message: httpResponse.USER_ALREADY_EXISTS })
       }
 
      
@@ -130,13 +133,13 @@ const verifyOTP = async (req, res) => {
       req.session.user = newResult._id 
 
       console.log('USER SAVED')
-      return res.status(200).json({ success: true, message: "User registered successfully." })
+      return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.USER_REGISTERED })
     } else {
-      return res.status(404).json({ success: false, message: 'Invalid OTP or Email' })
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.INVALID_OTP_OR_EMAIL })
     }
   } catch (error) {
     console.log(error.message)
-    res.status(500).json({ success: false, message: 'Internal Error. Please try again later.' })
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.INTERNAL_ERROR })
   }
 }
 
@@ -148,31 +151,31 @@ const Login = async (req, res) => {
     const user = await User.findOne({ email })
   
     if (!user){
-     return res.status(400).json({success: false, message: "invalid Email" }) 
+     return res.status(httpStatusCode.BAD_REQUEST).json({success: false, message: httpResponse.INVALID_EMAIL_SMALL }) 
     }
     if(user.isGoogle===true){
-      return res.status(400).json({success:false,message:'user loged with google, please login with google'})
+      return res.status(httpStatusCode.BAD_REQUEST).json({success:false,message:httpResponse.LOGIN_WITH_GOOGLE})
     }
     
     if(user.isActive===false){
-    return  res.json({success:false,message:"you have been blocked for some reason"})
+    return  res.status(httpStatusCode.FORBIDDEN).json({success:false,message:httpResponse.USER_BLOCKED})
     }
     
     const ismatch = await bcrypt.compare(password, user.password)
     if (!ismatch){
 
-      return res.json({success: false, message: "Password not Match"}) 
+      return res.status(httpStatusCode.BAD_REQUEST).json({success: false, message: httpResponse.PASSWORD_NOT_MATCH_USER}) 
     }  
 
     req.session.user = user._id  
     User.updateOne({email},{lastLogin:new Date()})
 
 
-     res.status(200).json({ success: true, message: "User Login successfully." })
+     res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.USER_LOGIN_SUCCESS })
     
   } catch (error) {
     console.log(error.message)
-    res.json({ success: false, message: error.message })  
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: error.message })  
   }
 }
 
@@ -202,7 +205,7 @@ const LoadHome=async(req,res)=>{
   
     const Data=await category.find({isList:true})
 
-    const coupon=await COUPON.find({status:'Active'})
+    const coupon=await COUPON.find({status:COUPON_STATUS.ACTIVE})
 
     const cart = await CART.findOne({UserID:req.session.user})
   let carSize
@@ -295,7 +298,7 @@ const shop = async (req, res) => {
    
 
       if (products.length === 0) {
-          message = message || 'No products found.'
+          message = message || httpResponse.NO_PRODUCTS_FOUND
       }
 
       const totalProducts = await PRODUCT.countDocuments(query)
@@ -317,7 +320,7 @@ products.forEach(product => {
 
       
      const data=await category.find({isList:true})
-     const coupon=await COUPON.find({status:'Active'})
+     const coupon=await COUPON.find({status:COUPON_STATUS.ACTIVE})
    
       res.render('user/shop', {
           products,
@@ -338,9 +341,9 @@ products.forEach(product => {
       
   } catch (error) {
       console.error('Error fetching products:', error)
-      res.status(500).json({
+      res.status(httpStatusCode.SERVER_ERROR).json({
           success: false,
-          message: 'An error occurred while fetching products.',
+          message: httpResponse.PRODUCTS_FETCH_ERROR,
           error: error.message, 
       })
   }
@@ -430,18 +433,18 @@ const number=Number(priceRange)
       }
 
     if (products.length === 0) {
-        message = message || 'No products found.'
+        message = message || httpResponse.NO_PRODUCTS_FOUND
     }
 
     if (!products || products.length === 0) {
-      return res.json({ message: "No products found" })
+      return res.status(httpStatusCode.OK).json({ message: httpResponse.NO_PRODUCTS_FOUND })
     }
 
-    res.json(products)
+    res.status(httpStatusCode.OK).json(products)
 
   } catch (error) {
     console.error('Error fetching products:', error)
-    res.status(500).json({ message: 'Error fetching products', error: error.message })
+    res.status(httpStatusCode.SERVER_ERROR).json({ message: httpResponse.PRODUCTS_FETCH_ERROR, error: error.message })
   }
 }
 
@@ -476,7 +479,7 @@ const productId=async(req,res)=>{
   
   const cat=await category.findOne({category:item.Category})
   
-  const coupon=await COUPON.find({status:'Active'})
+  const coupon=await COUPON.find({status:COUPON_STATUS.ACTIVE})
     res.render('user/single-product',{item,user: req.session.user,carSize,size,related,CURRENTpage:'product',cat ,Category:item.Category,coupon,NOtify})
   } catch (error) {
     console.log(error)
@@ -515,14 +518,14 @@ const ALL = async (req, res) => {
 
  
     if (products.length === 0) {
-      message = 'No products found.'
+      message = httpResponse.NO_PRODUCTS_FOUND
     }
 
    
-    res.json({
+    res.status(httpStatusCode.OK).json({
       success: true,
       products,
-      message: message || 'Products fetched successfully.',
+      message: message || httpResponse.PRODUCTS_FETCHED,
       pagination: {
         currentPage: page,
         totalPages,
@@ -534,9 +537,9 @@ const ALL = async (req, res) => {
 
   } catch (error) {
     console.error('Error fetching products:', error)
-    res.status(500).json({
+    res.status(httpStatusCode.SERVER_ERROR).json({
       success: false,
-      message: 'An error occurred while fetching products.',
+      message: httpResponse.PRODUCTS_FETCH_ERROR,
       error: error.message, 
     })
   }

@@ -12,6 +12,7 @@ const coupon=async(req,res)=>{
         res.status(httpStatusCode.OK).render('admin/coupon',{CURRENTpage:'coupon',coupon})
     } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR })
     }
     
 }
@@ -272,8 +273,10 @@ const deletCoupon=async(req,res)=>{
         if(result){
           return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.UPDATED_SUCCESSFULLY('Coupon','removed')})
         }
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ITEM_NOT_FOUND('Coupon') })
       } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR })
       }
 }
 

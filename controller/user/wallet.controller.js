@@ -1,4 +1,6 @@
 const WALLET=require('../../model/User/wallet')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const wallet=async(req,res)=>{
   try {
@@ -15,6 +17,7 @@ const wallet=async(req,res)=>{
     res.render('user/wallet',{user:req.session.user,CURRENTpage:'wallet',Wallet,currentPage: page,totalPages,totalwallet})
   } catch (error) {
     console.log(error.message)
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
   }
    
 }

@@ -1,13 +1,14 @@
 const USER= require('../../model/user/userModel')
-// const bcrypt=require('bcrypt')
 const ADDRES=require('../../model/user/address')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const mongoose=require('mongoose');
 
 const address=async (req,res)=>{
     console.log('get in address')
     try {
-        // const data=await USER.findOne()
+    
         console.log(req.session.user,'user session')
         const addres=await ADDRES.find({UserID:req.session.user})
 
@@ -19,7 +20,7 @@ const address=async (req,res)=>{
 }
 
 const addAddres=async(req,res)=>{
-    console.log('- - LOG IN ADD ADDRESS - -')
+  
     try {
        const{ Name,adres_name,pincode,place,city,state,user,mark}=req.body
         
@@ -35,7 +36,7 @@ const addAddres=async(req,res)=>{
         State:state
       })
       if(DATA){
-        return res.json({success:false,message:'the Address Already Exist'})
+        return res.status(httpStatusCode.ITEM_EXIST).json({success:false,message:httpResponse.ADDRESS_EXISTS})
       }else{
         const result=new ADDRES({
             UserID:user,
@@ -52,46 +53,47 @@ const addAddres=async(req,res)=>{
     
           if(data){
             console.log('data save',data)
-            res.status(200).json({success:true,message:'Address succesfully Added'})
+            res.status(httpStatusCode.CREATED).json({success:true,message:httpResponse.ADDRESS_ADDED})
           }   else{
-            res.status(500).json({success:false,message:'Failed to add Address'})
+            res.status(httpStatusCode.SERVER_ERROR).json({success:false,message:httpResponse.ADDRESS_ADD_FAILED})
           }
       }
           
       
     } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
     }
 }
 
 
 const rm_adres = async (req, res) => {
-    console.log('Entered rm_adres function');
+
 
     try {
-        console.log('Request body:', req.body);
+      
 
         const adrsID = req.body.adrsID;
         if (!adrsID) {
-            return res.status(400).json({ success: false, message: 'Address ID is required' });
+            return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.ADDRESS_ID_REQUIRED });
         }
 
-        console.log('Attempting to delete address with UserID:', adrsID);
+       
 
         const result = await ADDRES.findByIdAndDelete(adrsID);
 
 
         console.log('Delete result:', result);
 
-        if (result.deletedCount === 0) {
-            return res.status(500).json({ success: false, message: 'Failed to Delete Address' });
+        if (!result) {
+            return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.ADDRESS_DELETE_FAILED });
         }
 
-        res.status(200).json({ success: true, message: 'Address Successfully Deleted' });
+        res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ADDRESS_DELETED });
 
     } catch (error) {
         console.error('Error while deleting address:', error.message);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR });
     }
 };
 
@@ -109,13 +111,14 @@ const editAdddres=async(req,res)=>{
     State:State
    })
    if(!result){
-    return res.status(404).json({success:false,message:'User Not Found'})
+    return res.status(httpStatusCode.ITEM_NOT_FOUND).json({success:false,message:httpResponse.USER_NOT_FOUND_CAP})
    }
 
 
-        res.json({success:true,message:'Address Updated Succesfully'})
+        res.status(httpStatusCode.OK).json({success:true,message:httpResponse.ADDRESS_UPDATED})
     } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
     }
 }
 

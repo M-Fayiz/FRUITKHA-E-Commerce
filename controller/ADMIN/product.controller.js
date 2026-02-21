@@ -2,7 +2,6 @@ const adminModel = require('../../model/admin/adminModel')
 const USER = require('../../model/user/userModel')
 
 const category = require('../../model/admin/category');
-const { response } = require('express');
 
 const PRODUCT = require('../../model/admin/product');
 const categoryModel = require('../../model/admin/category');
@@ -17,7 +16,7 @@ const addProduct = async (req, res) => {
         const { title, description, regularPrice, expiryDate, quantity, category, subCategories } = req.body;
 
         const batch_id = `batch_${new Date().getTime()}`;
-        // const OFFER=regularPrice*(1-offerPrice/100)
+  
 
 
         const test = await PRODUCT.findOne({
@@ -41,7 +40,7 @@ const addProduct = async (req, res) => {
 
 
         const primaryImage = image[0];
-        const additionalImage = image.slice(1); // Fixed typo
+        const additionalImage = image.slice(1);
 
         const DATA = new PRODUCT({
             productTitle: title,
@@ -68,7 +67,7 @@ const addProduct = async (req, res) => {
 };
 
 
-// RENDERING <><><><><>
+
 const productForm = async (req, res) => {
     try {
         const data = await categoryModel.find({})
@@ -90,7 +89,6 @@ const prductList = async (req, res) => {
         const stock = Number(req.query.stock);
         let query = {};
 
-        // Add category filter
         if (Category) {
             query.Category = Category;
         }

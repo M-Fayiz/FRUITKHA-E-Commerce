@@ -1,6 +1,8 @@
 const PRODUCT = require('../../model/ADMIN/product');
 const USER = require('../../model/User/userModel');
 const WISHLIST = require('../../model/User/wishList');
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const wishList = async (req, res) => {
     try {
@@ -27,7 +29,7 @@ const wishList = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, message: 'Something went wrong' });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SOMETHING_WENT_WRONG });
     }
 };
 
@@ -40,13 +42,13 @@ const toggleWishList = async (req, res) => {
         const User = req.session.user;
 
         if (!User) {
-            return res.status(401).json({ success: false, message: 'User not logged in' });
+            return res.status(httpStatusCode.UNAUTHORIZED).json({ success: false, message: httpResponse.USER_NOT_LOGGED_IN });
         }
         let isWishList
 
         const product = await PRODUCT.findOne({ _id: val });
         if (!product) {
-            return res.status(404).json({ success: false, message: 'Product Not Found' });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ITEM_NOT_FOUND('Product') });
         }
 
         let wishlist = await WISHLIST.findOne({ UserId: User });
@@ -61,7 +63,7 @@ const toggleWishList = async (req, res) => {
             
 
             await wishlist.save();
-            return res.status(200).json({ success: true, message: 'Product successfully added to wishlist' });
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_ADDED_WISHLIST });
         }
 
         const productIndex = wishlist.Products.findIndex(p => p.product.toString() === val);
@@ -72,7 +74,7 @@ const toggleWishList = async (req, res) => {
             isWishList=false
               
             await wishlist.save();
-            return res.status(200).json({ success: true, message: 'Product successfully removed from wishlist' });
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_REMOVED_WISHLIST });
         } else {
             
             wishlist.Products.push({ product: val });
@@ -85,11 +87,11 @@ const toggleWishList = async (req, res) => {
            let aa =cc.Products.length
         
         //    console.log(cc)
-            return res.status(200).json({ success: true, message: 'Product successfully added to wishlist' ,val,isWishList,aa});
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_ADDED_WISHLIST ,val,isWishList,aa});
         }
     } catch (error) {
         console.error(error.message);
-        return res.status(500).json({ success: false, message: 'Something went wrong' });
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SOMETHING_WENT_WRONG });
     }
 };
 
@@ -102,7 +104,7 @@ const remove_wishList = async (req, res) => {
         const UserId = req.session.user;
 
         if (!UserId) {
-            return res.status(401).json({ success: false, message: "User is Not Logged In" });
+            return res.status(httpStatusCode.UNAUTHORIZED).json({ success: false, message: httpResponse.USER_NOT_LOGGED_IN_CAP });
         }
 
         const result = await WISHLIST.updateOne(
@@ -111,13 +113,13 @@ const remove_wishList = async (req, res) => {
         );
 
         if (result.modifiedCount > 0) {
-            return res.status(200).json({ success: true, message: "Product removed from wishlist" });
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_REMOVED_WISHLIST_ALT });
         } else {
-            return res.status(404).json({ success: false, message: "Product Not Found in Wishlist" });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_WISHLIST });
         }
     } catch (error) {
         console.error("Error:", error.message);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR });
     }
 };
 

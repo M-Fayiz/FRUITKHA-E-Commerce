@@ -27,8 +27,7 @@ const verifyLogin=async(req,res)=>{
 
        const admin= await adminModel.findOne({email}) 
    
-       const addd = await adminModel.find()
-       console.log('admin data ',addd)
+ 
        if(!admin){
          return  res.status(httpStatusCode.BAD_REQUEST).json({success:false,message:httpResponse.INVALID_EMAIL})
        }
@@ -66,7 +65,7 @@ const toogleUserStatus=async(req,res)=>{
 }
 
 const addCategory = async (req, res) => {
-    console.log('add category');
+ 
     
         try {
             const { title, discription } = req.body;
@@ -129,7 +128,7 @@ const categoryStatus=async(req,res)=>{
 
 const EditCategory=async(req,res)=>{
     
-console.log('edit Category');
+
 
     try {
         const { modalTitle, modalDescription, productId} = req.body;

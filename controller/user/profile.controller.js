@@ -5,6 +5,8 @@ const {sendForgotPasswordMail}=require('../../utils/mail_sender')
 const secret=require('../../utils/env')
 const TOKEN=require('../../model/User/token')
 const crypto = require('crypto');
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 // Generate a random token
 
@@ -35,7 +37,7 @@ let LoadProfile = async (req, res) => {
       res.render('user/profile', { user,CURRENTpage:'Profile' });
     } catch (error) {
       console.log(error.message);
-      res.status(500).send('Server error');
+      res.status(httpStatusCode.SERVER_ERROR).send(httpResponse.SERVER_ERROR_SHORT);
     }
   };
 
@@ -52,13 +54,14 @@ const editProfile=async(req,res)=>{
 
         console.log('retrive data from user',data)
         if(data){
-            res.status(200).json({success:true,message:'Profile Succesfully Updated'})
+            res.status(httpStatusCode.OK).json({success:true,message:httpResponse.PROFILE_UPDATED})
         }else{
-            res.status(404).json({success:false,message:'failed to update Profile'})
+            res.status(httpStatusCode.ITEM_NOT_FOUND).json({success:false,message:httpResponse.PROFILE_UPDATE_FAILED})
         }
 
     } catch (error) {
         console.log('error',error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
     }
 }
 
@@ -75,14 +78,14 @@ const ChangePass = async (req, res) => {
         const data = await USER.findById(userID);
 
         if (!data) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.USER_NOT_FOUND });
         }
 
         // Compare the entered password (plain-text) with the hashed password in the database
         const isMatch = await bcrypt.compare(password, data.password);  // password entered by user, data.password is hashed
 
         if (!isMatch) {
-            return res.status(404).json({ success: false, message: 'Current Password is not Match' });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CURRENT_PASSWORD_INVALID });
         }
 
         // Hash the new password
@@ -96,13 +99,13 @@ const ChangePass = async (req, res) => {
         console.log('Password successfully updated');
         
         if (result) {
-            res.status(200).json({ success: true, message: 'Password Successfully Changed' });
+            res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PASSWORD_CHANGED });
         } else {
-            res.status(500).json({ success: false, message: 'Password change failed' });
+            res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.PASSWORD_CHANGE_FAILED });
         }
     } catch (error) {
         console.log('Error from change password:', error.message);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR });
     }
 };
 
@@ -120,7 +123,7 @@ const forgotPAS = async (req, res) => {
       console.log(result, "User found in forgot password");
   
       if (!result) {
-        return res.status(404).json({ success: false, message: "User not found" });
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.USER_NOT_FOUND });
       }
   
       
@@ -149,16 +152,16 @@ console.log('after tokrn');
       
       try {
         await sendForgotPasswordMail(result.email, resetToken);
-        res.status(200).json({ success: true, message: "Reset email sent" });
+        res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.RESET_EMAIL_SENT });
       } catch (err) {
         console.error("Failed to send reset email:", err.message);
         res
-          .status(500)
-          .json({ success: false, message: "Failed to send reset email" });
+          .status(httpStatusCode.SERVER_ERROR)
+          .json({ success: false, message: httpResponse.RESET_EMAIL_FAILED });
       }
     } catch (error) {
       console.error("Error in forgot password:", error.message);
-      res.status(500).json({ success: false, message: "Internal server error" });
+      res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR });
     }
   };
   
@@ -172,7 +175,7 @@ const REST=async(req,res)=>{
 try {
     const result=await TOKEN.findOne({token:token})
     if(!result){
-        return res.status(404).json({success:false,message:'Invalid token'})
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({success:false,message:httpResponse.INVALID_TOKEN})
     }
 
     const secure=await securePassword(newPassword)
@@ -184,11 +187,12 @@ console.log('secure',secure)
  console.log('data',data)
 
     if(data){
-        res.status(200).json({success:true,message:'Password updated succesfully'})
+        res.status(httpStatusCode.OK).json({success:true,message:httpResponse.PASSWORD_UPDATED})
     }
     
 } catch (error) {
     console.log(error.message)
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
 }
 
 

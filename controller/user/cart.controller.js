@@ -5,6 +5,8 @@ const PRODUCT=require('../../model/ADMIN/product')
 const COUPON=require('../../model/ADMIN/Coupon')
 const notify=require('../../model/User/notification')
 const wishList=require('../../model/User/wishList')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 // Fetch Cart Items
 const cart = async (req, res) => {
   try {
@@ -51,7 +53,7 @@ const cart = async (req, res) => {
     
   } catch (err) {
     console.error("Error fetching cart:", err.message)
-    res.status(500).json({ success: false, message: "Error fetching cart" })
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.CART_FETCH_FAILED })
   }
 }
 
@@ -62,7 +64,7 @@ const addCart = async (req, res) => {
   const UserID = req.session.user
 
   if (!UserID) {
-    return res.status(400).json({ success: false, message: 'User not logged in',login:false })
+    return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.USER_NOT_LOGGED_IN,login:false })
   }
 
   try {
@@ -71,21 +73,21 @@ const addCart = async (req, res) => {
  
     const product = await PRODUCT.findById(productId)
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' })
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND })
     }
 
     const price = product.Offer.OfferPrice > 0 ? product.Offer.OfferPrice : product.RegulerPrice
     const minLimit = Math.min(Math.floor(product.Stock / 3), 10)
 
     if (Quantity > minLimit) {
-      return res.status(429).json({
+      return res.status(httpStatusCode.TOO_MANY_REQUESTS).json({
         success: false,
         message: `This Product's Maximum Allowed Quantity is ${minLimit}.`,
       })
     }
 
     if (Quantity > product.Stock) {
-      return res.status(409).json({
+      return res.status(httpStatusCode.ITEM_EXIST).json({
         success: false,
         message: `Requested quantity exceeds available stock of ${product.Stock}.`,
       })
@@ -99,9 +101,9 @@ const addCart = async (req, res) => {
       )
 
       if (productIndex > -1) {
-        return res.status(400).json({
+        return res.status(httpStatusCode.BAD_REQUEST).json({
           success: false,
-          message: 'This product is already in your cart.',
+          message: httpResponse.PRODUCT_ALREADY_IN_CART,
         })
       } else {
         
@@ -132,14 +134,14 @@ const addCart = async (req, res) => {
     
     await cart.save()
 
-    return res.status(200).json({
+    return res.status(httpStatusCode.OK).json({
       success: true,
-      message: 'Cart updated successfully',
+      message: httpResponse.CART_UPDATED,
       subTotal: cart.subTotal, // Return updated subtotal
     })
   } catch (err) {
     console.error('Error in addCart:', err)
-    res.status(500).json({ success: false, message: 'Something went wrong' })
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SOMETHING_WENT_WRONG })
   }
 }
 
@@ -152,7 +154,7 @@ const addCart = async (req, res) => {
       const UserID = req.session.user
   
       if (!UserID) {
-        return res.status(401).json({ success: false, message: 'User not logged in' })
+        return res.status(httpStatusCode.UNAUTHORIZED).json({ success: false, message: httpResponse.USER_NOT_LOGGED_IN })
       }
   
       console.log('PRODUCT ID:', productId)
@@ -160,18 +162,18 @@ const addCart = async (req, res) => {
       
       let cart = await CART.findOne({ UserID }).populate('Products.productId')
       if (!cart) {
-        return res.status(404).json({ success: false, message: 'Cart Not Found' })
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CART_NOT_FOUND_CAP })
       }
   
       
       let productIndex = cart.Products.findIndex(p => p.productId._id.toString() === productId.toString())
       if (productIndex === -1) {
-        return res.status(404).json({ success: false, message: 'Product Not Found in Cart' })
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_CART })
       }
   
       const product = cart.Products[productIndex].productId
       if (!product) {
-        return res.status(404).json({ success: false, message: 'Product Not Found in Database' })
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_DB })
       }
   
      
@@ -183,7 +185,7 @@ const addCart = async (req, res) => {
       
     
       if (newQuantity > minLimit) {
-        return res.status(429).json({
+        return res.status(httpStatusCode.TOO_MANY_REQUESTS).json({
           success: false,
           message: `This Product's Maximum Allowed Quantity is ${minLimit}.`,
         })
@@ -191,7 +193,7 @@ const addCart = async (req, res) => {
     
       
       if (newQuantity > product.totalStock) {
-        return res.status(409).json({
+        return res.status(httpStatusCode.ITEM_EXIST).json({
           success: false,
           message: `Requested quantity exceeds available stock of ${product.totalStock}.`,
         })
@@ -215,7 +217,7 @@ const addCart = async (req, res) => {
   
     const result=  await cart.save()
   
-      return res.status(200).json({ success: true,cart: {
+      return res.status(httpStatusCode.OK).json({ success: true,cart: {
         Products: result.Products.map(p => ({
             productId: p.productId._id,
             quantity: p.quantity,
@@ -226,7 +228,7 @@ const addCart = async (req, res) => {
   
     } catch (error) {
       console.error('Error:', error.message)
-      return res.status(500).json({ success: false, message: 'Internal Server Error' })
+      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR })
     }
   }
   
@@ -237,7 +239,7 @@ const removeCart = async (req, res) => {
   const UserID = req.session.user
 
   if (!UserID) {
-    return res.status(400).json({ success: false, message: "User not logged in" })
+    return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.USER_NOT_LOGGED_IN })
   }
 
   try {
@@ -251,16 +253,16 @@ const removeCart = async (req, res) => {
         
         cart.Products.splice(productIndex, 1)
         await cart.save()
-        return res.status(200).json({ success: true, message: "Product removed from cart" })
+        return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_REMOVED_FROM_CART })
       } else {
-        return res.status(404).json({ success: false, message: "Product not found in cart" })
+        return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_CART_LC })
       }
     } else {
-      return res.status(404).json({ success: false, message: "Cart not found" })
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CART_NOT_FOUND })
     }
   } catch (err) {
     console.error("Error in removeCart:", err.message)
-    res.status(500).json({ success: false, message: "Something went wrong" })
+    res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SOMETHING_WENT_WRONG })
   }
 }
 

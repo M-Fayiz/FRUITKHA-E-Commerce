@@ -2,6 +2,10 @@
 const ORDER=require('../../model/ADMIN/order-schema')
 const PRODUCT=require('../../model/ADMIN/product')
 const WALLET =require('../../model/User/wallet')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
+const { ORDER_STATUS } = require('../../constant/status/orderStatus')
+const { PAYMENT_METHOD, PAYMENT_STATUS } = require('../../constant/status/paymentStatus')
 
 
 const orderList=async(req,res)=>{
@@ -42,7 +46,7 @@ if (skip >= totalOrders && totalOrders > 0) {
         totalOrders,})
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Server Error")
+      res.status(httpStatusCode.SERVER_ERROR).send(httpResponse.SERVER_ERROR_SHORT)
     }
     
 
@@ -73,12 +77,12 @@ const orderDetails=async(req,res)=>{
       const order = await ORDER.findOne({ _id: orderId });
   
       if (!order) {
-        return res.status(400).json({ success: false, message: 'Order not found' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.ORDER_NOT_FOUND });
       }
-      order.orderStatus = 'Cancelled';
+      order.orderStatus = ORDER_STATUS.CANCELLED;
     
       const refundAmount=order.Final_Amount-order.Shipping
-      if(order.payment==='razorpay'||order.payment==='wallet'){
+      if(order.payment===PAYMENT_METHOD.RAZORPAY||order.payment===PAYMENT_METHOD.WALLET){
          const wallet=await WALLET.findOne({userId:user})
          if(wallet){
         
@@ -94,12 +98,12 @@ const orderDetails=async(req,res)=>{
           });
           await newWallet.save()
          }
-         order.paymentStatus='Refund'
+         order.paymentStatus=PAYMENT_STATUS.REFUND
   
       }
       if (Array.isArray(order.Products)) {
         for (const p of order.Products) {
-          p.status = 'Cancelled';
+          p.status = ORDER_STATUS.CANCELLED;
       
          
           const product = await PRODUCT.findOne({ _id: p.productId });
@@ -117,11 +121,11 @@ const orderDetails=async(req,res)=>{
       await order.save();
   
    
-     return res.status(200).json({ success: true, message: 'Order cancelled' });
+     return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_CANCELLED });
     } catch (error) {
       console.error(error.message);
       
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SALES_REPORT_ERROR });
     }
   };
 
@@ -135,13 +139,13 @@ const ReturnOrder=async(req,res)=>{
   try {
     const order=await ORDER.findOne({_id:orderId})
     if(!order){
-      return res.status(400).json({success:false,message:'Order not Found'})
+      return res.status(httpStatusCode.BAD_REQUEST).json({success:false,message:httpResponse.ORDER_NOT_FOUND_CAP})
     }
     const Current = new Date();
     if (order && new Date(order.Datess.expiryDate) < Current) {
-      return res.status(410).json({
+      return res.status(httpStatusCode.GONE).json({
         success: false,
-        message: 'Your return time for this order has exceeded 2 days , which the allowed period.',
+        message: httpResponse.RETURN_TIME_EXCEEDED_2DAYS,
       });
     }
 
@@ -149,9 +153,10 @@ const ReturnOrder=async(req,res)=>{
     order.Return.reason=Reason
     order.Return.image=prodctImage.filename
     await order.save()
- return  res.status(200).json({success:true,message:'Your Request Updated Soon'})
+ return  res.status(httpStatusCode.OK).json({success:true,message:httpResponse.RETURN_REQUEST_UPDATED_SOON})
   } catch (error) {
     console.log(error.message)
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success:false, message:httpResponse.SERVER_ERROR })
   }
 }
 
@@ -163,28 +168,28 @@ const productReturn = async (req, res) => {
 
   
     if (!productImage) {
-      return res.status(400).json({ success: false, message: 'Product image is required.' });
+      return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_RETURN_IMAGE_REQUIRED });
     }
 
    
     const order = await ORDER.findById(orderId);
     if (!order) {
-      return res.status(400).json({ success: false, message: 'Order not found.' });
+      return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.ORDER_NOT_FOUND_DOT });
     }
     
 
     
     const product = order.Products.find((p) => p.product.toString() === productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found in the order.' });
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_ORDER });
     }
 
    
     const current = new Date();
     if (new Date(order.Datess.expiryDate) < current) {
-      return res.status(410).json({
+      return res.status(httpStatusCode.GONE).json({
         success: false,
-        message: 'Your return time for this order has exceeded the allowed period.',
+        message: httpResponse.RETURN_TIME_EXCEEDED,
       });
     }
 
@@ -196,10 +201,10 @@ const productReturn = async (req, res) => {
     
     await order.save();
 
-    return res.status(200).json({ success: true, message: 'Your request has been updated. We will process it soon.' });
+    return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.RETURN_REQUEST_UPDATED });
   } catch (error) {
     console.error(error.message);
-    return res.status(500).json({ success: false, message: 'An error occurred. Please try again.' });
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.TRY_AGAIN_ERROR });
   }
 };
 

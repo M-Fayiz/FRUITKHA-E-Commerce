@@ -69,7 +69,6 @@ const addOffer = async (req, res) => {
 
   try {
       const { categoryID, offerPercentage, offerDescription, expiredAt, createdAt, productId } = req.body
-       console.log(req.body)
     
 
       let savedOffer

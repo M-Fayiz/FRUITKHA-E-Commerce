@@ -1,11 +1,11 @@
-const ORDER=require('../../model/ADMIN/order-schema')
-const product = require('../../model/ADMIN/product')
+const ORDER=require('../../model/admin/order-schema')
+const product = require('../../model/admin/product')
 const httpStatusCode = require('../../constant/httpStatusCode')
 const httpResponse = require('../../constant/httpResponse')
 const { buildCreatedAtFilter } = require('../../utils/dateFilter.util')
 
 const salesReport = async (req, res) => {
-  console.log('get in sales report');
+
   try {
     
     const { startDate, endDate, quickFilter } = req.query;
@@ -16,7 +16,7 @@ const salesReport = async (req, res) => {
     
     const filters = buildCreatedAtFilter({ quickFilter, startDate, endDate })
     
-    console.log('Filters:', filters);
+    
 
     
     const report = await ORDER.aggregate([
@@ -76,36 +76,6 @@ const salesReport = async (req, res) => {
     res.status(httpStatusCode.SERVER_ERROR).send(httpResponse.SERVER_ERROR);
   }
 };
-
-
-
-
-const genorate=async (req, res) => {
-    
-  //   const { startDate,endDate, quickFilter  } = req.body;
-  // console.log(req.body)
-  //   try {
-
-  //   //  console.log(filters,'filters')
-            
-           
-            
-       
-
-   
-  //       res.json({
-  //           success: true,
-               
-
-  //           },
-  //       });
-  //   } catch (error) {
-  //       console.error('Error fetching sales report:', error);
-  //       res.status(500).json({ success: false, message: 'Internal server error' });
-  //   }
-}
-
-
 
 
 module.exports={

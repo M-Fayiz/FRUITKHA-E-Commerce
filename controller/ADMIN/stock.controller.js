@@ -26,7 +26,7 @@ const stock=async(req,res)=>{
 
 
 const addQuantity=async(req,res)=>{
-    console.log('add Quantity')
+
     try {
           const batch_id = `batch_${new Date().getTime()}`
         const {quantity,expiryDate,productId}=req.body

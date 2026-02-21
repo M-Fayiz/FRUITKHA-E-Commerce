@@ -5,6 +5,7 @@ const PAYMENT_METHOD = {
 }
 
 const PAYMENT_STATUS = {
+  PENDING: 'Pending',
   COMPLETED: 'Completed',
   REFUND: 'Refund',
 }
