@@ -1,6 +1,6 @@
 const passport=require('passport')
 const GoogleStrategy=require('passport-google-oauth20').Strategy
-const User=require('../model/User/userModel')
+const User=require('../model/user/userModel')
 
 const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,callbackURL}=require('../utils/env')
 passport.use(new GoogleStrategy({

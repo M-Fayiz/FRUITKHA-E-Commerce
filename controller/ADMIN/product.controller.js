@@ -1,11 +1,13 @@
-const adminModel = require('../../model/ADMIN/adminModel')
-const USER = require('../../model/User/userModel')
+const adminModel = require('../../model/admin/adminModel')
+const USER = require('../../model/user/userModel')
 
-const category = require('../../model/ADMIN/category');
+const category = require('../../model/admin/category');
 const { response } = require('express');
 
-const PRODUCT = require('../../model/ADMIN/product');
-const categoryModel = require('../../model/ADMIN/category');
+const PRODUCT = require('../../model/admin/product');
+const categoryModel = require('../../model/admin/category');
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 
 const addProduct = async (req, res) => {
@@ -22,17 +24,17 @@ const addProduct = async (req, res) => {
             productTitle: { $regex: new RegExp('^' + title + '$', 'i') }
         });
         if (test) {
-            return res.json({ success: false, message: 'Product Exist with This Title' })
+            return res.status(httpStatusCode.ITEM_EXIST).json({ success: false, message: httpResponse.PRODUCT_EXISTS })
         }
 
 
 
         if (test) {
-            return res.json({ success: false, message: "Product Already Exists" });
+            return res.status(httpStatusCode.ITEM_EXIST).json({ success: false, message: httpResponse.PRODUCT_ALREADY_EXISTS });
         }
 
         if (!req.files || req.files.length === 0) {
-            return res.json({ success: false, message: "Upload at least one image" }); // Added return statement
+            return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_IMAGE_REQUIRED }); // Added return statement
         }
 
         const image = req.files ? (Array.isArray(req.files) ? req.files.map((file) => file.filename) : [req.files.filename]) : [];
@@ -58,10 +60,10 @@ const addProduct = async (req, res) => {
         await DATA.save();
 
 
-        res.json({ success: true, message: "Product added successfully" });
+        res.status(httpStatusCode.CREATED).json({ success: true, message: httpResponse.PRODUCT_ADDED });
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, message: error.message });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: error.message });
     }
 };
 
@@ -192,14 +194,14 @@ const editProduct = async (req, res) => {
             _id: { $ne: productId }
         });
         if (test) {
-            return res.json({ success: false, message: 'Product Exist with This Title' })
+            return res.status(httpStatusCode.ITEM_EXIST).json({ success: false, message: httpResponse.PRODUCT_EXISTS })
         }
 
 
 
         const product = await PRODUCT.findById(productId);
         if (!product) {
-            return res.json({ success: false, message: 'Product not found' });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND });
         }
 
       const updateData = {
@@ -236,14 +238,15 @@ const editProduct = async (req, res) => {
 
     const result = await PRODUCT.findByIdAndUpdate(productId, updateData, { new: true });
     if (!result) {
-        return res.json({ success: false, message: 'Failed to update product' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_UPDATE_FAILED });
     }
 
-    res.json({ success: true, message: 'Product updated successfully', product: result });
+    res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_UPDATED, product: result });
 
 
 } catch (error) {
     console.log(error.message);
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: error.message });
 
 }
 }
@@ -257,12 +260,12 @@ const productList = async (req, res) => {
 
         const result = await PRODUCT.findByIdAndUpdate(itemId, { isList: condition })
         if (!result) {
-            return res.json({ success: false, message: 'result not recieved' })
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.RESULT_NOT_RECEIVED })
         }
-        res.json({ success: true, message: "updated" })
+        res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.UPDATED_SUCCESSFULLY('Product', 'updated') })
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: error.message })
 
     }
 }

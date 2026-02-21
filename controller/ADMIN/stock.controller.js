@@ -1,4 +1,6 @@
-const PRODUCT=require('../../model/ADMIN/product')
+const PRODUCT=require('../../model/admin/product')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const stock=async(req,res)=>{
     try {
@@ -17,6 +19,7 @@ const stock=async(req,res)=>{
         res.render('admin/Stock',{CURRENTpage:'stock',inventory})
     } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR })
     }
 }
 
@@ -30,7 +33,7 @@ const addQuantity=async(req,res)=>{
        console.log(quantity,expiryDate,productId)
           const product = await PRODUCT.findById(productId);
           if (!product) {
-              return res.status(404).json({ success: false, message: "Product not found" });
+              return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND });
           }
           product.Stock.push({
             batchId:batch_id,
@@ -46,10 +49,11 @@ const addQuantity=async(req,res)=>{
   
           
           await product.save();
-      res.status(200).json({success:true,messagee:'Stock Added'})
+      res.status(httpStatusCode.OK).json({success:true,message:httpResponse.STOCK_ADDED})
 
     } catch (error) {
         console.log(error.message)
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR })
     }
 }
 

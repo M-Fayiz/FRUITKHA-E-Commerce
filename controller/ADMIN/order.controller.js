@@ -1,7 +1,9 @@
-const ORDER=require('../../model/ADMIN/order-schema')
-const PRODUCT=require('../../model/ADMIN/product')
-const WALLET=require('../../model/User/wallet')
-const notify=require('../../model/User/notification')
+const ORDER=require('../../model/admin/order-schema')
+const PRODUCT=require('../../model/admin/product')
+const WALLET=require('../../model/user/wallet')
+const notify=require('../../model/user/notification')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const order=async(req,res)=>{
     console.log('order list')
@@ -73,7 +75,7 @@ const OrderStatus = async (req, res) => {
       const order = await ORDER.findById( OrderID)
 
       if (!order) {
-          return res.status(500).json({ success: false, message: 'Order not found' })
+          return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ORDER_NOT_FOUND })
       }
 
       order.orderStatus = Status
@@ -100,10 +102,10 @@ const OrderStatus = async (req, res) => {
       await order.save();
 
 
-      res.status(200).json({ success: true, message: 'Order Status Successfully Updated' });
+      res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_STATUS_UPDATED });
   } catch (error) {
       console.log(error.message);
-      res.status(500).json({ success: false, message: 'Internal Server Error' });
+      res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR });
   }
 };
 
@@ -114,19 +116,19 @@ const handleProductAction = async (req, res) => {
 
     const User = req.session?.user;
     if (!User) {
-      return res.status(400).json({ success: false, message: 'User is not logged in.' });
+      return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.NOT_LOGGED_IN });
     }
 
     const order = await ORDER.findById(orderId);
     if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found.' });
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ORDER_NOT_FOUND });
     }
 
   
 
     const productIndex = order.Products.findIndex((p) => p.product.toString() === productId);
     if (productIndex === -1) {
-      return res.status(404).json({ success: false, message: 'Product not found in the order.' });
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_ORDER });
     }
     const product = order.Products[productIndex];
 
@@ -179,15 +181,15 @@ const handleProductAction = async (req, res) => {
       await order.save();
     }
 
-    res.status(200).json({
+    res.status(httpStatusCode.OK).json({
       success: true,
-      message: `Product successfully ${status.toLowerCase()}.`,
+      message: httpResponse.PRODUCT_STATUS_UPDATED(status),
     });
   } catch (error) {
     console.error('Error handling product action:', error.message);
-    res.status(500).json({
+    res.status(httpStatusCode.SERVER_ERROR).json({
       success: false,
-      message: 'An error occurred while processing the request.',
+      message: httpResponse.ORDER_PROCESSING_ERROR,
       error: error.message,
     });
   }
@@ -196,25 +198,25 @@ const handleProductAction = async (req, res) => {
 
 //     SINGLE PRODUCT RETURN
 const ReturnHandle = async (req, res) => {
-  console.log('Return Handle ')
+
   try {
     const { selected, itemId, orderId } = req.body;
    console.log(selected)
 
     const order = await ORDER.findOne({ _id: orderId });
     if (!order) {
-      console.log('order not found')
-      return res.status(404).json({ success: false, message: 'Order not found.' });
+
+      return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.ORDER_NOT_FOUND });
     }
 
     if (selected === 'Approve') {
     
-      // if the returning a single individual product 
+     
       if (itemId) {
     
         const productIndex = order.Products.findIndex((p) => p._id.toString() === itemId);
         if (productIndex === -1) {
-          return res.status(400).json({ success: false, message: 'Product not found in the order.' });
+          return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_ORDER });
         }
 
         const product = order.Products[productIndex];
@@ -222,7 +224,7 @@ const ReturnHandle = async (req, res) => {
         product.status = 'Returned';
 
         const calculation = calculateRefundAndAdjustments(order, product);
-        console.log(calculation.refundAmount,'refund calcultatuon')
+ 
         await refundWallet(order.UserID, calculation.refundAmount);
 
         await ORDER.findOneAndUpdate(
@@ -243,7 +245,7 @@ const ReturnHandle = async (req, res) => {
         );
 
         await sendNotification(req.session.user, 'Product approved and marked as returned.', 'success');
-        return res.status(200).json({ success: true, message: 'Product marked as returned.' });
+        return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_MARKED_RETURNED });
       } else if(!itemId) {
       
         order.Products.forEach((product) => {
@@ -270,7 +272,7 @@ const ReturnHandle = async (req, res) => {
 
         await refundWallet(order.UserID, refundAmount);
         await sendNotification(req.session.user, 'Order approved and marked as returned.', 'success');
-        return res.status(200).json({ success: true, message: 'Order marked as returned.' });
+        return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_MARKED_RETURNED });
       }
   
     }
@@ -280,7 +282,7 @@ const ReturnHandle = async (req, res) => {
       if (itemId) {
         const productIndex = order.Products.findIndex((p) => p._id.toString() === itemId);
         if (productIndex === -1) {
-          return res.status(400).json({ success: false, message: 'Product not found in the order.' });
+          return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_IN_ORDER });
         }
 
         await ORDER.findOneAndUpdate(
@@ -293,7 +295,7 @@ const ReturnHandle = async (req, res) => {
         );
 
         await sendNotification(req.session.user, 'Product return request rejected.', 'error');
-        return res.status(200).json({ success: true, message: 'Product return rejected.' });
+        return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_RETURN_REJECTED });
       } else {
         
         await ORDER.findOneAndUpdate(
@@ -307,19 +309,18 @@ const ReturnHandle = async (req, res) => {
         );
 
         await sendNotification(req.session.user, 'Order return request rejected.', 'error');
-        return res.status(200).json({ success: true, message: 'Order return rejected.' });
+        return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.ORDER_RETURN_REJECTED });
       }
     }
   } catch (error) {
     console.error('Error:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal server error.' });
+    return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.RETURN_HANDLE_ERROR });
   }
 };
 
   
-  // Shipping: updatedTotals.shipping,
-  
-  //  |   NOTIFICATION AREA
+
+
   const sendNotification = async (userId, message, status ) => {
     try {
       const current = new Date();
@@ -338,7 +339,7 @@ const ReturnHandle = async (req, res) => {
       console.error('Error sending notification:', error.message);
     }
   };
-  //     |    REFUND MANAGEMENT   |
+
   const refundWallet = async (userId, amount) => {
     try {
       let wallet = await WALLET.findOne({ userId });
@@ -354,12 +355,12 @@ const ReturnHandle = async (req, res) => {
       }
       return { success: true };
     } catch (error) {
-      console.error('Error updating wallet:', error.message);
-      return { success: false, message: 'Failed to update wallet.' };
+   
+      return { success: false, message: httpResponse.WALLET_UPDATE_FAILED };
     }
   };
  
-  //  CALCULATIONS of Refund and adjust remaining calculation as per propotion
+
   const calculateRefundAndAdjustments = (order, product) => {
       
       const initialSubTotal = order.subTotal;
@@ -369,19 +370,18 @@ const ReturnHandle = async (req, res) => {
       const allProductsReturned = order.Products.every((product) => product.status === 'Returned');
       const shipping = allProductsReturned ? 0 : order.Shipping;
 
-    //  console.log(initialDiscount, 'intital discount',initialSubTotal)
+  
       const productGSTshare=Math.round((intialGst/initialSubTotal)*product.TOTAL)
-      // console.log(productGSTshare,'gst rate')
+    
       const productDiscountShare = Math.round((initialDiscount / initialSubTotal) * product.TOTAL);
       const refundAmount = product.TOTAL+productGSTshare - productDiscountShare;
-      // console.log(productDiscountShare,'product discount share')
+
     const remainingGst=Math.round(intialGst-productGSTshare)
     const remainingSubTotal = Math.max(0, initialSubTotal - product.TOTAL);
     const remainingDiscount = Math.round(initialDiscount - productDiscountShare);
     const finalAmount = Math.max(0, remainingSubTotal + remainingGst+shipping - remainingDiscount);
-    // console.log(remainingDiscount,'dis',remainingSubTotal,'sub',finalAmount,'final')
-    console.log(remainingGst,'ramining')
-    // console.log(remainingDiscount,'remaining discount')
+    
+   
     return {
       refundAmount: Math.round(refundAmount),
       orderStatus: allProductsReturned ? 'Returned' : order.orderStatus,

@@ -1,15 +1,14 @@
-const COUPON=require('../../model/ADMIN/coupon')
-const USER=require('../../model/User/userModel')
-const CART=require('../../model/User/CART')
-// const check = async()=>{
-//     console.log(await USER.find({email: "shahan@gmail.com"}))
-// }
-// check()
+const COUPON=require('../../model/admin/Coupon')
+const USER=require('../../model/user/userModel')
+const CART=require('../../model/user/CART')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
+
 
 const coupon=async(req,res)=>{
     try {
         const coupon= await COUPON.find({})
-        res.render('admin/coupon',{CURRENTpage:'coupon',coupon})
+        res.status(httpStatusCode.OK).render('admin/coupon',{CURRENTpage:'coupon',coupon})
     } catch (error) {
         console.log(error.message)
     }
@@ -17,7 +16,7 @@ const coupon=async(req,res)=>{
 }
 
 const addCoupon=async(req,res)=>{
-    console.log(' - - ADD COUPON - - ');
+
     
    try {
     const {
@@ -35,7 +34,7 @@ const addCoupon=async(req,res)=>{
  
     const check=await COUPON.findOne({code:couponCode})
      if(check){
-        return res.json({success:false,message:'Coupon Exist with THIS CODE'})
+        return res.status(httpStatusCode.ITEM_EXIST).json({success:false,message:httpResponse.COUPON_EXIST})
      }
     
     
@@ -53,19 +52,19 @@ const addCoupon=async(req,res)=>{
     })
    const data=await result.save()
    if(data){
-    return res.status(200).json({success:true,message:'Coupon Added Succesfully'})
+    return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.COUPON_ADDED})
    }
  
    } catch (error) {
     console.log(error.message);
-    return res.status(500).json({success:false,message:'Internal Error'})
+    return res.status(httpStatusCode.SERVER_ERROR).json({success:false,message:httpResponse.SERVER_ERROR})
    }
 
 
 }
 
 const editCoupon = async (req, res) => {
-    console.log("- - EDIT COUPON - -");
+
 
     try {
         const {
@@ -103,48 +102,48 @@ const editCoupon = async (req, res) => {
      
         
         if (!coupon) {
-            return res.status(404).json({ success: false, message: "Coupon Not Found" });
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message:httpResponse.ITEM_NOT_FOUND('Coupon') });
         }
 
        
 
-        res.status(200).json({ success: true, message: "Coupon Successfully Updated", data: coupon });
+        res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.UPDATED_SUCCESSFULLY('Coupon','updated'), data: coupon });
     } catch (error) {
         console.error("Error:", error.message);
 
         if (error.name === "ValidationError") {
-            return res.status(400).json({ success: false, message: error.message });
+            return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
 
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR});
     }
 }
 
 const couponValidate = async (req, res) => {
-    console.log("VALIDATE COUPON");
+
     try {
       const { coupon, userId, total } = req.body;
-      console.log(coupon, userId, total);
+
       let TOTAL = Number(total);
   
       const result = await COUPON.findOne({ code: coupon });
       if (!result) {
-        return res.status(400).json({ success: false, message: "Invalid Coupon Code" });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.INVALID_COUPON });
       }
   
-      console.log('result', result.code);
+  
   
       if (result.status !== "Active") {
-        return res.status(400).json({ success: false, message: "Coupon is not active." });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.Coupon_not_active });
       }
       
       const now = new Date();
       if (now < result.startDate ||now > result.endDate) {
-        return res.status(400).json({ success: false, message: "This coupon is expired or not active yet." });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "This coupon is expired or not active yet." });
       }
   
       if (result.maxUses > 0 && result.uses >= result.maxUses) {
-        return res.status(400).json({ success: false, message: "This coupon has been fully redeemed." });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "This coupon has been fully redeemed." });
       }
   
       const user = await USER.findById(userId);
@@ -163,7 +162,7 @@ const couponValidate = async (req, res) => {
   
       if (existingCoupon) {
         if (existingCoupon.usageCount >= result.usedPerUser) {
-          return res.status(400).json({
+          return res.status(httpStatusCode.BAD_REQUEST).json({
             success: false,
             message: "You have already used this coupon the maximum allowed times.",
           });
@@ -177,7 +176,7 @@ const couponValidate = async (req, res) => {
       }
   
       if (result.minCartValue && TOTAL < result.minCartValue) {
-        return res.status(400).json({
+        return res.status(httpStatusCode.BAD_REQUEST).json({
           success: false,
           message: `Minimum cart value must be at least ${result.minCartValue}.`,
         });
@@ -212,39 +211,39 @@ const couponValidate = async (req, res) => {
       await cart.save();
       await user.save();
   
-      return res.status(200).json({
+      return res.status(httpStatusCode.OK).json({
         success: true,
         message: "Coupon applied successfully!",
         discount,
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: "Internal Server Error", error: error.message });
     }
   };
   
   
 
 const remove = async (req, res) => {
-    console.log('GET IN REMOVE COUPON');
+    
     try {
       const { couponId, userId } = req.body;
   
       const user = await USER.findById(userId);
       if (!user) {
-        return res.status(400).json({ success: false, message: 'User Not Found' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'User Not Found' });
       }
   
       const couponIndex = user.usedCoupon.findIndex(c => c.coupon.toString() === couponId.toString());
       if (couponIndex === -1) {
-        return res.status(400).json({ success: false, message: 'Coupon not found in user history.' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'Coupon not found in user history.' });
       }
   
       user.usedCoupon.splice(couponIndex, 1);
   
       const cart = await CART.findOne({ UserID: userId });
       if (!cart) {
-        return res.status(400).json({ success: false, message: 'Cart not found.' });
+        return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: 'Cart not found.' });
       }
   
       cart.Discount = { discount_amount: 0, discountId: null };
@@ -253,24 +252,24 @@ const remove = async (req, res) => {
       await user.save();
       await cart.save();
   
-      return res.status(200).json({
+      return res.status(httpStatusCode.OK).json({
         success: true,
         message: 'Coupon removed successfully. Discount has been reset.',
         cart,
       });
     } catch (error) {
       console.error(error.message);
-      return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+      return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
 };
   
 const deletCoupon=async(req,res)=>{
-  console.log('GET IN DELET XOUPON')
+
    const {couponId}=req.body
       try {
         const result=await COUPON.findByIdAndDelete(couponId)
         if(result){
-          return res.status(200).json({success:true,message:'coupon Deleted'})
+          return res.status(httpStatusCode.OK).json({success:true,message:httpResponse.ITEM_NOT_FOUND('coupon','removed')})
         }
       } catch (error) {
         console.log(error.message)

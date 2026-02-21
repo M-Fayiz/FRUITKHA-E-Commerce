@@ -1,22 +1,24 @@
-const PRODUCT=require('../../model/ADMIN/product')
-const category=require('../../model/ADMIN/category')
-const OFFER=require('../../model/ADMIN/offer')
+const PRODUCT=require('../../model/admin/product')
+const category=require('../../model/admin/category')
+const OFFER=require('../../model/admin/Offer')
 const mongoose=require('mongoose')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const removeOFF = async (req, res) => {
     try {
         const { OfferID } = req.body
 
         if (!OfferID) {
-            return res.status(400).json({ success: false, message: "OfferID is required" })
+            return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.OFFER_ID_REQUIRED })
         }
 
-        console.log("Removing offer with ID:", OfferID)
+       
 
         const result = await OFFER.findByIdAndDelete(OfferID)
 
         if (!result) {
-            return res.status(404).json({ success: false, message: "Offer not found" })
+            return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.OFFER_NOT_FOUND })
         }
 
         
@@ -28,17 +30,17 @@ const removeOFF = async (req, res) => {
             )
 
             if (!updatedCategory) {
-                return res.status(404).json({ success: false, message: "Category not found for the given offer" })
+                return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CATEGORY_NOT_FOUND_FOR_OFFER })
             }
 
             
-console.log(result.categoryId,'nnn')
+
             await PRODUCT.updateMany(
                 { Category: result.categoryId },
                 { $unset: { "Offer.OfferPrice": "", "Offer.OfferId": "" } }
             )
 
-            return res.status(200).json({ success: true, message: "Category offer removed successfully" })
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.CATEGORY_OFFER_REMOVED })
         } else if (result.productId) {
             const updatedProduct = await PRODUCT.findByIdAndUpdate(
                 result.productId,
@@ -46,25 +48,25 @@ console.log(result.categoryId,'nnn')
             )
 
             if (!updatedProduct) {
-                return res.status(404).json({ success: false, message: "Product not found for the given offer" })
+                return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND_FOR_OFFER })
             }
 
-            console.log("Product offer removed successfully:", updatedProduct)
+         
 
-            return res.status(200).json({ success: true, message: "Product offer removed successfully" })
+            return res.status(httpStatusCode.OK).json({ success: true, message: httpResponse.PRODUCT_OFFER_REMOVED })
         } else {
-            return res.status(400).json({ success: false, message: "Invalid offer: No categoryId or productId found" })
+            return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.INVALID_OFFER_TARGET })
         }
     } catch (error) {
         console.error("Error in removeOFF:", error.message)
-        return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message })
+        return res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SERVER_ERROR, error: error.message })
     }
 }
 
 
 
 const addOffer = async (req, res) => {
-  console.log('Enter add offer')
+
   try {
       const { categoryID, offerPercentage, offerDescription, expiredAt, createdAt, productId } = req.body
        console.log(req.body)
@@ -75,12 +77,12 @@ const addOffer = async (req, res) => {
       if (categoryID) {
           const CATEGORY = await category.findById(categoryID)
           if (!CATEGORY) {
-              return res.status(404).json({ success: false, message: "Category not found" })
+              return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.CATEGORY_NOT_FOUND })
           }
 
           const duplicateOffer = await OFFER.findOne({ categoryId: categoryID })
           if (duplicateOffer) {
-              return res.status(400).json({ success: false, message: "offer for this category already exists" })
+              return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.CATEGORY_OFFER_EXISTS })
           }
 
           savedOffer = new OFFER({
@@ -109,7 +111,7 @@ const addOffer = async (req, res) => {
       } else if (productId) {
           const product = await PRODUCT.findById(productId)
           if (!product) {
-              return res.status(404).json({ success: false, message: "Product not found" })
+              return res.status(httpStatusCode.ITEM_NOT_FOUND).json({ success: false, message: httpResponse.PRODUCT_NOT_FOUND })
           }
 
           const discount = (product.RegulerPrice * offerPercentage) / 100
@@ -118,7 +120,7 @@ const addOffer = async (req, res) => {
 
           const duplicateOffer = await OFFER.findOne({ productId: productId })
           if (duplicateOffer) {
-              return res.status(400).json({ success: false, message: "offer for this product already exists" })
+              return res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: httpResponse.PRODUCT_OFFER_EXISTS })
           }
           savedOffer = new OFFER({
               offer: offerPercentage,
@@ -135,10 +137,10 @@ const addOffer = async (req, res) => {
           )
       }
 
-      res.json({ success: true, message: "Offer added successfully" })
+      res.status(httpStatusCode.CREATED).json({ success: true, message: httpResponse.OFFER_ADDED })
   } catch (error) {
-      console.error('Error:', error.message)
-      res.status(500).json({ success: false, message: error.message })
+   
+      res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: error.message })
   }
 }
 

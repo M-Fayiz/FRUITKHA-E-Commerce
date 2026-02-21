@@ -1,4 +1,4 @@
-const USER=require('../model/User/userModel')
+const USER=require('../model/user/userModel')
 
 const userAuth=(req,res,next)=>{
 

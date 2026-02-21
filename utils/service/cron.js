@@ -1,7 +1,7 @@
 const cron = require("node-cron");
-const Coupon = require("../../model/ADMIN/Coupon"); 
-const PRODUCT = require("../../model/ADMIN/product");
-const Offer=require('../../model/ADMIN/Offer')
+const Coupon = require("../../model/admin/Coupon"); 
+const PRODUCT = require("../../model/admin/product");
+const Offer=require('../../model/admin/Offer')
 const startExpired = () => {
     cron.schedule("0 * * * *", async () => {
         console.log("Running coupon expiration check...");

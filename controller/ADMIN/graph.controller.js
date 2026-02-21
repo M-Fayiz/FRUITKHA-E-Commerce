@@ -1,7 +1,10 @@
-const ORDER=require('../../model/ADMIN/order-schema')
-const categorry=require('../../model/ADMIN/category')
+const ORDER=require('../../model/admin/order-schema')
+const categorry=require('../../model/admin/category')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
+
 const graph=async(req,res)=>{
-    // console.log(req.body)
+ 
      const {startDate,endDate,quickFilter}=req.body
      try {
 
@@ -36,7 +39,7 @@ const graph=async(req,res)=>{
           };
         }
         
-  //  console.log(filters.createdAt,';;;;')
+
             const report = await ORDER.aggregate([
                 { $match: filters },
                 {$unwind:'$Products'},
@@ -55,7 +58,7 @@ const graph=async(req,res)=>{
                 {$sort:{totalsales:-1}},
                 {$limit:8}
             ])
-// console.log(report)
+
             const category=await ORDER.aggregate([
               {$match:filters},
               {$unwind:'$Products'},
@@ -97,13 +100,13 @@ const graph=async(req,res)=>{
    }
 
 
-            return res.status(200).json({success:true,report,category,monthlySales,hello})
+            return res.status(httpStatusCode.OK).json({success:true,report,category,monthlySales,hello})
         
     
        
     } catch (error) {
         console.error('Error fetching sales report:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        res.status(httpStatusCode.SERVER_ERROR).json({ success: false, message: httpResponse.SALES_REPORT_ERROR });
     }
 }
 

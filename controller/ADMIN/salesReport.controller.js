@@ -1,5 +1,7 @@
 const ORDER=require('../../model/ADMIN/order-schema')
 const product = require('../../model/ADMIN/product')
+const httpStatusCode = require('../../constant/httpStatusCode')
+const httpResponse = require('../../constant/httpResponse')
 
 const salesReport = async (req, res) => {
   console.log('get in sales report');
@@ -7,7 +9,7 @@ const salesReport = async (req, res) => {
     
     const { startDate, endDate, quickFilter } = req.query;
     if(startDate>endDate){
-      return res.status(400).send('Invalid startDate or endDate');
+      return res.status(httpStatusCode.BAD_REQUEST).send(httpResponse.INVALID_DATE_RANGE);
     }
     
     
@@ -20,7 +22,7 @@ const salesReport = async (req, res) => {
         const end = new Date(endDate);
         
         if (isNaN(start) || isNaN(end)) {
-          return res.status(400).send('Invalid startDate or endDate');
+          return res.status(httpStatusCode.BAD_REQUEST).send(httpResponse.INVALID_DATE_RANGE);
         }
         
        
@@ -112,7 +114,7 @@ const salesReport = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in salesReport:', error.message);
-    res.status(500).send('Internal Server Error');
+    res.status(httpStatusCode.SERVER_ERROR).send(httpResponse.SERVER_ERROR);
   }
 };
 
