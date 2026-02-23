@@ -1,267 +1,177 @@
+/* shop.js — Fruitkha shop page logic
+   All filtering, searching and sorting is URL-based so pagination works correctly.
+*/
+
 const dom = {
-  applyFiltersBtn: document.getElementById("applyFiltersBtn"),
-  searchInput: document.getElementById("search-input"),
-  productsContainer: document.getElementById("productsContainer"),
-  shopMessage: document.getElementById("shopMessage"),
-  sortBy: document.getElementById("sortBy"),
-  priceRange: document.getElementById("priceRange"),
-  priceValue: document.getElementById("priceValue"),
-  filterPanel: document.getElementById("filterPanel"),
-  overlay: document.getElementById("overlay"),
-  filterToggleBtn: document.getElementById("filterToggleBtn"),
-  closeFilterBtn: document.getElementById("closeFilterBtn"),
+  searchInput: document.getElementById('search-input'),
+  productsContainer: document.getElementById('productsContainer'),
+  shopMessage: document.getElementById('shopMessage'),
+  sortBy: document.getElementById('sortBy'),
+  priceRange: document.getElementById('priceRange'),
+  priceValue: document.getElementById('priceValue'),
+  filterPanel: document.getElementById('filterPanel'),
+  overlay: document.getElementById('overlay'),
+  filterToggleBtn: document.getElementById('filterToggleBtn'),
+  closeFilterBtn: document.getElementById('closeFilterBtn'),
+  applyFiltersBtn: document.getElementById('applyFiltersBtn'),
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  bindFilters();
-});
-
-function bindFilters() {
-  if (dom.applyFiltersBtn) {
-    dom.applyFiltersBtn.addEventListener("click", async () => {
-      await handleSearch();
-      toggleFilter(false);
-    });
-  }
-
-  if (dom.searchInput) {
-    dom.searchInput.addEventListener("keydown", async (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        await handleSearch();
-      }
-    });
-  }
-
-  if (dom.priceRange && dom.priceValue) {
-    dom.priceRange.addEventListener("input", (event) => {
-      dom.priceValue.textContent = `\u20B9${event.target.value}`;
-    });
-  }
-
-  if (dom.filterToggleBtn) {
-    dom.filterToggleBtn.addEventListener("click", () => toggleFilter(true));
-  }
-
-  if (dom.closeFilterBtn) {
-    dom.closeFilterBtn.addEventListener("click", () => toggleFilter(false));
-  }
-
-  if (dom.overlay) {
-    dom.overlay.addEventListener("click", () => toggleFilter(false));
-  }
+/* ── Helpers ── */
+function getCurrentParams() {
+  return new URLSearchParams(window.location.search);
 }
 
+function buildUrl(overrides = {}) {
+  const p = getCurrentParams();
+  if (!('page' in overrides)) p.delete('page');
+  Object.entries(overrides).forEach(([k, v]) => {
+    if (v === null || v === undefined || v === '') {
+      p.delete(k);
+    } else {
+      p.set(k, v);
+    }
+  });
+  return '/shop?' + p.toString();
+}
+
+/* ── Filter panel open/close ── */
 function toggleFilter(open) {
-  if (!dom.filterPanel || !dom.overlay) {
-    return;
-  }
-  dom.filterPanel.classList.toggle("active", open);
-  dom.overlay.classList.toggle("active", open);
+  if (!dom.filterPanel || !dom.overlay) return;
+  dom.filterPanel.classList.toggle('active', open);
+  dom.overlay.classList.toggle('active', open);
 }
 
-async function handleSearch() {
-  const query = dom.searchInput ? dom.searchInput.value.trim() : "";
-  const selectedCategories = Array.from(
-    document.querySelectorAll(".category-check:checked"),
-  ).map((checkbox) => checkbox.value);
-  const selectedSortBy = dom.sortBy ? dom.sortBy.value : "";
-  const selectedPriceRange = dom.priceRange ? dom.priceRange.value : "";
+/* ── Apply filters → navigate to new URL ── */
+function applyFilters() {
+  const sortBy = dom.sortBy ? dom.sortBy.value : '';
+  const priceRng = dom.priceRange ? dom.priceRange.value : '';
 
-  const params = new URLSearchParams();
+  // Collect checked category IDs (ObjectIds) from filter panel
+  const checkedCats = Array.from(
+    document.querySelectorAll('.category-check:checked')
+  ).map(cb => cb.value);
 
-  if (query) {
-    params.append("search", query);
+  const p = new URLSearchParams(window.location.search);
+
+  // Keep search if already in url
+  const existingSearch = p.get('search');
+  if (existingSearch) p.set('search', existingSearch);
+
+  if (checkedCats.length) {
+    p.set('category', checkedCats[0]); // backend takes one category ObjectId
+  } else {
+    p.delete('category');
   }
+  if (sortBy) p.set('sortOrder', sortBy);
+  else p.delete('sortOrder');
+  if (priceRng) p.set('priceRange', priceRng);
+  else p.delete('priceRange');
 
-  if (selectedCategories.length > 0) {
-    params.append("selectedCategories", selectedCategories.join(","));
-  }
+  p.delete('page');
+  window.location.href = '/shop?' + p.toString();
+}
 
-  if (selectedSortBy) {
-    params.append("sortOrder", selectedSortBy);
-  }
-
-  if (selectedPriceRange) {
-    params.append("priceRange", selectedPriceRange);
-  }
-
-  try {
-    const response = await fetch(`/search?${params.toString()}`);
-    const payload = await response.json();
-
-    if (Array.isArray(payload)) {
-      displayProducts(payload);
-      return;
+/* ── Search on Enter — product name only ── */
+function bindSearch() {
+  if (!dom.searchInput) return;
+  dom.searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const q = dom.searchInput.value.trim();
+      window.location.href = buildUrl({ search: q || null });
     }
+  });
 
-    if (payload && payload.message) {
-      displayProducts([]);
-      return;
-    }
-
-    displayProducts([]);
-  } catch (error) {
-    console.error("Error fetching search results:", error);
-    if (dom.shopMessage) {
-      dom.shopMessage.textContent = "Could not load filtered results.";
-    }
+  const p = getCurrentParams();
+  if (p.get('search') && dom.searchInput) {
+    dom.searchInput.value = p.get('search');
   }
 }
 
-function displayProducts(products) {
-  if (!dom.productsContainer) {
-    return;
+/* ── Pre-select sort/price/category from URL ── */
+function restoreFilterState() {
+  const p = getCurrentParams();
+
+  if (dom.sortBy && p.get('sortOrder')) {
+    dom.sortBy.value = p.get('sortOrder');
   }
-
-  if (!products || products.length === 0) {
-    dom.productsContainer.innerHTML = "";
-    if (dom.shopMessage) {
-      dom.shopMessage.textContent = "No products found.";
-    }
-    return;
+  if (dom.priceRange && p.get('priceRange')) {
+    dom.priceRange.value = p.get('priceRange');
+    if (dom.priceValue) dom.priceValue.textContent = '₹' + p.get('priceRange');
   }
-
-  if (dom.shopMessage) {
-    dom.shopMessage.textContent = "";
-  }
-
-  dom.productsContainer.innerHTML = products.map((item) => productCardTemplate(item)).join("");
-}
-
-function productCardTemplate(item) {
-  const title = escapeHtml(item.productTitle || "Product");
-  const image = escapeHtml(item.primaryImage || "");
-  const productId = item._id || item.id;
-  const regularPrice = Number(item.RegulerPrice || 0);
-  const offerPrice = Number(
-    item.OfferPrice || (item.Offer && item.Offer.OfferPrice) || 0,
-  );
-  const displayPrice = offerPrice > 0 ? offerPrice : regularPrice;
-  const totalStock = Number(item.totalStock || item.Stock || 0);
-  const wishlistClass = item.isInWishlist ? "is-active" : "";
-  const heartIcon = item.isInWishlist ? "fas fa-heart" : "far fa-heart";
-
-  let stockHtml = '<span class="stock-pill stock-out">Out of Stock</span>';
-  if (totalStock > 10) {
-    stockHtml = `<span class="stock-pill stock-in">In Stock: ${totalStock} kg</span>`;
-  } else if (totalStock > 0) {
-    stockHtml = `<span class="stock-pill stock-low">Low Stock: ${totalStock} kg</span>`;
-  }
-
-  let offerTag = "";
-  if (offerPrice > 0 && regularPrice > 0 && regularPrice > offerPrice) {
-    const discount = Math.round(((regularPrice - offerPrice) / regularPrice) * 100);
-    if (discount > 0) {
-      offerTag = `<span class="offer-tag">${discount}% OFF</span>`;
-    }
-  }
-
-  const priceHtml =
-    offerPrice > 0
-      ? `<span class="price-now">\u20B9${offerPrice}</span><span class="price-old">\u20B9${regularPrice}</span>`
-      : `<span class="price-now">\u20B9${regularPrice}</span>`;
-
-  return `
-    <article class="product-card">
-      <div class="product-thumb">
-        ${offerTag}
-        <button class="wishlist-btn ${wishlistClass}" id="wishlistIcon-${productId}" onclick="wishList('${productId}')" aria-label="Toggle wishlist">
-          <i class="${heartIcon}"></i>
-        </button>
-        <a href="/product/${productId}">
-          <img src="/images/${image}" alt="${title}">
-        </a>
-      </div>
-      <div class="product-content">
-        <h3 class="product-title">${title}</h3>
-        <div class="price-block">${priceHtml}</div>
-        ${stockHtml}
-        <button class="cart-btn" onclick="addToCart('${productId}')" ${totalStock > 0 ? "" : "disabled"}>
-          <i class="fas fa-shopping-cart"></i> ${totalStock > 0 ? "Add to Cart" : "Unavailable"}
-        </button>
-      </div>
-    </article>
-  `;
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function addToCart(productId) {
-  fetch("/api/cart/items", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      productId,
-      quantity: 1,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.login === false) {
-        window.location.href = "/login";
-        return;
-      }
-
-      if (data.success) {
-        showToast(data.message || "Added to cart", "success");
-      } else {
-        showToast(data.message || "Could not add item to cart", "error");
-      }
-    })
-    .catch((error) => {
-      console.error("Cart error:", error);
-      showToast("Something went wrong.", "error");
+  if (dom.priceRange && dom.priceValue) {
+    dom.priceRange.addEventListener('input', (e) => {
+      dom.priceValue.textContent = '₹' + e.target.value;
     });
+  }
+
+  // Mark checked category from URL (ObjectId match)
+  const catId = p.get('category');
+  if (catId) {
+    const cb = document.getElementById('cat-' + catId);
+    if (cb) cb.checked = true;
+  }
 }
 
-function wishList(val) {
-  fetch("/api/wishlist/items/toggle", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+/* ── Navigate to product detail — card click handler ── */
+function goToProduct(url, e) {
+  if (e && e.target.closest('button')) return;
+  window.location.href = url;
+}
+
+/* ── Add to Cart ── */
+function addToCart(productId, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  fetch('/api/cart/items', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId, quantity: 1 }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.login === false) { window.location.href = '/login'; return; }
+      showToast(data.message || (data.success ? 'Added to cart' : 'Could not add item'), data.success ? 'success' : 'error');
+    })
+    .catch(() => showToast('Something went wrong.', 'error'));
+}
+
+/* ── Toggle Wishlist ── */
+function wishList(val, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  fetch('/api/wishlist/items/toggle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ val }),
   })
-    .then((res) => res.json())
-    .then((data) => {
-      const iconButton = document.getElementById(`wishlistIcon-${val}`);
-      const countW = document.getElementById("countW");
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) { showToast(data.message || 'Wishlist update failed.', 'error'); return; }
+      showToast(data.message || 'Wishlist updated.', 'success');
 
-      if (!data.success) {
-        showToast(data.message || "Wishlist update failed.", "error");
-        return;
+      const btn = document.getElementById('wishlistIcon-' + val);
+      if (btn) {
+        btn.classList.toggle('is-active', Boolean(data.isWishList));
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = data.isWishList ? 'fas fa-heart' : 'far fa-heart';
       }
-
-      showToast(data.message || "Wishlist updated.", "success");
-
-      if (iconButton) {
-        iconButton.classList.toggle("is-active", Boolean(data.isWishList));
-        const icon = iconButton.querySelector("i");
-        if (icon) {
-          icon.className = data.isWishList ? "fas fa-heart" : "far fa-heart";
-        }
-      }
-
-      if (countW && Number.isFinite(Number(data.aa))) {
-        countW.innerText = data.aa;
-      }
+      const countW = document.getElementById('countW');
+      if (countW && Number.isFinite(Number(data.aa))) countW.innerText = data.aa;
     })
-    .catch((error) => {
-      console.error("Wishlist error:", error);
-      showToast("Something went wrong.", "error");
-    });
+    .catch(() => showToast('Something went wrong.', 'error'));
 }
 
-window.handleSearch = handleSearch;
+/* ── Boot ── */
+document.addEventListener('DOMContentLoaded', () => {
+  if (dom.filterToggleBtn) dom.filterToggleBtn.addEventListener('click', () => toggleFilter(true));
+  if (dom.closeFilterBtn) dom.closeFilterBtn.addEventListener('click', () => toggleFilter(false));
+  if (dom.overlay) dom.overlay.addEventListener('click', () => toggleFilter(false));
+  if (dom.applyFiltersBtn) dom.applyFiltersBtn.addEventListener('click', () => applyFilters());
+
+  bindSearch();
+  restoreFilterState();
+});
+
+/* expose globals for inline onclick */
 window.addToCart = addToCart;
 window.wishList = wishList;
+window.goToProduct = goToProduct;

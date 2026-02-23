@@ -1,0 +1,23 @@
+/* Admin Order Detail Layout and Status Indicators */
+.order-detail-header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+/* Return request info styling */
+.return-info {
+    background-color: #fffaf0;
+    border: 1px solid #feebc8;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}

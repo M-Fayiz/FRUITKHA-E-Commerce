@@ -1,274 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Nest Dashboard</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:title" content="" />
-    <meta property="og:type" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
-    <!-- Favicon -->
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="/admin/imgs/theme/favicon.svg"
-    />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-green: #3BB77E;
-            --light-green: #DEF9EC;
-            --text-gray: #7E7E7E;
-        }
 
-        .btn-primary {
-            background-color: var(--primary-green);
-            border-color: var(--primary-green);
-        }
-
-        .btn-primary:hover {
-            background-color: #2a9d64;
-            border-color: #2a9d64;
-        }
-
-        .modal-header {
-            background-color: var(--primary-green);
-            color: white;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 0.25rem rgba(59, 183, 126, 0.25);
-        }
-    </style>
+<head>
+  <meta charset="utf-8" />
+  <title>Nest Dashboard</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/admin/imgs/theme/favicon.svg" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/pages/admin/categories.css">
 
   <link rel="stylesheet" href="/admin/css/category.css">
   <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Bootstrap JS and Popper.js (for modal functionality) -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <!-- Bootstrap JS and Popper.js (for modal functionality) -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-<!-- jQuery (for optional jQuery-based modal hide) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery (for optional jQuery-based modal hide) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <link rel="stylesheet" href="/toast.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Template CSS -->
-    <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="/SHOW.css">
-  </head>
- 
-  <body>
+  <!-- Template CSS -->
+  <link href="/admin/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/SHOW.css">
+</head>
 
-    <div class="toast-container" id="toastContainer"></div>
-    <div class="screen-overlay"></div>
-    <%-include('../partials/sidebar.ejs') %>
-  <%-include('../partials/block.ejs')%>
-    <main class="main-wrap">
-    <%-include('../partials/adminHeader')%>
-      <section class="content-main">
-        <div class="content-header">
-        </div>
-        <div class="container">
-          <div class="category-card">
-              <div class="card-header">
+<body>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <div class="screen-overlay"></div>
+  <%-include('.. /partials/sidebar.ejs') %>
+    <%-include('.. /partials/block.ejs')%>
+      <main class="main-wrap">
+        <%-include('.. /partials/adminHeader')%>
+          <section class="content-main">
+            <div class="content-header">
+            </div>
+            <div class="container">
+              <div class="category-card">
+                <div class="card-header">
                   <h1 class="card-title">Category Management</h1>
-              </div>
-  
-              <!-- Add Category Form -->
-              <form class="add-category-form" id="form-category" enctype="multipart/form-data">
+                </div>
+
+                <!-- Add Category Form -->
+                <form class="add-category-form" id="form-category" enctype="multipart/form-data">
 
                   <input type="text" class="form-input" name="title" id="title" placeholder="New Category Name">
-                  <input type="text"  class="form-input" name="discription" id="discr" placeholder="description">
+                  <input type="text" class="form-input" name="discription" id="discr" placeholder="description">
                   <!-- <input type="number"  class="form-input" name="Offer" id="Offer" placeholder="Category Offer"> -->
                   <input type="file" class="file-input" name="category-image" id="image" accept="image/*">
-                 <!-- Image Preview Modal -->
+                  <!-- Image Preview Modal -->
 
                   <button type="submit" class="btn-add">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <line x1="12" y1="5" x2="12" y2="19"></line>
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
-                      Add Category
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Category
                   </button>
-              </form>
-              <!-- Image Preview Modal -->
-<div id="imageModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span id="closeModal" class="close">&times;</span>
-    <img id="modalImage" src="" alt="Preview" style="max-width: 30%; height:30%;">
-  </div>
-</div>
-
-              <!-- EDIT CATEGRY -->
-              <!-- Modal Container -->
-              <div id="editModal" class="modal" style="display: none; flex-direction: column; gap: 15px;">
-                <!-- edit-form  -->
-                <form action="" id="edit-category">
-                  <div class="modal-content">
-                    <span id="closeUpdateModal" class="close">&times;</span>
-                    <h3>Update Information</h3>
-              
-                    <!-- Title and Description Inputs -->
-                    <div style="display: flex; gap: 10px;">
-                      <div>
-                        <label for="modalTitle">Title:</label>
-                        <input type="text" id="modalTitle" name="title" placeholder="Enter title" >
-                      </div>
-                      <span>
-                        <label for="modalDescription">Description:</label>
-                        <input type="text" id="modalDescription" name="description" placeholder="Enter description" >
-                      </span>
-                          
-                     
-                    </div>
-                    <div>
-                      <img id="editImg" style="width: 180px;" >
-                    </div>
-                    <div>
-                      <label for="modalImageInput">Image:</label>
-                      <input type="file" id="modalImageInput" name="image" accept="image/*">
-                    </div>
-                    
-
-                    <!-- Image Input -->
-                    
-              
-                    <!-- Update Button -->
-                    <button type="submit" id="updateButton">Update</button>
-                  </div>
                 </form>
-              </div>
+                <!-- Image Preview Modal -->
+                <div id="imageModal" class="modal" style="display: none;">
+                  <div class="modal-content">
+                    <span id="closeModal" class="close">&times;</span>
+                    <img id="modalImage" src="" alt="Preview" style="max-width: 30%; height:30%;">
+                  </div>
+                </div>
 
-              <!-- onclick="toggleSubcategories(this) -->
-              <!-- Category List -->
-              <div class="category-list">
-                <% data.forEach((item, index) => { %>
-                  <div class="category-item" id="divTAbl<%= item._id %>">
-                    <div class="category-header">
-                      <div class="category-name">
-                        <img src="/images/<%= item.image %>" style="width: 60px;height: 60px;" alt="Category Image" class="category-image">
-                        <span><%= item.category %></span>
+                <!-- EDIT CATEGRY -->
+                <!-- Modal Container -->
+                <div id="editModal" class="modal" style="display: none; flex-direction: column; gap: 15px;">
+                  <!-- edit-form  -->
+                  <form action="" id="edit-category">
+                    <div class="modal-content">
+                      <span id="closeUpdateModal" class="close">&times;</span>
+                      <h3>Update Information</h3>
+
+                      <!-- Title and Description Inputs -->
+                      <div style="display: flex; gap: 10px;">
+                        <div>
+                          <label for="modalTitle">Title:</label>
+                          <input type="text" id="modalTitle" name="title" placeholder="Enter title">
+                        </div>
+                        <span>
+                          <label for="modalDescription">Description:</label>
+                          <input type="text" id="modalDescription" name="description" placeholder="Enter description">
+                        </span>
+
+
                       </div>
-                      <p><%= item.description %></p>
-                      <div style="display: flex; gap: 8px; align-items: center;">
-                        
-                          
+                      <div>
+                        <img id="editImg" style="width: 180px;">
+                      </div>
+                      <div>
+                        <label for="modalImageInput">Image:</label>
+                        <input type="file" id="modalImageInput" name="image" accept="image/*">
+                      </div>
+
+
+                      <!-- Image Input -->
+
+
+                      <!-- Update Button -->
+                      <button type="submit" id="updateButton">Update</button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- onclick="toggleSubcategories(this) -->
+                <!-- Category List -->
+                <div class="category-list">
+                  <% data.forEach((item, index)=> { %>
+                    <div class="category-item" id="divTAbl<%= item._id %>">
+                      <div class="category-header">
+                        <div class="category-name">
+                          <img src="/images/<%= item.image %>" style="width: 60px;height: 60px;" alt="Category Image"
+                            class="category-image">
+                          <span>
+                            <%= item.category %>
+                          </span>
+                        </div>
+                        <p>
+                          <%= item.description %>
+                        </p>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+
+
                           <% if (item.Offer) { %>
-                            <h5 style="color: green;"><%= item.Offer.offer%> % OFF</h5>
-                             <% } %>
-                       
-                      </div>
-              
-                      <div class="category-actions" style="display: flex; gap: 10px; align-items: center;">
-                        <!-- Add Offer button - Opens specific modal -->
-                       
-    <!-- modal for add offer -->
-                         
-                        <!-- Edit Button -->
-                        <button class="btn btn-edit edit-btn"  onclick="editCategory('<%=item._id%>','<%= item.category %>','<%= item.description %>','<%= item.image %>')"data-id="<%= item.id %>">Edit</button>
-              
-                        <!-- List/Unlist Button -->
-                        <% if (item.isList === true) { %>
-                          <button 
-                            class="btn btn-outline-danger" 
-                            onclick="toggleItemStatus('<%= item.id %>', false, '<%= index %>')"
-                          >
-                            UnList
-                          </button>
-                        <% } else { %>
-                          <button 
-                            class="btn btn-outline-success" 
-                            onclick="toggleItemStatus('<%= item.id %>', true, '<%= index %>')"
-                          >
-                            List
-                          </button>
-                        <% } %>
+                            <h5 style="color: green;">
+                              <%= item.Offer.offer%> % OFF
+                            </h5>
+                            <% } %>
+
+                        </div>
+
+                        <div class="category-actions" style="display: flex; gap: 10px; align-items: center;">
+                          <!-- Add Offer button - Opens specific modal -->
+
+                          <!-- modal for add offer -->
+
+                          <!-- Edit Button -->
+                          <button class="btn btn-edit edit-btn"
+                            onclick="editCategory('<%=item._id%>','<%= item.category %>','<%= item.description %>','<%= item.image %>')"
+                            data-id="<%= item.id %>">Edit</button>
+
+                          <!-- List/Unlist Button -->
+                          <% if (item.isList===true) { %>
+                            <button class="btn btn-outline-danger"
+                              onclick="toggleItemStatus('<%= item.id %>', false, '<%= index %>')">
+                              UnList
+                            </button>
+                            <% } else { %>
+                              <button class="btn btn-outline-success"
+                                onclick="toggleItemStatus('<%= item.id %>', true, '<%= index %>')">
+                                List
+                              </button>
+                              <% } %>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                <% }) %>
+                    <% }) %>
+                </div>
+
+
               </div>
-              
-              
-              </div>
-          </div>
-      </div>
-  
-    <div class="border-t border-gray-100 p-4">
-      <div class="flex items-center justify-between">
-          <!-- <p class="text-sm text-gray-500">
+            </div>
+            </div>
+
+            <div class="border-t border-gray-100 p-4">
+              <div class="flex items-center justify-between">
+                <!-- <p class="text-sm text-gray-500">
               Showing <%= (currentPage - 1) * 6 + 1 %> to <%= Math.min(currentPage * 6, totalProducts) %> of <%= totalProducts %> products
           </p> -->
-          <div class="flex gap-2">
-              <!-- Previous Button -->
-              <% if (currentPage > 1) { %>
-                  <a href="/admin/category?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                <div class="flex gap-2">
+                  <!-- Previous Button -->
+                  <% if (currentPage> 1) { %>
+                    <a href="/admin/category?page=<%= currentPage - 1 %>"
+                      class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
                       Previous
-                  </a>
-              <% } %>
-  
-              <!-- Page Numbers -->
-              <% 
-                  const maxButtons = 3; // Maximum visible page buttons
-                  let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-                  let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-  
-                 
-                  if (endPage - startPage + 1 < maxButtons) {
-                      startPage = Math.max(1, endPage - maxButtons + 1);
-                  }
-              %>
-  
-              <% for (let i = startPage; i <= endPage; i++) { %>
-                  <a href="/admin/category?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
-                      <%= i %>
-                  </a>
-              <% } %>
-  
-              <!-- Next Button -->
-              <% if (currentPage < totalPages) { %>
-                  <a href="/admin/category?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
-                      Next
-                  </a>
-              <% } %>
-          </div>
-      </div>
-  </div>
+                    </a>
+                    <% } %>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+                      <!-- Page Numbers -->
+                      <% const maxButtons=3; // Maximum visible page buttons let startPage=Math.max(1, currentPage -
+                        Math.floor(maxButtons / 2)); let endPage=Math.min(totalPages, startPage + maxButtons - 1); if
+                        (endPage - startPage + 1 < maxButtons) { startPage=Math.max(1, endPage - maxButtons + 1); } %>
 
-<!-- Modal Background Wrapper -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-<script>
+                        <% for (let i=startPage; i <=endPage; i++) { %>
+                          <a href="/admin/category?page=<%= i %>"
+                            class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
+                            <%= i %>
+                          </a>
+                          <% } %>
 
-   
-    
+                            <!-- Next Button -->
+                            <% if (currentPage < totalPages) { %>
+                              <a href="/admin/category?page=<%= currentPage + 1 %>"
+                                class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
+                                Next
+                              </a>
+                              <% } %>
+                </div>
+              </div>
+            </div>
 
-</script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-<script src="/TOAST.js"></script>
+            <!-- Modal Background Wrapper -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+            <script>
 
-<script src="/admin/js/categoryEjs.js"></script>
- <!-- card .// -->
-      </section>
-      <!-- content-main end// -->
-  
-    </main>
-    <script src="/TOAST.js"></script>
-    <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/admin/js/vendors/select2.min.js"></script>
-    <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
-  </body>
+
+
+
+            </script>
+
+            <script src="/TOAST.js"></script>
+
+            <script src="/admin/js/categoryEjs.js"></script>
+            <!-- card .// -->
+          </section>
+          <!-- content-main end// -->
+
+      </main>
+      <script src="/TOAST.js"></script>
+      <script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+      <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+      <script src="/admin/js/vendors/select2.min.js"></script>
+      <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+      <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+      <!-- Main Script -->
+      <script src="/admin/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
+
 </html>
-

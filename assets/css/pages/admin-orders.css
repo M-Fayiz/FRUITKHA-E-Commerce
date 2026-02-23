@@ -1,0 +1,36 @@
+/* Admin Orders Status Badges */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.status-shipped {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.status-delivered {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.status-returned {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}

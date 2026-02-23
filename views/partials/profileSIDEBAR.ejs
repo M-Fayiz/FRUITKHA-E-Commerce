@@ -1,190 +1,62 @@
-<style>
-    :root {
-            --primary-color: #F28123;
-            --sidebar-width: 280px;
-            --sidebar-bg: #fff;
-            --sidebar-hover: #f8f9fa;
-            --sidebar-active: #e8f0fe;
-            --sidebar-text: #333;
-        }
-        
-        body {
-            font-size: 16px;
-        }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-        }
-        
-        .main-content {
-            margin-left: 30px;
-            padding: 40px;
-            background-color: #f8f9fa;
-         
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-        }
-        
-        .nav-link {
-            color: var(--sidebar-text);
-            padding: 16px 25px;
-            margin: 6px 0;
-            transition: all 0.3s;
-            border-radius: 0;
-            font-size: 16px;
-        }
-        
-        .nav-link:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-color);
-        }
-        
-        .nav-link.active {
-            background-color: var(--sidebar-active);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .nav-link i {
-            width: 24px;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-        
-        .content-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-        }
-        
-        .content-card h5 {
-            font-size: 22px;
-            margin-bottom: 25px;
-            color: #333;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .btn-primary:hover {
-            background-color: #d97320;
-            border-color: #d97320;
-        }
-        
-        .form-label {
-            font-size: 16px;
-            color: #444;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            padding: 12px 18px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
-        }
-        
-        .text-danger {
-            color: #dc3545 !important;
-        }
-        
-        .forgot-password {
-            color: var(--primary-color);
-            font-size: 15px;
-            text-decoration: none;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .navbar {
-            padding: 15px 0;
-        }
-        
-        .navbar-brand img {
-            height: 50px;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                min-height: auto;
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            .content-card {
-                padding: 25px;
-            }
-        }
-        #place {
-    white-space: normal; /* Allows text wrapping */
-    overflow-y: auto;   /* Enables scrolling if content overflows */
-    max-height: 200px;  /* Limits the height of the dropdown */
-}
-</style>
-<div class="sidebar collapse d-md-block" id="sidebar">
-    <div class="d-flex flex-column py-4">
-        <a href="/" class="nav-link">
-            <i class="fas fa-home"></i> Home
-        </a>
-        <a href="/profile" class="nav-link active">
-            <i class="fas fa-user"></i> Profile
-        </a>
-        <a href="/orderList" class="nav-link">
-            <i class="fas fa-shopping-bag"></i> Orders
-        </a>
-        <a href="/wishList" class="nav-link">
-            <i class="fas fa-heart"></i> Wishlist
-        </a>
-        <a href="/address" class="nav-link">
-            <i class="fas fa-map-marker-alt"></i> Address
-        </a>
-        <a href="/wallet" class="nav-link">
-            <i class="fas fa-wallet text-warnin"></i> Wallet
-        </a>
-        <form action="" id="logOUT">
-            <%console.log(user._id)%>
-        <a href="/logOut/<%=user%>" id="data" class="nav-link text-danger">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-       </form>
-    </div>
-</div>
- <script>
-    // document.getElementById('logOUT').addEventListener('click',(e)=>{
-    //     e.preventDefault()
-    //     const data=document.getElementById('data')
-    //     const userId=data.getAttribute('data-id')
+<% /* Determine the active page based on the URL for sidebar highlighting */ const currentPath=typeof locals.currentPath
+    !=='undefined' ? locals.currentPath : '' ; %>
+    <aside class="user-sidebar" id="userSidebar">
 
-    //     fetch('/logOut',{
-    //         method:'post',
-    //         headers:{
-    //             'Content-Type':'application/json'
-    //         },
-    //         body:JSON.stringify({
-    //             "userId.id"
-    //         })
-    //     })
-    // })
- </script>
+        <!-- User Avatar / Greeting -->
+        <div class="sidebar-user-block">
+            <div class="sidebar-avatar">
+                <%= (user && user.firstName) ? user.firstName.charAt(0).toUpperCase() : 'U' %>
+            </div>
+            <p class="sidebar-username">
+                <%= (user && user.firstName) ? user.firstName : 'User' %>
+                    <%= (user && user.lastName) ? user.lastName : '' %>
+            </p>
+            <span class="sidebar-role">My Account</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+            <a href="/" class="s-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="/profile" class="s-link <%= currentPath === 'profile' ? 'active' : '' %>">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+
+            <a href="/orderList" class="s-link <%= currentPath === 'orderList' ? 'active' : '' %>">
+                <i class="fas fa-shopping-bag"></i>
+                <span>My Orders</span>
+            </a>
+
+            <a href="/wishList" class="s-link <%= currentPath === 'wishList' ? 'active' : '' %>">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+            </a>
+
+            <a href="/cart" class="s-link <%= currentPath === 'cart' ? 'active' : '' %>">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </a>
+
+            <a href="/address" class="s-link <%= currentPath === 'address' ? 'active' : '' %>">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Addresses</span>
+            </a>
+
+            <a href="/wallet" class="s-link <%= currentPath === 'wallet' ? 'active' : '' %>">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </a>
+
+            <div class="sidebar-divider mt-auto"></div>
+
+            <a href="/logOut/<%= user %>" class="s-link s-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+
+    </aside>

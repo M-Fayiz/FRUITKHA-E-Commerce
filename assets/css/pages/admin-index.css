@@ -1,0 +1,14 @@
+/* Admin Dashboard Charts and Layout */
+.chart-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Radio button styling in dashboard */
+.form-check-input:checked {
+    background-color: #3bb77e;
+    border-color: #3bb77e;
+}

@@ -1,0 +1,26 @@
+/* Admin Category Management styling */
+:root {
+    --primary-green: #3BB77E;
+    --light-green: #DEF9EC;
+    --text-gray: #7E7E7E;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-primary:hover {
+    background-color: #2a9d64;
+    border-color: #2a9d64;
+}
+
+.modal-header {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(59, 183, 126, 0.25);
+}

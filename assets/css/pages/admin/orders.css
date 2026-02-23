@@ -1,0 +1,23 @@
+.pending {
+    color: orange;
+}
+
+.shipped {
+    color: blue;
+}
+
+.on-delivery {
+    color: green;
+}
+
+.delivered {
+    color: darkgreen;
+}
+
+.cancelled {
+    color: red;
+}
+
+.return {
+    color: darkorange;
+}

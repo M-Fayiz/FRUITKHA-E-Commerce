@@ -1,0 +1,138 @@
+#hello {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.small-product {
+    width: 100px;
+    height: 100px;
+}
+
+.imag-div {
+    width: 100px;
+    height: 100px;
+}
+
+/* General Reset */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Scroll Container */
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+}
+
+/* Notification Button */
+.notif-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Sidebar Styling */
+.notif-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    /* Initially hidden */
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+.notif-sidebar.open {
+    right: 0;
+}
+
+/* Header */
+.sidebar-header {
+    padding: 15px;
+    background-color: #ff9800;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Notifications Content */
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.notif-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.notif-item .title {
+    font-weight: bold;
+}
+
+.notif-item .desc {
+    font-size: 14px;
+    color: #555;
+}
+
+.notif-item .date {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Sidebar Toggle Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1000;
+}
+
+.overlay.show {
+    display: block;
+}

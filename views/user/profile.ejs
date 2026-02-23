@@ -1,258 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - Fruitkha</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>My Profile — Fruitkha</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-  <style>
-        :root {
-            --primary-color: #F28123;
-            --sidebar-width: 280px;
-            --sidebar-bg: #fff;
-            --sidebar-hover: #f8f9fa;
-            --sidebar-active: #e8f0fe;
-            --sidebar-text: #333;
-        }
-        
-        body {
-            font-size: 16px;
-        }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-        }
-        
-        .main-content {
-            margin-left: 30px;
-            padding: 40px;
-            background-color: #f8f9fa;
-         
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-        }
-        
-        .nav-link {
-            color: var(--sidebar-text);
-            padding: 16px 25px;
-            margin: 6px 0;
-            transition: all 0.3s;
-            border-radius: 0;
-            font-size: 16px;
-        }
-        
-        .nav-link:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-color);
-        }
-        
-        .nav-link.active {
-            background-color: var(--sidebar-active);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .nav-link i {
-            width: 24px;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-        
-        .content-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-        }
-        
-        .content-card h5 {
-            font-size: 22px;
-            margin-bottom: 25px;
-            color: #333;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .btn-primary:hover {
-            background-color: #d97320;
-            border-color: #d97320;
-        }
-        
-        .form-label {
-            font-size: 16px;
-            color: #444;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            padding: 12px 18px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
-        }
-        
-        .text-danger {
-            color: #dc3545 !important;
-        }
-        
-        .forgot-password {
-            color: var(--primary-color);
-            font-size: 15px;
-            text-decoration: none;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .navbar {
-            padding: 15px 0;
-        }
-        
-        .navbar-brand img {
-            height: 50px;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                min-height: auto;
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            .content-card {
-                padding: 25px;
-            }
-        }
-    </style>
+    <!-- Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fruitkha Shared Theme -->
+    <link rel="stylesheet" href="/user-theme.css">
     <link rel="stylesheet" href="/SHOW.css">
+    <% const currentPath='profile' ; %>
 </head>
+
 <body>
- 
-     <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid px-4" valu="<%=user %>">
-            <a class="navbar-brand" href="#">
-                <img src="/img/logo.png" alt="Fruitkha" height="50">
-            </a>
-            
-            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav> 
 
+    <!-- ── Top Navigation Bar ── -->
+    <header class="profile-topbar">
+        <a href="/">
+            <img src="/img/logo.png" alt="Fruitkha" class="brand-logo">
+        </a>
+        <!-- Mobile sidebar toggler -->
+        <button class="topbar-toggle d-md-none" id="sidebarToggleBtn" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
 
+    <!-- ── Layout ── -->
+    <div class="profile-layout">
 
-    <div class="d-flex">
         <!-- Sidebar -->
-       <%-include('../partials/profileSIDEBAR.ejs')%>
+        <%- include('../partials/profileSIDEBAR.ejs') %>
 
-        <!-- Main Content -->
-        <div class="main-content ">
-            <!-- Profile Details -->
-            <div class="content-card">
-                <h5>Profile Details</h5>
-                <form action="" id="edit-profile">
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">First Name</label>
-                            <input type="text" id="FIRST" value="<%=user.firstName%>" class="form-control" >
-                            <span id="Firsterror" style="color: #ff2b2b; font-size: 12px;"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" id="LAST" value="<%=user.lastName%>" class="form-control" >
-                            <span id="Lasterror" style="color: #ff2b2b; font-size: 12px;"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" id="ID" value="<%=user.id %>" hidden>
-                        <!-- <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="user.email">
-                        </div> -->
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" id="phone" value="<%=user.phone%>"  class="form-control" >
-                            <span id="PHONEerror" style="color: #ff2b2b; font-size: 12px;"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                </div>
-             </form>
-            </div>
+            <!-- Main Content -->
+            <main class="page-content">
 
-            <!-- Password Settings -->
-           <% if(user.isGoogle ===false){%>  
-            <div class="content-card">
-                <h5>Password Settings</h5>
-                <div class="row">
-                    <div class="col-md-12">
-                     <form action="" id="pass-form">
-                        <div class="mb-4">
-                            <label class="form-label">Current Password</label>
-                            
-                            <input id="password" type="password" class="form-control">
-                            <span id="Passworderror" style="color: #ff2a2a; font-size: 12px;"></span>
+                <!-- ── Profile Details Card ── -->
+                <div class="content-card">
+                    <div class="page-header">
+                        <div class="page-header-icon">
+                            <i class="fas fa-user"></i>
                         </div>
-                        <div class="mb-4">
-                            <input type="text" value="<%=user.id%>" name="" id="userID" hidden>
+                        <div>
+                            <h5 class="ph-title">Profile Details</h5>
+                            <span class="ph-sub">Manage your personal information</span>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label">New Password</label>
-                            <input id="PAS1" type="password" class="form-control">
-                            <span id="PAS1error" style="color: #ff2a2a; font-size: 12px;"></span>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Confirm New Password</label>
-                            <input id="PAS2"  type="password" class="form-control">
-                            <span id="PAS2error" style="color: #ff2a2a; font-size: 12px;"></span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <a href="/rest" class="forgot-password">Forgot your password?</a>
-                            <button type="submit" class="btn btn-primary">Change Password</button>
-                        </div>
-                     </form>
                     </div>
+
+                    <form id="edit-profile">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" id="FIRST" value="<%= user.firstName %>" class="form-control"
+                                    placeholder="Enter first name">
+                                <span id="Firsterror" class="text-danger" style="font-size: 12px;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" id="LAST" value="<%= user.lastName %>" class="form-control"
+                                    placeholder="Enter last name">
+                                <span id="Lasterror" class="text-danger" style="font-size: 12px;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" id="phone" value="<%= user.phone %>" class="form-control"
+                                    placeholder="Enter phone number">
+                                <span id="PHONEerror" class="text-danger" style="font-size: 12px;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" value="<%= user.email %>" class="form-control" disabled
+                                    style="opacity:0.65; cursor:not-allowed;">
+                                <span class="d-block mt-1" style="font-size: 12px; color: var(--fr-muted);">Email cannot
+                                    be changed</span>
+                            </div>
+                        </div>
+
+                        <!-- Hidden user ID -->
+                        <input type="hidden" id="ID" value="<%= user.id %>">
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn-orange">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        <%}%>
-        </div>
+
+                <!-- ── Password Settings Card ── -->
+                <% if (user.isGoogle===false) { %>
+                    <div class="content-card">
+                        <div class="page-header">
+                            <div class="page-header-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div>
+                                <h5 class="ph-title">Password Settings</h5>
+                                <span class="ph-sub">Change your account password</span>
+                            </div>
+                        </div>
+
+                        <form id="pass-form">
+                            <input type="hidden" id="userID" value="<%= user.id %>">
+
+                            <div class="row g-4">
+                                <div class="col-md-12">
+                                    <label class="form-label">Current Password</label>
+                                    <input id="password" type="password" class="form-control"
+                                        placeholder="Enter current password">
+                                    <span id="Passworderror" class="text-danger" style="font-size: 12px;"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">New Password</label>
+                                    <input id="PAS1" type="password" class="form-control"
+                                        placeholder="Enter new password">
+                                    <span id="PAS1error" class="text-danger" style="font-size: 12px;"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input id="PAS2" type="password" class="form-control"
+                                        placeholder="Confirm new password">
+                                    <span id="PAS2error" class="text-danger" style="font-size: 12px;"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <a href="/rest" class="fr-link">
+                                    <i class="fas fa-key me-1"></i> Forgot your password?
+                                </a>
+                                <button type="submit" class="btn-orange">
+                                    <i class="fas fa-shield-alt"></i> Change Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <% } %>
+
+            </main>
     </div>
-    <%-include('../partials/block.ejs')%>
- <script src="/TOAST.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="/js/profileEjs.js"></script>
+
+    <%- include('../partials/block.ejs') %>
+        <script src="/TOAST.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/profileEjs.js"></script>
+
+        <!-- Mobile sidebar toggle -->
+        <script>
+            const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+            const userSidebar = document.getElementById('userSidebar');
+            if (sidebarToggleBtn && userSidebar) {
+                sidebarToggleBtn.addEventListener('click', () => {
+                    userSidebar.classList.toggle('collapsed');
+                });
+            }
+        </script>
+
 </body>
+
 </html>
-
-

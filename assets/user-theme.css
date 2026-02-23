@@ -1,0 +1,396 @@
+/* ============================================================
+   Fruitkha — User Account Pages Shared Theme
+   Theme: Orange (#F28123) · White · Navy (#0D1B2A)
+   ============================================================ */
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --fr-orange: #F28123;
+  --fr-orange-dark: #d96f1a;
+  --fr-orange-light: rgba(242, 129, 35, 0.12);
+  --fr-navy: #0D1B2A;
+  --fr-navy-mid: #1B2B3A;
+  --fr-navy-light: #243447;
+  --fr-white: #FFFFFF;
+  --fr-bg: #F5F6FA;
+  --fr-card: #FFFFFF;
+  --fr-text: #1a1a2e;
+  --fr-muted: #6c757d;
+  --fr-border: #e8ecf0;
+  --fr-danger: #e74c3c;
+  --fr-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
+  --fr-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.10);
+  --fr-radius: 12px;
+  --fr-radius-sm: 8px;
+  --fr-sidebar-w: 260px;
+  --fr-transition: all 0.25s ease;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+body {
+  font-family: 'Poppins', 'Open Sans', sans-serif;
+  background-color: var(--fr-bg);
+  color: var(--fr-text);
+}
+
+/* ── Layout Wrapper ─────────────────────────────────────────── */
+.profile-layout {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(100vh - 80px);
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+.user-sidebar {
+  width: var(--fr-sidebar-w);
+  min-width: var(--fr-sidebar-w);
+  height: 100vh;
+  background: var(--fr-navy);
+  display: flex;
+  flex-direction: column;
+  transition: var(--fr-transition);
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+  /* critical for sticky in flex row */
+  overflow-y: auto;
+}
+
+/* Avatar / greeting block */
+.sidebar-user-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid var(--fr-navy-light);
+  text-align: center;
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--fr-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: var(--fr-white);
+  font-weight: 700;
+  margin-bottom: 10px;
+  box-shadow: 0 0 0 4px rgba(242, 129, 35, 0.25);
+}
+
+.sidebar-username {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fr-white);
+  margin: 0 0 3px;
+}
+
+.sidebar-role {
+  font-size: 12px;
+  color: var(--fr-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Nav links */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 0;
+  flex: 1;
+}
+
+.sidebar-nav .s-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 22px;
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: var(--fr-transition);
+  cursor: pointer;
+  background: transparent;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-nav .s-link i {
+  width: 20px;
+  font-size: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-nav .s-link:hover {
+  background: var(--fr-navy-light);
+  color: var(--fr-white);
+  border-left-color: var(--fr-orange);
+}
+
+.sidebar-nav .s-link.active {
+  background: rgba(242, 129, 35, 0.15);
+  color: var(--fr-orange);
+  border-left-color: var(--fr-orange);
+  font-weight: 600;
+}
+
+.sidebar-nav .s-link.s-logout {
+  color: rgba(231, 76, 60, 0.80);
+  margin-top: auto;
+  border-top: 1px solid var(--fr-navy-light);
+}
+
+.sidebar-nav .s-link.s-logout:hover {
+  background: rgba(231, 76, 60, 0.12);
+  color: var(--fr-danger);
+  border-left-color: var(--fr-danger);
+}
+
+/* Sidebar divider */
+.sidebar-divider {
+  height: 1px;
+  background: var(--fr-navy-light);
+  margin: 6px 20px;
+}
+
+/* ── Page Content Area ──────────────────────────────────────── */
+.page-content {
+  flex: 1;
+  padding: 36px 40px;
+  min-height: calc(100vh - 80px);
+  background: var(--fr-bg);
+  overflow-x: hidden;
+}
+
+/* ── Content Cards ──────────────────────────────────────────── */
+.content-card {
+  background: var(--fr-card);
+  border-radius: var(--fr-radius);
+  box-shadow: var(--fr-shadow-sm);
+  border: 1px solid var(--fr-border);
+  padding: 30px 32px;
+  margin-bottom: 24px;
+}
+
+/* ── Page / Card Section Headers ────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--fr-border);
+}
+
+.page-header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--fr-orange-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fr-orange);
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.page-header h5,
+.page-header .ph-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fr-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-header .ph-sub {
+  font-size: 12.5px;
+  color: var(--fr-muted);
+  margin: 2px 0 0;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn-orange {
+  background: var(--fr-orange);
+  color: var(--fr-white);
+  border: 2px solid var(--fr-orange);
+  padding: 10px 28px;
+  border-radius: var(--fr-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: var(--fr-transition);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-orange:hover {
+  background: var(--fr-orange-dark);
+  border-color: var(--fr-orange-dark);
+  color: var(--fr-white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(242, 129, 35, 0.35);
+}
+
+.btn-outline-orange {
+  background: transparent;
+  color: var(--fr-orange);
+  border: 2px solid var(--fr-orange);
+  padding: 10px 28px;
+  border-radius: var(--fr-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--fr-transition);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-orange:hover {
+  background: var(--fr-orange);
+  color: var(--fr-white);
+  transform: translateY(-1px);
+}
+
+/* Override Bootstrap btn-primary with orange */
+.btn-primary {
+  background: var(--fr-orange) !important;
+  border-color: var(--fr-orange) !important;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: var(--fr-transition);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: var(--fr-orange-dark) !important;
+  border-color: var(--fr-orange-dark) !important;
+  box-shadow: 0 4px 12px rgba(242, 129, 35, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+/* ── Form Controls ──────────────────────────────────────────── */
+.form-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--fr-text);
+  margin-bottom: 6px;
+}
+
+.form-control,
+.form-select {
+  border: 1.5px solid var(--fr-border);
+  border-radius: var(--fr-radius-sm);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--fr-text);
+  background: #fafbfc;
+  transition: var(--fr-transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--fr-orange);
+  box-shadow: 0 0 0 3px rgba(242, 129, 35, 0.18);
+  background: var(--fr-white);
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: #adb5bd;
+}
+
+/* ── Utility ────────────────────────────────────────────────── */
+.text-orange {
+  color: var(--fr-orange);
+}
+
+.bg-orange {
+  background: var(--fr-orange);
+}
+
+.text-navy {
+  color: var(--fr-navy);
+}
+
+.fr-link {
+  color: var(--fr-orange);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: var(--fr-transition);
+}
+
+.fr-link:hover {
+  color: var(--fr-orange-dark);
+  text-decoration: underline;
+}
+
+/* ── Profile page nav top bar ───────────────────────────────── */
+.profile-topbar {
+  background: var(--fr-navy);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.profile-topbar .brand-logo {
+  height: 44px;
+}
+
+.profile-topbar .topbar-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--fr-white);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .profile-layout {
+    flex-direction: column;
+  }
+
+  .user-sidebar {
+    width: 100%;
+    min-width: unset;
+    min-height: unset;
+    position: relative;
+  }
+
+  .user-sidebar.collapsed .sidebar-nav,
+  .user-sidebar.collapsed .sidebar-user-block {
+    display: none;
+  }
+
+  .page-content {
+    padding: 20px 16px;
+  }
+
+  .content-card {
+    padding: 20px 16px;
+  }
+
+  .profile-topbar {
+    padding: 12px 16px;
+  }
+}

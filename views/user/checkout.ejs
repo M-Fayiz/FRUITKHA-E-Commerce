@@ -1,484 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Checkout — Fruitkha">
+	<title>Checkout — Fruitkha</title>
 
-	<!-- title -->
-	<title>Check Out</title>
-<style>
-	.order-summary {
-      width: 350px;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .order-summary h2 {
-      font-size: 22px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-  
-
-    .item-details {
-      flex: 1;
-    }
-
-    .item-details h4 {
-      font-size: 18px;
-      margin: 0 0 5px 0;
-      color: #333;
-    }
-
-    .item-details p {
-      font-size: 14px;
-      color: #666;
-      margin: 0;
-    }
-
-    .item-price {
-      font-size: 16px;
-      color: #333;
-      font-weight: bold;
-    }
-
-    .order-total {
-      border-top: 1px solid #ddd;
-      padding-top: 15px;
-      margin-top: 15px;
-    }
-
-    .order-total div {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .order-total div span {
-      font-size: 16px;
-      color: #333;
-    }
-
-    .order-total .total {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .coupon {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .coupon input {
-      width: 70%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    .coupon button {
-      padding: 8px 15px;
-      background-color: #FF6600;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .coupon button:hover {
-      background-color: #555;
-    }
-	.add-address-btn {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #3179d7; /* Blue background */
-    color: white; /* White text */
-    text-align: center;
-    text-decoration: none; /* Remove underline */
-    border-radius: 8px; /* Rounded corners */
-    font-size: 16px;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-
-  .add-address-btn:hover {
-    background-color: #b6d3f2; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-  }
-
-  .add-address-btn:active {
-    background-color: #004494; /* Even darker blue on click */
-    transform: translateY(0); /* Reset lift effect */
-  }
-.payment-method{
-   padding: 6px;
-   border: 1.2px solid rgb(178, 178, 178);
-   border-radius: 10px;
-   margin-bottom: 6px;
-}
-.img{
-  width: 35px;
-}
-
-</style>
-	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="/img/favicon.png">
-	<!-- google font -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-	<!-- fontawesome -->
-	<link rel="stylesheet" href="/css/all.min.css">
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="/css/owl.carousel.css">
-	<!-- magnific popup -->
-	<link rel="stylesheet" href="/css/magnific-popup.css">
-	<!-- animate css -->
-	<link rel="stylesheet" href="/css/animate.css">
-	<!-- mean menu css -->
-	<link rel="stylesheet" href="/css/meanmenu.min.css">
-	<!-- main style -->
-	<link rel="stylesheet" href="/css/main.css">
-	<!-- responsive -->
-	<link rel="stylesheet" href="/css/responsive.css">
-     <link rel="stylesheet" href="/SHOW.css">
-     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css" 
-    integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww==" 
-    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-	 <!-- Add SweetAlert2 CDN link in the head of your HTML -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+		rel="stylesheet">
+	<link href="/css/all.min.css" rel="stylesheet">
+	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/pages/checkout.css">
+	<link rel="stylesheet" href="/SHOW.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-	
-	<!-- PreLoader-->
-    <!-- <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div> -->
-    <!--PreLoader Ends -->
-	
-	<!-- header -->
-	<%-include('../partials/Header.ejs')%>
-	<!-- end header -->
-<%-include('../partials/block.ejs')%>
-	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
+
+	<%- include('../partials/Header.ejs') %>
+		<%- include('../partials/block.ejs') %>
+
+			<!-- ── Hero Strip ── -->
+			<div class="co-hero">
+				<div class="co-hero-inner">
+					<h1><i class="fas fa-shopping-bag" style="color:var(--orange)"></i> Checkout</h1>
+					<div class="co-breadcrumb">
+						<a href="/">Home</a>
+						<i class="fas fa-chevron-right"></i>
+						<a href="/cart">Cart</a>
+						<i class="fas fa-chevron-right"></i>
+						<span>Checkout</span>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	<!-- end search arewa -->
-	
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Check Out Product</h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end breadcrumb section -->
 
-	<!-- check out section -->
-	<div class="checkout-section mt-150 mb-150">
-		<div class="container">
-		 <form action="" id="order-form">
-			<div class="row">
-				<div class="col-lg-8">
-					<div class="checkout-accordion-wrap">
-					 
-						<div class="accordion" id="accordionExample">
-						  <div class="card single-accordion">
-						    <div class="card-header" id="headingOne">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						          Select Address
-						        </button>
-						      </h5>
-						    </div>
+			<!-- ── Main Page ── -->
+			<div class="co-page">
+				<form action="" id="order-form">
+					<div class="co-grid">
 
-						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-						      <div class="card-body">
-								<%if(address && address.length > 0) { %>  <!-- Ensure address is valid -->
-									<% address.forEach(item => { %>
-										<label class="card mb-3" style="padding: 7px; display: block; border: 1px solid #ccc; cursor: pointer;">
-											<input type="radio" name="selectedAddress" id="addresId" value="<%= item._id %>" style="display: block;" >
-										
-											<div class="card-body" >
-											  <h5 class="card-title"><%= item.Address_name %></h5>
-											  <div style="display: flex; flex-wrap: wrap; gap: 3px;">
-												<p><span style="color: #5a5a5a;">Name:</span> <%= item.Name %></p>
-												<p><span style="color: #5a5a5a;">State:</span> <%= item.State %></p>
-												<p><span style="color: #5a5a5a;">City:</span> <%= item.District %></p>
-												<p><span style="color: #5a5a5a;">Place:</span> <%= item.place %></p>
-												<p><span style="color: #5a5a5a;">Pin code:</span> <%= item.PIN %></p>
-												<p><span style="color: #5a5a5a;">Landmark:</span> <%= item.mark %></p>
-											  </div>
-										
-											  <div class="text-end">
-												<button type="button" class="btn btn-outline-info" style="padding: 5px;" data-bs-toggle="modal" data-bs-target="#editAddressModal" onclick="editAddress('<%=item.Address_name %>','<%=item.Name%>','<%=item.State %>','<%= item.District %>','<%=item.place%>','<%=item.PIN %>','<%=item.mark%>','<%=item.id%>')">
-													Edit Address
-												  </button>
-											  </div>
+						<!-- LEFT COLUMN -->
+						<div>
+
+							<!-- Step 1: Delivery Address -->
+							<div class="co-section">
+								<div class="co-section-title">
+									<span class="step-badge">1</span>
+									<i class="fas fa-map-marker-alt"></i> Delivery Address
+								</div>
+
+								<% if (address && address.length> 0) { %>
+									<div class="addr-grid">
+										<% address.forEach((item, idx)=> { %>
+											<div>
+												<label class="addr-label">
+													<input type="radio" name="selectedAddress" id="addresId"
+														value="<%= item._id %>" <%=idx===0 ? 'checked' : '' %>>
+													<div class="addr-card">
+														<div class="selected-check"><i class="fas fa-check"></i></div>
+														<span class="addr-type">
+															<%= item.Address_name %>
+														</span>
+														<div class="addr-name">
+															<%= item.Name %>
+														</div>
+														<div class="addr-line"><i class="fas fa-city"></i>
+															<%= item.District %>, <%= item.State %>
+														</div>
+														<div class="addr-line"><i class="fas fa-location-arrow"></i>
+															<%= item.place %>
+														</div>
+														<div class="addr-line"><i class="fas fa-mail-bulk"></i> PIN: <%=
+																item.PIN %>
+														</div>
+														<% if (item.mark) { %>
+															<div class="addr-line"><i class="fas fa-map-pin"></i>
+																<%= item.mark %>
+															</div>
+															<% } %>
+																<button type="button" class="btn-edit-addr"
+																	data-bs-toggle="modal"
+																	data-bs-target="#editAddressModal"
+																	onclick="editAddress('<%= item.Address_name %>','<%= item.Name %>','<%= item.State %>','<%= item.District %>','<%= item.place %>','<%= item.PIN %>','<%= item.mark %>','<%= item.id %>')">
+																	<i class="fas fa-pencil-alt"></i> Edit
+																</button>
+													</div>
+												</label>
 											</div>
-										  </label>
-									<% }) %>
-								  <% } else { %>
-									<div>
-									  <p style="color: rgb(48, 48, 48);">No Address Added Yet</p>
+											<% }) %>
 									</div>
-									<div>
-										<a href="/address" class="add-address-btn">+ Add Address</a>
-									  </div>
-									  
-								  <% } %>
-						      </div>
-						    </div>
-						  </div>
-						  
-						  
+
+									<div class="mt-3">
+										<a href="/address" class="btn-add-addr">
+											<i class="fas fa-plus"></i> Add New Address
+										</a>
+									</div>
+
+									<% } else { %>
+										<div class="empty-addr">
+											<i class="fas fa-map-marked-alt"></i>
+											<p>No addresses saved yet.</p>
+											<a href="/address" class="btn-add-addr"><i class="fas fa-plus"></i> Add
+												Address</a>
+										</div>
+										<% } %>
+							</div>
+
+							<!-- Step 2: Payment Method -->
+							<div class="co-section">
+								<div class="co-section-title">
+									<span class="step-badge">2</span>
+									<i class="fas fa-credit-card"></i> Payment Method
+								</div>
+
+								<div class="pay-grid">
+
+									<!-- Razorpay -->
+									<label class="pay-label">
+										<input type="radio" name="paymentMethod" id="razorpay" value="razorpay">
+										<div class="pay-card">
+											<div class="pay-icon-wrap pay-icon-razorpay"><i class="fas fa-bolt"></i>
+											</div>
+											<div class="pay-info">
+												<div class="pay-title">Online Payment</div>
+												<div class="pay-sub">Credit/Debit Card, UPI, Net Banking via Razorpay
+												</div>
+											</div>
+											<div class="pay-radio-dot"></div>
+										</div>
+									</label>
+
+									<!-- Wallet -->
+									<label class="pay-label">
+										<input type="radio" name="paymentMethod" id="WALLET" value="wallet">
+										<div class="pay-card">
+											<div class="pay-icon-wrap pay-icon-wallet"><i class="fas fa-wallet"></i>
+											</div>
+											<div class="pay-info">
+												<div class="pay-title">Pay with Wallet</div>
+												<div class="pay-sub">Use your Fruitkha wallet balance instantly</div>
+											</div>
+											<div class="pay-radio-dot"></div>
+										</div>
+									</label>
+
+									<!-- COD -->
+									<label class="pay-label">
+										<input type="radio" name="paymentMethod" id="cod" value="COD">
+										<div class="pay-card" id="CODinf">
+											<div class="pay-icon-wrap pay-icon-cod"><i
+													class="fas fa-money-bill-wave"></i></div>
+											<div class="pay-info">
+												<div class="pay-title">Cash on Delivery</div>
+												<div class="pay-sub">Pay when your order arrives at your door</div>
+												<p id="inform" class="cod-warn d-none"></p>
+											</div>
+											<div class="pay-radio-dot"></div>
+										</div>
+									</label>
+
+								</div>
+							</div>
+
+						</div><!-- /LEFT COLUMN -->
+
+						<!-- RIGHT: Order Summary -->
+						<div>
+							<div class="order-summary-card">
+								<div class="os-title"><i class="fas fa-receipt"></i> Order Summary</div>
+
+								<!-- Items -->
+								<% cart.Products.forEach(item=> { %>
+									<div class="os-item">
+										<input type="text" value="<%= cart.UserID %>" hidden>
+										<div class="os-item-name">
+											<%= item.productId.productTitle %>
+												<span class="os-item-qty d-block">Qty: <%= item.quantity %> kg</span>
+										</div>
+										<div class="os-item-price">₹<%= item.TOTAL %>
+										</div>
+									</div>
+									<% }) %>
+
+										<hr class="os-divider">
+
+										<!-- Totals -->
+										<% let gst=(0.12 * cart.subTotal); %>
+											<div class="os-row"><span class="label">Subtotal</span><span class="value">₹
+													<%= cart.subTotal.toFixed(2) %></span></div>
+											<div class="os-row"><span class="label">GST (12%)</span><span
+													class="value">₹<%= gst.toFixed(2) %></span></div>
+											<div class="os-row os-discount">
+												<span class="label">Discount</span>
+												<span class="value">−₹<%= cart.Discount.discount_amount.toFixed(2) %>
+														</span>
+											</div>
+											<div class="os-row"><span class="label">Shipping</span><span class="value">₹
+													<%= cart.Shipping.toFixed(2) %></span></div>
+											<div class="os-row os-total">
+												<span>Total</span>
+												<span class="value">₹<%= (cart.subTotal + gst + cart.Shipping -
+														cart.Discount.discount_amount).toFixed(2) %></span>
+											</div>
+
+											<!-- Coupon -->
+											<fieldset id="innerForm">
+												<div class="coupon-wrap">
+													<div class="coupon-label"><i class="fas fa-tag me-2"></i>Have a
+														coupon?</div>
+													<% if (!cart.Discount.discount_amount> 0) { %>
+														<div class="coupon-input-row">
+															<input type="text" id="coupon-input"
+																placeholder="Enter coupon code">
+															<button type="button" data-total="<%= cart.subTotal %>"
+																data-user="<%= user %>" id="apply">Apply</button>
+														</div>
+														<% } else { %>
+															<button type="button"
+																data-coupon="<%= cart.Discount.discountId %>"
+																data-user="<%= user %>" id="remove">
+																<i class="fas fa-times-circle me-2"></i>Remove Coupon
+															</button>
+															<% } %>
+																<p id="result"
+																	style="color:red;font-size:12px;margin-top:6px;">
+																</p>
+												</div>
+											</fieldset>
+
+											<!-- Place Order -->
+											<button type="submit"
+												data-amount="<%= (cart.subTotal + gst + cart.Shipping - cart.Discount.discount_amount) %>"
+												id="place" class="btn-place-order">
+												<i class="fas fa-lock"></i> Place Order
+											</button>
+											<div class="secure-note">
+												<i class="fas fa-shield-alt"></i> Secure &amp; encrypted checkout
+											</div>
+							</div>
 						</div>
-						<div class="payment-methods">
-							<h3 class="mb-4 mt-4" style="font-weight: 500;">Select Payment Method</h3>
-		
-							<!-- Razorpay Payment Option -->
-							<div class="payment-method" >
-          
-								<input type="radio" name="paymentMethod" id="razorpay" value="razorpay" >
-                <img class="img" src="/img/smartphone.png" alt="">
-								<label for="razorpay">
-								
-										<h5 style="color: #3f3f3f;font-weight: 500;">Online Payment via Razorpay</h5>
-										
-							
-								</label>
-                 <p class="text-muted">Pay securely using credit/debit cards, net banking, UPI, and wallets</p>
-							</div>
-		
-							
-							
-							<div class="payment-method"  >
-								<input type="radio" name="paymentMethod" id="WALLET" value="wallet">
-                <img class="img" src="/img/wallet.png" alt="">
-								<label for="cod">
-									
-									
-										<h5 style="color: #3e3e3e;font-weight: 500;">Wallet</h5>
-										
-								
-								</label>
-                <p class="text-muted">Pay from Your Cart Balance</p>
-							</div>
-               <!-- Cash on Delivery Option -->
-              <div class="payment-method" id="CODinf" >
-								<input type="radio" name="paymentMethod" id="cod" value="COD">
-								<label for="cod">
-									
-							
-										<h5 style="color: #3e3e3e;font-weight: 500;">Cash on Delivery (COD)</h5>
-	
-								</label>
-                <p class="text-muted">Pay in cash when your order is delivered</p>
-                <p  id="inform"></p>
-							</div>
+
+					</div><!-- /co-grid -->
+				</form>
+			</div><!-- /co-page -->
+
+			<!-- Edit Address Modal -->
+			<div class="modal fade" id="editAddressModal" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content" style="border-radius:14px;border:none;">
+						<div class="modal-header" style="background:#fff4ea;border-bottom:1px solid #e2e8f0;">
+							<h5 class="modal-title"
+								style="color:var(--orange);font-weight:700;font-family:'Poppins',sans-serif;">
+								<i class="fas fa-pencil-alt me-2"></i>Edit Address
+							</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 						</div>
-					  
+						<div class="modal-body">
+							<form id="edit-address-form">
+								<div class="row g-3">
+									<div class="col-12">
+										<label class="form-label fw-600">Address Name</label>
+										<input type="text" class="form-control" id="editAddressName"
+											placeholder="Home or Office" required>
+									</div>
+									<div class="col-12">
+										<label class="form-label fw-600">Full Name</label>
+										<input type="text" class="form-control" id="editCustomerName"
+											placeholder="Recipient name" required>
+									</div>
+									<div class="col-6">
+										<label class="form-label">Pincode</label>
+										<input type="text" class="form-control" id="editPincode"
+											placeholder="Enter Pincode" required>
+									</div>
+									<div class="col-6">
+										<label class="form-label">Place</label>
+										<input type="text" id="editPlace" class="form-control" placeholder="Place">
+									</div>
+									<div class="col-12">
+										<label class="form-label">Landmark</label>
+										<input type="text" class="form-control" id="editLandmark"
+											placeholder="Enter Landmark" required>
+									</div>
+									<div class="col-6">
+										<label class="form-label">District</label>
+										<input type="text" class="form-control" id="editCity" placeholder="District"
+											required>
+									</div>
+									<div class="col-6">
+										<label class="form-label">State</label>
+										<input type="text" class="form-control" id="editState" placeholder="State"
+											required>
+									</div>
+								</div>
+								<div id="Result" class="mt-3"></div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+								style="border-radius:8px;">Cancel</button>
+							<button type="submit" form="edit-address-form" class="btn"
+								style="background:var(--orange);color:#fff;border-radius:8px;font-weight:600;">
+								<i class="fas fa-save me-1"></i>Save Changes
+							</button>
+						</div>
 					</div>
 				</div>
-
-				<div class="col-lg-4">
-					<div class="order-details-wrap" >
-						<div class="order-summary" >
-							<h2>Order Summary</h2>
-							<div class="item" >
-								<div class="item-details" style="display:flex;flex-direction: column;"  >
-								<% cart.Products.forEach(item=>{%>
-									    <input type="text" value="<%= cart.UserID %>" hidden>
-										<div style="display: flex; justify-content: space-between;">
-										<h6 style="color: #3c3c3c;font-size: 16px;font-weight: 600;"><%=item.productId.productTitle%></h6>
-										<p>Quantity:<%=item.quantity%></p>
-										<p class="item-price">total :<%=item.TOTAL%></p>
-									   </div>
-									
-								<%})%>
-							</div>
-							  
-							</div>
-						
-							<div class="order-total" style="line-height: 17px;">
-							  <div>
-								<span>Subtotal :</span>
-								<span>₹<%=cart.subTotal%>.00</span>
-							  </div>
-							  <div>
-								<span>GST 12%:</span>
-                <% let gst=(0.12* cart.subTotal)%>
-								<span>₹<%=(gst).toFixed(2)%></span>
-							  </div>
-                <div>
-                  <span>Discount :</span>
-                  <span>₹<%=(cart.Discount.discount_amount).toFixed(2)%></span>
-                </div>
-							  <div>
-								<span>Shipping :</span>
-								<span>₹<%=cart.Shipping%>.00</span>
-							  </div>
-							  
-							  <div class="total">
-								<span>Total :</span>
-								<span>₹<%=(cart.subTotal + gst+ cart.Shipping-cart.Discount.discount_amount).toFixed(2)%></span>
-									
-							  </div>
-							</div>
-						 <fieldset id="innerForm">
-							<% if(!cart.Discount.discount_amount>0){%>
-								<div class="coupon">
-									<input type="text" id="coupon-input" placeholder="Enter coupon code" />
-									<button type="button" data-total="<%=cart.subTotal%>" data-user="<%=user%>"  id="apply">Apply</button>
-							    </div>
-							<%}else {%>
-								<div class="coupon">
-								<button type="button" data-coupon="<%=cart.Discount.discountId%>" data-user="<%=user%>"  id="remove">Remove</button>
-							    </div>
-							<%}%>
-							
-							  <p id="result" style="color: red;"></p>
-						    </fieldset>
-						  </div>
-						<button type="submit" data-amount="<%=(cart.subTotal + gst+ cart.Shipping-cart.Discount.discount_amount)%>" style="background-color:#FF6600 ;color: white;" id="place" class="coupon">Place Order</button>
-					</div>
-				</div>
 			</div>
-			</form>
-		</div>
-	</div>
-	<!-- end check out section -->
-	<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-			  <form id="edit-address-form">
-				<div class="mb-3">
-				  <label for="editAddressName" class="form-label">Address Name</label>
-				  <input type="text" class="form-control" id="editAddressName" placeholder="Home or Office" required>
-				</div>
-				<div class="mb-3">
-				  <label for="editCustomerName" class="form-label">Name of Customer</label>
-				  <input type="text" class="form-control" id="editCustomerName" placeholder="Your Name" required>
-				</div>
-				<div class="row">
-				  <div class="col-md-6 mb-3">
-					<label for="editPincode" class="form-label">Pincode</label>
-					<input type="text" class="form-control" id="editPincode" placeholder="Enter Pincode" required>
-				  </div>
-				  <div class="col-md-6 mb-3">
-					<label for="editPlace" class="form-label">Place</label>
-					<input type="text" id="editPlace" class="form-select">
-				  </div>
-				</div>
-				<div class="mb-3">
-				  <label for="editLandmark" class="form-label">Landmark</label>
-				  <input type="text" class="form-control" id="editLandmark" placeholder="Enter Landmark" required>
-				</div>
-				<div class="row">
-				  <div class="col-md-6 mb-3">
-					<label for="editCity" class="form-label">District</label>
-					<input type="text" class="form-control" id="editCity" placeholder="Enter City" required>
-				  </div>
-				  <div class="col-md-6 mb-3">
-					<label for="editState" class="form-label">State</label>
-					<input type="text" class="form-control" id="editState" placeholder="Enter State" required>
-				  </div>
-				</div>
-			  </form>
-			</div>
-			<div id="Result" class="mt-4"></div>
-			<div class="modal-footer">
-			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-			  <button type="submit" form="edit-address-form" class="btn btn-success">Save Changes</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
 
-	  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-	<!-- logo carousel -->
-	<%-include('../partials/footer.ejs')%>
-	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="/js/jquery.magnific-popup.min.js"></script>
-
-	<script src="/js/jquery.meanmenu.min.js"></script>
-
-	<script src="/js/sticker.js"></script>
-
-	<script src="/js/main.js"></script>
-     <script src="/TOAST.js"></script>
-	<script src="/js/checkoutEjs.js"></script>
-
+			<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+			<script src="/TOAST.js"></script>
+			<script src="/js/checkoutEjs.js"></script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-

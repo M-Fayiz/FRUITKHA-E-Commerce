@@ -1,236 +1,171 @@
-<div class="top-header-area" id="sticker">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-sm-12 text-center">
-                <div class="main-menu-wrap">
-                    <!-- logo -->
-                    <div class="site-logo">
-                        <a href="/">
-                            <img src="/img/logo.png" href="/" alt="">
-                        </a>
-                    </div>
-                    <!-- logo -->
-                   
-                    <!-- menu start -->
-                    <nav class="main-menu">
-                        <ul>
-                            <li class="current-list-item"><a href="/">Home</a>
-                                
-                            </li>
-                           
-                            <li><a href="/shop">Shop</a>
-                                
-                            </li>
-                            <li>
-                                <div class="header-icons">
-                                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<% /* currentPath & Category & CURRENTpage passed from controllers */ const _cp=(typeof locals.CURRENTpage
+    !=='undefined' ? CURRENTpage : '' ).toLowerCase(); const _cat=typeof locals.Category !=='undefined' ? Category :
+    null; %>
+    <link rel="stylesheet" href="/css/pages/header.css">
 
-                                    <a class="shopping-cart" href="/cart">
-                                      <i class="fas fa-shopping-cart"></i>
-                                      <%if(carSize!==null){%> 
-                                        <span style="font-size: 12px;position: relative;right:3px;bottom: 8px;"><%=carSize%></span>
-                                      <%}%>
-                                    </a>
-                                    
-                                    <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-                                    <a href="/wishList">
-                                      
-                                        <i class="bi bi-heart-fill "  style="color: #ffffff;"></i>
-                                        <span id="countW" style="font-size: 12px;position: relative;right:3px;bottom: 7px;"><%=size%></span>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
-                                    </a>
-                                    <% if (user) { %>
-                                        
-                                        <a class="profile" href="/profile/<%= user %>">
-                                          <i class="fa-solid fa-user" style="color: #ffffff;"></i>
-                                        </a>
-                                       
-                                      <% } else { %>
-                                      <% } %>
-                                      <!-- <span><a href="/login" style="color: #ffffff;">Login</a></span> -->
-                                    <!-- <a class="user-account" href="account.html"><i class="bi bi-person"></i></a> -->
-                                    
-                                       
-                            </li>
-                            
-                        </ul>
-                    </nav>
-                    <!-- <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-                    <div class="mobile-menu"></div> -->
-                    <!-- menu end -->
+    <nav class="fk-nav">
+        <div class="fk-nav-inner">
+            <!-- Logo -->
+            <a href="/" class="fk-logo"><img src="/img/logo.png" alt="Fruitkha"></a>
+
+            <!-- Main links -->
+            <ul class="fk-links">
+                <li><a href="/" class="<%= _cp === 'home' ? 'fk-active' : '' %>"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li><a href="/shop" class="<%= _cp === 'shop' ? 'fk-active' : '' %>"><i class="fas fa-store"></i>
+                        Shop</a></li>
+            </ul>
+
+            <!-- Right icons -->
+            <div class="fk-icons">
+                <!-- Search -->
+                <button class="fk-icon-btn" id="fkSearchBtn" aria-label="Search"
+                    style="border:none;cursor:pointer;background:transparent;">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <!-- Cart -->
+                <a href="/cart" class="fk-icon-btn" aria-label="Cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <% if (typeof carSize !=='undefined' && carSize !==null && carSize> 0) { %>
+                        <span class="fk-badge">
+                            <%= carSize %>
+                        </span>
+                        <% } %>
+                </a>
+
+                <!-- Wishlist -->
+                <a href="/wishList" class="fk-icon-btn" aria-label="Wishlist">
+                    <i class="fas fa-heart"></i>
+                    <% if (typeof size !=='undefined' && size> 0) { %>
+                        <span class="fk-badge">
+                            <%= size %>
+                        </span>
+                        <% } %>
+                </a>
+
+                <!-- Profile -->
+                <% if (typeof user !=='undefined' && user) { %>
+                    <a href="/profile/<%= user %>" class="fk-profile-btn">
+                        <i class="fas fa-user-circle"></i> Account
+                    </a>
+                    <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── Breadcrumb bar ── -->
+    <% if (_cp && _cp !=='home' ) { %>
+        <div class="fk-breadcrumb-bar">
+            <div class="fk-breadcrumb-inner">
+                <a href="/" class="fk-bc-item"><i class="fas fa-home"></i> Home</a>
+
+                <% if (_cp==='shop' && !_cat) { %>
+                    <i class="fas fa-chevron-right fk-bc-sep"></i>
+                    <span class="fk-bc-item fk-bc-current">Shop</span>
+
+                    <% } else if (_cp==='shop' && _cat) { %>
+                        <i class="fas fa-chevron-right fk-bc-sep"></i>
+                        <a href="/shop" class="fk-bc-item">Shop</a>
+                        <i class="fas fa-chevron-right fk-bc-sep"></i>
+                        <span class="fk-bc-item fk-bc-current">
+                            <%= _cat.category %>
+                        </span>
+
+                        <% } else if (_cp==='product' && _cat) { %>
+                            <i class="fas fa-chevron-right fk-bc-sep"></i>
+                            <a href="/shop" class="fk-bc-item">Shop</a>
+                            <i class="fas fa-chevron-right fk-bc-sep"></i>
+                            <a href="/shop?category=<%= _cat.category %>" class="fk-bc-item">
+                                <%= _cat.category %>
+                            </a>
+                            <i class="fas fa-chevron-right fk-bc-sep"></i>
+                            <span class="fk-bc-item fk-bc-current">Product</span>
+
+                            <% } else if (_cp==='cart' ) { %>
+                                <i class="fas fa-chevron-right fk-bc-sep"></i>
+                                <span class="fk-bc-item fk-bc-current">Cart</span>
+
+                                <% } else if (_cp==='checkout' ) { %>
+                                    <i class="fas fa-chevron-right fk-bc-sep"></i>
+                                    <a href="/cart" class="fk-bc-item">Cart</a>
+                                    <i class="fas fa-chevron-right fk-bc-sep"></i>
+                                    <span class="fk-bc-item fk-bc-current">Checkout</span>
+                                    <% } %>
+            </div>
+        </div>
+        <% } %>
+
+            <!-- ── Coupon Drawer ── -->
+            <button class="fk-coupon-toggle" id="fkCouponToggle" title="View Coupons">
+                <i class="fas fa-ticket-alt"></i>
+                Coupons
+            </button>
+
+            <div class="fk-coupon-drawer" id="fkCouponDrawer">
+                <div class="fk-coupon-header">
+                    <h5><i class="fas fa-ticket-alt me-2" style="color:#F28123"></i>Available Coupons</h5>
+                    <button class="fk-coupon-close" id="fkCouponClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="fk-coupon-body">
+                    <% if (typeof coupon !=='undefined' && coupon && coupon.length> 0) { %>
+                        <% coupon.forEach(item=> { %>
+                            <div class="fk-coupon-card">
+                                <div class="fk-coupon-code"><i class="fas fa-tag me-2"></i>
+                                    <%= item.code %>
+                                </div>
+                                <div class="fk-coupon-desc">
+                                    <%= item.Description %>
+                                </div>
+                                <div class="fk-coupon-min"><i class="fas fa-shopping-cart me-1"></i>Min. purchase ₹<%=
+                                        item.minCartValue %>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <p
+                                        style="color:rgba(255,255,255,0.5);font-size:13px;font-family:'Poppins',sans-serif;text-align:center;padding:20px 0;">
+                                        No coupons available right now.</p>
+                                    <% } %>
                 </div>
             </div>
-            <nav style="padding-left: 50px;">
-   
-                <ul style="display: flex;">
-                    <li class="breadcrumb-item current-list-item"><a href="/" style="color: #ffffff;">Home</a></li>
-                    
-                    <% if (CURRENTpage === 'shop' && !Category) { %>
-                        <!-- Shop page without category -->
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #ffffff;">Shop</li>
-                    <% } else if (CURRENTpage === 'shop' && Category) { %>
-                        <!-- Shop page with category -->
-                        <li class="breadcrumb-item">
-                            <a href="/shop" style="color: #ffffff;">Shop</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #a3a3a3;"><%= Category.category %></li>
-                    <% } else if (CURRENTpage === 'product' && Category  ) { %>
-                        <li class="breadcrumb-item">
-                            <a href="/shop" style="color: #ffffff;">Shop</a>
-                           
-                        </li>
-                        <li class="breadcrumb-item">
-                        <a style="color: #ffffff;" href="/shop?category=<%=Category.category%>"><%=Category.category %></a>
-                        </li>
-                        
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #a3a3a3;">product</li>
 
-
-                    <% } %>
-                </ul>
-                
-                <div>
-                    <style>
-                        body {
-                            font-family: 'Arial', sans-serif;
-                        }
-                
-                        #couponSidebar {
-                            position: fixed;
-                            top: 50%;
-                            right: -300px; /* Initially hide the sidebar off-screen */
-                            transform: translateY(-50%);
-                            width: 300px;
-                            background-color: #051922; /* Dark background for sidebar */
-                            color: white;
-                            border-radius: 8px;
-                            /* box-shadow: -2px 0px 5px rgba(59, 59, 59, 0.3); */
-                            padding: 20px;
-                            z-index: 1050;
-                            transition: right 0.3s ease; /* Smooth transition when sliding */
-                        }
-                
-                        #couponSidebar.show {
-                            right: 0; /* When sidebar is toggled, move it into view */
-                        }
-                
-                        #couponSidebar h5 {
-                            font-size: 20px;
-                            margin-bottom: 20px;
-                        }
-                
-                        .coupon-item {
-                            background-color: #ffffff; /* Slightly lighter background for coupons */
-                            padding: 10px;
-                            border-radius: 8px;
-                            margin-bottom: 15px;
-                            transition: transform 0.3s;
-                        }
-                
-                        .coupon-item:hover {
-                            transform: scale(1.05);
-                        }
-                
-                        .coupon-code {
-                            font-size: 16px;
-                            font-weight: 700;
-                            color: #F28123; /* Yellow color for the coupon code */
-                        }
-                
-                        .coupon-item p {
-                            font-size: 14px;
-                            margin: 5px 0;
-                        }
-                
-                        .btn-apply {
-                            width: 100%;
-                            background-color: #F28123;
-                            color: rgb(255, 255, 255);
-                            border: none;
-                            padding: 8px;
-                            border-radius: 5px;
-                            font-weight: bold;
-                        }
-                
-                        .btn-apply:hover {
-                            background-color: #ffffff;
-                            border-color: #F28123;
-                        }
-                
-                        /* Button to toggle the sidebar */
-                        .toggle-sidebar-btn {
-                            position: fixed;
-                            top: 50%;
-                            right: 20px;
-                            z-index: 1060;
-                            background-color: #f8ecc3;
-                            color: white;
-                            border: none;
-                            padding: 6px;
-                             border-radius: 50%;
-                            font-size: 18px;
-                            cursor: pointer;
-                            box-shadow: 0 2px 5px rgba(195, 195, 195, 0.2);
-                        }
-                
-                        .toggle-sidebar-btn:hover {
-                            background-color: #ffffff;
-                        }
-                    </style>
-                     <button class="toggle-sidebar-btn" id="toggleSidebarBtn" style="border: none; ">
-                        <span id="sidebarIcon"><img style="width: 35px ;" src="/img/ticket.png" alt="Ticket Icon" id="iconImage"></span>
-<!-- You can change this to any icon you like -->
-                    </button>
-                
-                    <!-- Sidebar displaying Coupons -->
-                    <div id="couponSidebar">
-                        <h5 class="text-center">Available Coupons</h5>
-                
-                        <!-- Coupon 1 -->
-                         <%coupon.forEach((item)=>{%>
-                            <div class="coupon-item" style="display: flex;flex-direction: column; justify-content: center; align-items: center;">
-                                <h6 class="coupon-code text-center"><%=item.code%></h6>
-                                <p class="text-center"><%=item.Description%></p>
-                                
-                                <p>For Minimum purchase <%=item.minCartValue%>₹</p>
-                                <!-- <button class="btn btn-apply">Apply</button> -->
-                            </div>
-                            <%})%>
-                       
-                
-                        <!-- Coupon 2 -->
-                       
-                    </div>
-                
-                    <!-- Bootstrap 5 JS and dependencies -->
-                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-                
-                    <script>
-                        // JavaScript to toggle sidebar visibility
-                        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-                        const couponSidebar = document.getElementById('couponSidebar');
-                        const sidebarIcon = document.getElementById('sidebarIcon');
-                
-                        toggleSidebarBtn.addEventListener('click', function() {
-                            couponSidebar.classList.toggle('show'); // Toggle the sidebar visibility
-                            if (couponSidebar.classList.contains('show')) {
-                                sidebarIcon.src = '/img/ticket.png'; // Change the icon to '×' when the sidebar is open
-                            } else {
-                                sidebarIcon.src = '/img/ticket.png'; // Change the icon back to '☰' when the sidebar is closed
-                            }
-                        });
-                    </script>
+            <!-- ── Search Overlay ── -->
+            <div class="fk-search-overlay" id="fkSearchOverlay">
+                <div class="fk-search-box">
+                    <i class="fas fa-search" style="color:#F28123;font-size:18px;"></i>
+                    <input type="text" id="fkSearchInput" placeholder="Search for fruits, categories…">
+                    <button
+                        onclick="window.location='/shop?search='+document.getElementById('fkSearchInput').value">Search</button>
                 </div>
-                
-                
-                    
-                  
-                    
-                </nav>
-        </div>
-        
-    </div>
-</div>
+                <button class="fk-search-close" id="fkSearchClose"><i class="fas fa-times"></i></button>
+            </div>
 
+            <script>
+                (function () {
+                    const couponToggle = document.getElementById('fkCouponToggle');
+                    const couponDrawer = document.getElementById('fkCouponDrawer');
+                    const couponClose = document.getElementById('fkCouponClose');
+                    const searchBtn = document.getElementById('fkSearchBtn');
+                    const searchOverlay = document.getElementById('fkSearchOverlay');
+                    const searchClose = document.getElementById('fkSearchClose');
+                    const searchInput = document.getElementById('fkSearchInput');
 
+                    if (couponToggle && couponDrawer) {
+                        couponToggle.addEventListener('click', () => couponDrawer.classList.toggle('open'));
+                        couponClose && couponClose.addEventListener('click', () => couponDrawer.classList.remove('open'));
+                    }
+                    if (searchBtn && searchOverlay) {
+                        searchBtn.addEventListener('click', () => { searchOverlay.classList.add('open'); searchInput && searchInput.focus(); });
+                        searchClose && searchClose.addEventListener('click', () => searchOverlay.classList.remove('open'));
+                        searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('open'); });
+                        searchInput && searchInput.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') window.location = '/shop?search=' + encodeURIComponent(searchInput.value);
+                            if (e.key === 'Escape') searchOverlay.classList.remove('open');
+                        });
+                    }
+                })();
+            </script>

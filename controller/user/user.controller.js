@@ -286,36 +286,49 @@ const shop = async (req, res) => {
   }
 
   try {
-    const Category = req.query.category;
-    const categoru = await category.findById(Category);
-    // const cattt=req.query.Category
-    // console.log(Category,'Category')
+    const Category = req.query.category || "";
+    const searchQuery = req.query.search ? req.query.search.trim() : "";
+    const priceRange = req.query.priceRange || "";
+    const sortOrder = req.query.sortOrder || "";
     const page = parseInt(req.query.page) || 1;
     const limit = 6;
     const skip = (page - 1) * limit;
     let message = "";
+
     const listedCategory = await category.find({ isList: true });
-    const listedCategoryNames = listedCategory.map((cat) => cat._id);
+    const listedCategoryIds = listedCategory.map((cat) => cat._id);
 
     let query = { isList: true };
+
+    // Category filter — use ObjectId
     if (Category) {
       query.Category = Category;
     } else {
-      query.Category = { $in: listedCategoryNames };
+      query.Category = { $in: listedCategoryIds };
     }
 
-    //   const current=new Date()
-    //   const activeOffers = await OFFER.find({
-    //     status: 'Active',
-    //     CreatedAt: { $lte: current },
-    //     expiredAt: { $gte: current }
-    // }).select('_id');
-    // // const offerIds = activeOffers.map(offer => offer._id);
-    // if (listedCategoryNames.length > 0) {
-    //   query.Category = { $in: listedCategoryNames };
-    //   console.log(query.Category ,';;;;')
-    // }
-    const products = await PRODUCT.find(query).skip(skip).limit(limit);
+    // Search by product title only
+    if (searchQuery) {
+      query.productTitle = { $regex: searchQuery, $options: "i" };
+    }
+
+    // Price range filter
+    if (priceRange) {
+      const Price = Number(priceRange);
+      if (!isNaN(Price)) query.RegulerPrice = { $lte: Price };
+    }
+
+    let sortCriteria = {};
+    switch (sortOrder) {
+      case "LOW": sortCriteria.RegulerPrice = 1; break;
+      case "HIGH": sortCriteria.RegulerPrice = -1; break;
+      case "NEWEST": sortCriteria.createdAt = -1; break;
+      case "A_TO_Z": sortCriteria.productTitle = 1; break;
+      case "Z_TO_A": sortCriteria.productTitle = -1; break;
+      default: break;
+    }
+
+    const products = await PRODUCT.find(query).sort(sortCriteria).skip(skip).limit(limit);
 
     if (products.length === 0) {
       message = message || httpResponse.NO_PRODUCTS_FOUND;
@@ -325,8 +338,9 @@ const shop = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     if (page > totalPages && totalProducts > 0) {
-      return res.redirect(`/user/shop?page=${totalPages}`);
+      return res.redirect(`/shop?page=${totalPages}`);
     }
+
     const userId = req.session.user;
     const wishlist = await wishList.findOne({ UserId: userId });
     let size;
@@ -347,6 +361,9 @@ const shop = async (req, res) => {
     const data = await category.find({ isList: true });
     const coupon = await COUPON.find({ status: COUPON_STATUS.ACTIVE });
 
+    // Resolve the selected Category object for breadcrumb/active state
+    const categoru = Category ? await category.findById(Category).catch(() => null) : null;
+
     res.render("user/shop", {
       products,
       user: req.session.user,
@@ -358,7 +375,6 @@ const shop = async (req, res) => {
       Category: categoru,
       data,
       coupon,
-
       size,
       carSize,
     });
@@ -374,8 +390,9 @@ const shop = async (req, res) => {
 
 // ** SEARCH - SEARCH - SEARCH - SEARCH
 const search = async (req, res) => {
-  const searchQuery = req.query.search ? req.query.search.toLowerCase() : "";
-  const selectedCategories = req.query.selectedCategories || "";
+  const searchQuery = req.query.search ? req.query.search.trim() : "";
+  // selectedCategories is now a single category ObjectId from the filter panel
+  const selectedCategory = req.query.category || "";
   const priceRange = req.query.priceRange || "";
   const sortOrder = req.query.sortOrder || "";
   const page = parseInt(req.query.page) || 1;
@@ -386,48 +403,35 @@ const search = async (req, res) => {
   let query = { isList: true };
 
   try {
-    const cat = await category.find({ isList: true });
-    const listedCategoryNames = cat.map((cat) => cat.category);
+    const listedCategories = await category.find({ isList: true });
+    const listedCategoryIds = listedCategories.map((cat) => cat._id);
 
+    // Search ONLY by product title
     if (searchQuery) {
-      let regex = new RegExp(`^${searchQuery}`, "i");
-      if (
-        listedCategoryNames.some((category) =>
-          new RegExp(`^${searchQuery}$`, "i").test(category),
-        )
-      ) {
-        query.Category = { $regex: searchQuery, $options: "i" };
-      } else {
-        query = {
-          isList: true,
-          $or: [
-            { productTitle: { $regex: searchQuery, $options: "i" } },
-            { Category: { $regex: searchQuery, $options: "i" } },
-            { Brand: { $regex: searchQuery, $options: "i" } },
-          ],
-        };
-      }
+      query.productTitle = { $regex: searchQuery, $options: "i" };
+      // Still restrict to listed categories
+      query.Category = { $in: listedCategoryIds };
     } else {
-      query.Category = { $in: listedCategoryNames };
+      query.Category = { $in: listedCategoryIds };
     }
 
-    if (selectedCategories) {
-      const selectedCategoryArray = selectedCategories.split(",");
-      query.Category = { $in: selectedCategoryArray };
+    // Category filter — uses ObjectId directly
+    if (selectedCategory) {
+      query.Category = selectedCategory; // ObjectId string, mongoose coerces it
     }
-    const number = Number(priceRange);
+
     if (priceRange) {
-      const Price = number;
-      console.log(Price);
-
-      query.Price = { $lte: Price };
+      const Price = Number(priceRange);
+      if (!isNaN(Price)) {
+        query.RegulerPrice = { $lte: Price };
+      }
     }
 
     let sortCriteria = {};
-
     switch (sortOrder) {
       case "LOW":
         sortCriteria.RegulerPrice = 1;
+        break;
       case "HIGH":
         sortCriteria.RegulerPrice = -1;
         break;
@@ -440,11 +444,8 @@ const search = async (req, res) => {
       case "Z_TO_A":
         sortCriteria.productTitle = -1;
         break;
-      // case 'POPULARITY':
-      //   sortCriteria.popularity = -1
-      //   break
       default:
-        console.log("Invalid sort order");
+        break;
     }
 
     const products = await PRODUCT.find(query)
@@ -452,15 +453,10 @@ const search = async (req, res) => {
       .skip(skip)
       .limit(limit);
     const totalProducts = await PRODUCT.countDocuments(query);
-
     const totalPages = Math.ceil(totalProducts / limit);
 
     if (page > totalPages && totalProducts > 0) {
-      return res.redirect(`/user/shop?page=${totalPages}`);
-    }
-
-    if (products.length === 0) {
-      message = message || httpResponse.NO_PRODUCTS_FOUND;
+      return res.redirect(`/shop?page=${totalPages}`);
     }
 
     if (!products || products.length === 0) {

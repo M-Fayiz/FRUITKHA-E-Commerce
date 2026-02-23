@@ -1,356 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - Fruitkha</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>My Addresses — Fruitkha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .btn-orange {
-            background-color: #ff6600;
-            color: white;
-        }
-        .btn-orange:hover {
-            background-color: #e55b00;
-        }
-    </style>
-    <style>
-        :root {
-            --primary-color: #F28123;
-            --sidebar-width: 280px;
-            --sidebar-bg: #fff;
-            --sidebar-hover: #f8f9fa;
-            --sidebar-active: #e8f0fe;
-            --sidebar-text: #333;
-        }
-        
-        body {
-            font-size: 16px;
-        }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--sidebar-bg);
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-        }
-        
-        .main-content {
-            margin-left: 30px;
-            padding: 40px;
-            background-color: #f8f9fa;
-         
-            min-height: calc(100vh - 80px);
-            transition: all 0.3s;
-        }
-        
-        .nav-link {
-            color: var(--sidebar-text);
-            padding: 16px 25px;
-            margin: 6px 0;
-            transition: all 0.3s;
-            border-radius: 0;
-            font-size: 16px;
-        }
-        
-        .nav-link:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-color);
-        }
-        
-        .nav-link.active {
-            background-color: var(--sidebar-active);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .nav-link i {
-            width: 24px;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-        
-        .content-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-        }
-        
-        .content-card h5 {
-            font-size: 22px;
-            margin-bottom: 25px;
-            color: #333;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .btn-primary:hover {
-            background-color: #d97320;
-            border-color: #d97320;
-        }
-        
-        .form-label {
-            font-size: 16px;
-            color: #444;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            padding: 12px 18px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(242, 129, 35, 0.25);
-        }
-        
-        .text-danger {
-            color: #dc3545 !important;
-        }
-        
-        .forgot-password {
-            color: var(--primary-color);
-            font-size: 15px;
-            text-decoration: none;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .navbar {
-            padding: 15px 0;
-        }
-        
-        .navbar-brand img {
-            height: 50px;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                min-height: auto;
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            .content-card {
-                padding: 25px;
-            }
-        }
-        #place {
-    white-space: normal; /* Allows text wrapping */
-    overflow-y: auto;   /* Enables scrolling if content overflows */
-    max-height: 200px;  /* Limits the height of the dropdown */
-}
-
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/user-theme.css">
     <link rel="stylesheet" href="/SHOW.css">
-    
+    <% const currentPath='address' ; %>
+        <link rel="stylesheet" href="/css/pages/address.css">
 </head>
+
 <body>
-    
-    <%-include('../partials/profile_NAV.ejs')%>
-    <div class="d-flex">
-    <%-include('../partials/profileSIDEBAR.ejs')%>
-    <%-include('../partials/block.ejs')%>
+    <header class="profile-topbar">
+        <a href="/"><img src="/img/logo.png" alt="Fruitkha" class="brand-logo"></a>
+        <button class="topbar-toggle d-md-none" id="sidebarToggleBtn"><i class="fas fa-bars"></i></button>
+    </header>
 
-    <div class="container my-5">
-      
-      <h2 class="text-center mb-4">Manage Addresses</h2>
+    <div class="profile-layout">
+        <%- include('../partials/profileSIDEBAR.ejs') %>
+            <%- include('../partials/block.ejs') %>
 
-      <!-- Add Address Button -->
-      <div class="text-end mb-3 " style="padding-right: 70px;" >
-          <button class="btn btn-orange btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-              <i class="bi bi-plus"></i> Add Address
-          </button>
-      </div>
+                <main class="page-content">
+                    <div class="content-card">
+                        <div class="page-header">
+                            <div class="page-header-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <h5 class="ph-title">My Addresses</h5>
+                                <span class="ph-sub">Manage your delivery addresses</span>
+                            </div>
+                            <button class="btn-orange ms-auto" style="font-size:13px;padding:8px 18px;"
+                                data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <i class="fas fa-plus me-1"></i> Add Address
+                            </button>
+                        </div>
 
-      <!-- Addresses List -->
-      <div id="addresses"  style="display: flex;flex-basis: 400px; gap: 20px;">
-          <!-- Example Address -->
-           <% addres.forEach(item=>{ %> 
-          <div class="card mb-3 " style="padding: 7px;">
-              <div class="card-body">
-                  <h5 class="card-title"><%=item.Address_name %></h5>
-                  <div style="display: flex; gap: 8px;">
-                  <p><span style="color: #5a5a5a;">Name :</span><%=item.Name%></p>
-                  <p><span style="color: #5a5a5a;">State :</span><%=item.State %></p>
-                  <p><span style="color: #5a5a5a;">City :</span><%= item.District %></p>
-                  </div>
-                  <div>
-                  <p><span style="color: #5a5a5a;">Place :</span><%=item.place%></p>
-                  <p><span style="color: #5a5a5a;">Pin code:</span><%=item.PIN %></p>
-                 
-                  </div>
-                  <p ><span style="color: #5a5a5a;">Landmark :</span><%=item.mark%></p>
-                 
-                  <div class="text-end">
-                    <button type="button" class="btn btn-primary" style="padding: 5px;" data-bs-toggle="modal" data-bs-target="#editAddressModal" onclick="editAddress('<%=item.Address_name %>','<%=item.Name%>','<%=item.State %>','<%= item.District %>','<%=item.place%>','<%=item.PIN %>','<%=item.mark%>','<%=item.id%>')">
-                        Edit Address
-                      </button>
-                      
-                      <!-- <button class="btn btn-sm btn-outline-primary me-2" onclick="editAddress()">Edit</button> -->
-                      <button class="btn btn-sm btn-outline-danger" onclick="deleteAddress('<%=item.id%>')">Delete</button>
-                  </div>
-              </div>
-          </div>
-          <%})%>
+                        <% if (!addres || addres.length===0) { %>
+                            <div class="empty-address">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p style="color:var(--fr-muted);">No addresses saved yet.</p>
+                                <button class="btn-orange mt-2" data-bs-toggle="modal"
+                                    data-bs-target="#addAddressModal">
+                                    <i class="fas fa-plus me-1"></i> Add Your First Address
+                                </button>
+                            </div>
+                            <% } else { %>
+                                <div class="row g-4">
+                                    <% addres.forEach(item=>{ %>
+                                        <div class="col-md-6">
+                                            <div class="address-card">
+                                                <span class="address-type-badge"><i class="fas fa-tag me-1"></i>
+                                                    <%= item.Address_name %>
+                                                </span>
+                                                <div class="addr-name">
+                                                    <%= item.Name %>
+                                                </div>
+                                                <div class="addr-line"><i class="fas fa-city"></i>
+                                                    <%= item.District %>, <%= item.State %>
+                                                </div>
+                                                <div class="addr-line"><i class="fas fa-location-arrow"></i>
+                                                    <%= item.place %>
+                                                </div>
+                                                <div class="addr-line"><i class="fas fa-mail-bulk"></i>PIN: <%= item.PIN
+                                                        %>
+                                                </div>
+                                                <div class="addr-line"><i class="fas fa-map-pin"></i>Landmark: <%=
+                                                        item.mark %>
+                                                </div>
+                                                <div class="address-actions">
+                                                    <button class="btn-orange" style="font-size:12px;padding:7px 14px;"
+                                                        data-bs-toggle="modal" data-bs-target="#editAddressModal"
+                                                        onclick="editAddress('<%= item.Address_name %>','<%= item.Name %>','<%= item.State %>','<%= item.District %>','<%= item.place %>','<%= item.PIN %>','<%= item.mark %>','<%= item.id %>')">
+                                                        <i class="fas fa-pencil-alt me-1"></i> Edit
+                                                    </button>
+                                                    <button class="btn-outline-orange"
+                                                        style="font-size:12px;padding:7px 14px;border-radius:8px;border:2px solid var(--fr-orange);color:var(--fr-orange);background:transparent;cursor:pointer;transition:all .25s;"
+                                                        onclick="deleteAddress('<%= item.id %>')"
+                                                        onmouseover="this.style.background='var(--fr-orange)';this.style.color='#fff'"
+                                                        onmouseout="this.style.background='transparent';this.style.color='var(--fr-orange)'">
+                                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% } %>
+                    </div>
+                </main>
+    </div>
 
-          <!-- <div class="card mb-3">
-              <div class="card-body">
-                  <h5 class="card-title">Office Address</h5>
-                  <p class="card-text">
-                      456 Elm Street, Suite 300, Business City, State 12345
-                  </p>
-                  <div class="text-end">
-                      <button class="btn btn-sm btn-outline-primary me-2" onclick="editAddress()">Edit</button>
-                      <button class="btn btn-sm btn-outline-danger" onclick="deleteAddress()">Delete</button>
-                  </div>
-              </div>
-          </div> -->
-      </div>
-  </div>
-</div>
-
-<!-- modal -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="address-form">
-                    <div class="mb-3">
-                        <label for="addressName" class="form-label">Address Name</label>
-                        <input type="text" class="form-control" id="addressName" placeholder="Home or Office">
-                     </div >
-                    <div class="mb-3">
-                        <label for="Name" class="form-label">Name of  Customer</label>
-                        <input type="text" class="form-control" id="NAME" placeholder="You Name">
-                     </div >
-                    <div style="display: flex; justify-content: space-between;">
-                    <div class="mb-3">
-                        <label for="pincode" class="form-label">Pincode</label>
-                        <input type="text" class="form-control" id="pincode" placeholder="Enter Pincode">
-                    </div>
-                    <div class="mb-3">
-                        <label for="streetName" class="form-label">Place</label>
-                        <select name="" id="place" class="form-control">
-                           
-                            <option   value="">Select Place</option>
-                            
-                        </select>
-                    </div>
-                  </div>
-                    <div class="mb-3">
-                        <label for="landmark" class="form-label">Landmark</label>
-                        <input type="text" class="form-control" id="landmark" placeholder="Enter Landmark">
-                    </div>
-                 <div class="d-flex " style=" display: flex; gap: 10px;">
-                    <div class="mb-3">
-                        <label for="city" class="form-label">District</label>
-                        <input type="text" class="form-control" id="city" placeholder="Enter City">
-                    </div>
-                    <div class="mb-3">
-                        <label for="state" class="form-label">State</label>
-                        <input type="text" class="form-control" id="state" placeholder="Enter State">
-                        <input type="text" name="" id="user" value="<%=user%>" hidden>
-                    </div>
-                    <div id="validationResult" class="mt-4"></div>
-                 </div> 
-                    <button type="submit" class="btn btn-success">Save</button>
-                </form>
+    <!-- Add Address Modal -->
+    <div class="modal fade" id="addAddressModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:var(--fr-radius);border:none;">
+                <div class="modal-header"
+                    style="background:var(--fr-orange-light);border-bottom:1px solid var(--fr-border);">
+                    <h5 class="modal-title" style="color:var(--fr-orange);font-weight:700;"><i
+                            class="fas fa-plus me-2"></i>Add Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="address-form">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Address Name</label>
+                                <input type="text" class="form-control" id="addressName"
+                                    placeholder="e.g. Home, Office">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="NAME" placeholder="Recipient name">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Pincode</label>
+                                <input type="text" class="form-control" id="pincode" placeholder="Enter pincode">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Place</label>
+                                <select id="place" class="form-control">
+                                    <option value="">Select Place</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Landmark</label>
+                                <input type="text" class="form-control" id="landmark" placeholder="Nearby landmark">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control" id="city" placeholder="District">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" id="state" placeholder="State">
+                                <input type="hidden" id="user" value="<%= user %>">
+                            </div>
+                            <div id="validationResult" class="col-12"></div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn-orange" style="border:none;"><i
+                                    class="fas fa-save me-1"></i>Save Address</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- hello -->
-<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    <!-- Edit Address Modal -->
+    <div class="modal fade" id="editAddressModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:var(--fr-radius);border:none;">
+                <div class="modal-header"
+                    style="background:var(--fr-orange-light);border-bottom:1px solid var(--fr-border);">
+                    <h5 class="modal-title" style="color:var(--fr-orange);font-weight:700;"><i
+                            class="fas fa-pencil-alt me-2"></i>Edit Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-address-form">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Address Name</label>
+                                <input type="text" class="form-control" id="editAddressName"
+                                    placeholder="Home or Office" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="editCustomerName"
+                                    placeholder="Recipient name" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Pincode</label>
+                                <input type="text" class="form-control" id="editPincode" placeholder="Pincode" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Place</label>
+                                <input type="text" class="form-control" id="editPlace" placeholder="Place">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Landmark</label>
+                                <input type="text" class="form-control" id="editLandmark" placeholder="Landmark"
+                                    required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control" id="editCity" placeholder="District" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" id="editState" placeholder="State" required>
+                            </div>
+                            <div id="Result" class="col-12"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                        style="border-radius:8px;">Cancel</button>
+                    <button type="submit" form="edit-address-form" class="btn-orange" style="border:none;"><i
+                            class="fas fa-save me-1"></i>Save Changes</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <form id="edit-address-form">
-            <div class="mb-3">
-              <label for="editAddressName" class="form-label">Address Name</label>
-              <input type="text" class="form-control" id="editAddressName" placeholder="Home or Office" required>
-            </div>
-            <div class="mb-3">
-              <label for="editCustomerName" class="form-label">Name of Customer</label>
-              <input type="text" class="form-control" id="editCustomerName" placeholder="Your Name" required>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="editPincode" class="form-label">Pincode</label>
-                <input type="text" class="form-control" id="editPincode" placeholder="Enter Pincode" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="editPlace" class="form-label">Place</label>
-                <input type="text" id="editPlace" class="form-select" >
-                
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="editLandmark" class="form-label">Landmark</label>
-              <input type="text" class="form-control" id="editLandmark" placeholder="Enter Landmark" required>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="editCity" class="form-label">District</label>
-                <input type="text" class="form-control" id="editCity" placeholder="Enter City" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="editState" class="form-label">State</label>
-                <input type="text" class="form-control" id="editState" placeholder="Enter State" required>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div id="Result" class="mt-4"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" form="edit-address-form" class="btn btn-success">Save Changes</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!--  -->
-<script src="/TOAST.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/js/addressEjs.js"></script>
-
-  
+    <script src="/TOAST.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/addressEjs.js"></script>
+    <script>
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const userSidebar = document.getElementById('userSidebar');
+        if (sidebarToggleBtn && userSidebar)
+            sidebarToggleBtn.addEventListener('click', () => userSidebar.classList.toggle('collapsed'));
+    </script>
 </body>
+
 </html>
-
-

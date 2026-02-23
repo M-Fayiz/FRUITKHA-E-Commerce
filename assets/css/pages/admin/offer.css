@@ -1,0 +1,49 @@
+:root {
+    --primary-green: #3BB77E;
+    --light-green: #DEF9EC;
+    --danger-red: #FFE1E1;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-primary:hover {
+    background-color: #2a9d64;
+    border-color: #2a9d64;
+}
+
+.btn-danger {
+    background-color: #FF5B5B;
+    border-color: #FF5B5B;
+}
+
+.btn-danger:hover {
+    background-color: #e24444;
+    border-color: #e24444;
+}
+
+.offer-badge {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.table {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+.table td,
+.table th {
+    border-color: #eee;
+}

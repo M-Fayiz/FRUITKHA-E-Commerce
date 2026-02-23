@@ -1,354 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Order List</title>
- 
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
-    }
-    .page-container {
-      display: flex;
-      max-width: 800px;
-      margin: 30px auto;
-      gap: 20px;
-    }
-    .sidebar-container {
-      flex: 0 0 250px; /* Set sidebar width */
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      height: fit-content; /* Ensure it wraps the content */
-    }
-    .order-list-container {
-      flex-grow: 1;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-    }
-    .order-header {
-      font-weight: bold;
-      font-size: 20px;
-      color: #f37421;
-    }
-    .order-item {
-      border: 1px solid #bbc5d0;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    .order-item .product {
-      display: flex;
-      align-items: center;
-    }
-    .product img {
-      max-width: 80px;
-      border-radius: 8px;
-      margin-right: 15px;
-    }
-    .product-details {
-      flex-grow: 1;
-    }
-    .product-details p {
-      margin: 0;
-    }
-    .pending {
-  color: orange;
- /* color: lightyellow; */
-}
-
-.shipped {
-  color: blue;
-  /* color: lightblue; */
-}
-
-.on-delivery {
-  color: green;
-  /* color: lightgreen; */
-}
-
-.delivered {
-  color: darkgreen;
-  /* color: lightseagreen; */
-}
-
-.cancelled {
-  /* color: white; */
- color: red;
-}
-
-.return {
-  color: darkorange;
-  /* background-color: lightcoral; */
-}
-/* Custom Styling (Optional) */
-.modal-content {
-    border-radius: 8px;
-}
-
-textarea {
-    resize: none;
-}
-
-button {
-    border-radius: 5px;
-}
-
-
-  </style>
-  <style>
-		/* Basic button styling for pagination links */
-		.pagination-wrap ul {
-		  display: inline-block;
-		  padding: 0;
-		  margin: 0;
-		}
-		
-		.pagination-wrap ul li {
-		  display: inline;
-		  margin: 0 5px;
-		}
-		
-		.pagination-wrap ul li a {
-		  display: inline-block;
-		  padding: 8px 12px;
-		  font-size: 14px;
-		  color: #333;
-		  border: 1px solid #ccc;
-		  border-radius: 20px;
-		  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-		}
-		
-		/* Highlight the active page */
-		.pagination-wrap ul li a.bg-emerald-500 {
-		  background-color: #f28123; /* Emerald */
-		  color: #fff;
-		}
-		
-		/* Hover state for pagination buttons */
-		.pagination-wrap ul li a:hover {
-		  background-color: #f28123; /* Hover effect color */
-		  color: #fff;
-		  border-color: #f28123;
-		  transform: scale(1.05);
-		}
-		
-		/* Additional hover effect to change other buttons */
-		.pagination-wrap ul li a:hover ~ li a {
-		  background-color: #d1fae5; /* Light emerald shade for inactive buttons */
-		  color: #f28123;
-		}
-    a{
-      text-decoration: none;
-    }
-		</style>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <title>My Orders — Fruitkha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="/user-theme.css">
   <link rel="stylesheet" href="/SHOW.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <% const currentPath='orderList' ; %>
+    <link rel="stylesheet" href="/css/pages/order-list.css">
+
 </head>
+
 <body>
-  <!-- Header -->
-  <%- include('../partials/profile_NAV.ejs') %>
-  
-    <!-- Sidebar -->
- <%-include('../partials/block.ejs')%>
-    <div style="display: flex;">
-      <%- include('../partials/profileSIDEBAR.ejs') %>
-      <div class="page-container"></div>
-  <% if(typeof info !=='undefined'){%>
-    <h5><%=info%></h5>
-  <% }else {%>
-    
-    <!-- Order List -->
-    <div class="order-list-container">
-      <h2 class="text-center mb-4">Your Orders</h2>
-      <%orders.sort((a,b)=>b.createdAt-a.createdAt)%>
-    <% orders.forEach(order => { %>
-      <!-- Order Card -->
-      <div class="order-item" style="line-height: 12px;">
-        
-       <div style="display: flex;justify-content: space-between;">
-        <h4 class="order-header">Order ID: <%= order._id %></h4>
-        <p>Order Date: <%= new Date(order.createdAt).toLocaleString('en-US', {
-            weekday: 'short', 
-            month: 'short',    
-            day: '2-digit',    
-            year: 'numeric',   
-            hour: 'numeric',   
-            minute: '2-digit', 
-            hour12: true      
-          }) %></p>
-        </div> 
-        <div style="display: flex;gap: 25px;" > 
-         <p> <b>Total Amount: </b> ₹<%= order.Final_Amount %></p><span>|</span>
-         <p> <b>Payment: </b> <%= order.payment %></p><span>|</span>
-         <p><strong> paymentStatus: </strong> <%= order.paymentStatus %></p><span>|</span>
-         <p class="orderStatus "class="<%= 
-         order.orderStatus === 'Pending' ? 'pending' : 
-         order.orderStatus === 'Shipped' ? 'shipped' : 
-         order.orderStatus === 'On Delivery' ? 'on-delivery' : 
-         order.orderStatus === 'Delivered' ? 'delivered' : 
-         order.orderStatus === 'Cancelled' ? 'cancelled' : 
-         order.orderStatus === 'Return' ? 'return' : '' 
-         %>" ><b>Status: </b> <%= order.orderStatus %></p>
-        
-        </div>
-         <div style="display: flex;justify-content: space-between;">
-          
-              <% if(order.orderStatus !== 'Cancelled' && order.orderStatus !== 'Delivered' && order.orderStatus!=='Returned') { %>
-                <button type="button" data-id="<%= order._id %>" onclick="cancel(this)" class="btn btn-outline-danger btn-sm mt-3">Cancel</button>
-            <% } else if (order.orderStatus === 'Shipped') { %>
-                <button type="button" data-id="<%= order._id %>" onclick="cancelRequst('<%= order._id %>')" class="btn btn-outline-danger">Request for Cancel</button>
-            <% } else if (order.orderStatus === 'Delivered') { %>
-                <% if (order.Return.req === false) { %>
-                    <!-- Show Return button if no return request -->
-                    <button type="button" data-id="<%= order._id %>" onclick="orderReturn(this)" class="btn btn-outline-danger btn-sm">Return</button>
-                <% } else if (order.Return.req === true) { %>
-                    <!-- Show message or Request for Return button if return is already requested -->
-                    <button type="button" class="btn btn-outline-danger btn-sm" disabled>Requested for Return</button>
-                <% }else if(order.orderStatus==='Returned'){%>
-                    <p></p>
-                <%} %>
-                <% if(order.payment==='razorpay'&&order.paymentStatus==='Pending'){%> 
-                  <p style="color: rgb(255, 187, 0);">please Complete Your Payment</p>
-                <%}%>
-            <% } %>
-            
-        
-          <div class="text-end">
-            <a href="/orderDetails/<%=order.id%>" class="btn btn-outline-secondary btn-sm">View Details</a>
-            
+  <header class="profile-topbar">
+    <a href="/"><img src="/img/logo.png" alt="Fruitkha" class="brand-logo"></a>
+    <button class="topbar-toggle d-md-none" id="sidebarToggleBtn"><i class="fas fa-bars"></i></button>
+  </header>
+
+  <div class="profile-layout">
+    <%- include('../partials/profileSIDEBAR.ejs') %>
+      <%- include('../partials/block.ejs') %>
+
+        <main class="page-content">
+          <div class="content-card">
+            <div class="page-header">
+              <div class="page-header-icon"><i class="fas fa-shopping-bag"></i></div>
+              <div>
+                <h5 class="ph-title">My Orders</h5>
+                <span class="ph-sub">Track and manage your purchases</span>
+              </div>
+            </div>
+
+            <% if (typeof info !=='undefined' ) { %>
+              <div class="text-center py-5">
+                <i class="fas fa-box-open fa-3x mb-3" style="color:var(--fr-border)"></i>
+                <p style="color:var(--fr-muted)">
+                  <%= info %>
+                </p>
+                <a href="/shop" class="btn-orange mt-2"><i class="fas fa-store me-2"></i>Shop Now</a>
+              </div>
+              <% } else { %>
+                <% orders.sort((a,b)=>b.createdAt-a.createdAt) %>
+                  <% orders.forEach(order=> { %>
+                    <div class="order-card">
+                      <!-- Header row -->
+                      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                        <div>
+                          <div class="order-id"><i class="fas fa-hashtag me-1"></i>
+                            <%= order._id %>
+                          </div>
+                          <div class="order-date mt-1">
+                            <i class="far fa-clock me-1"></i>
+                            <%= new Date(order.createdAt).toLocaleString('en-IN',
+                              {weekday:'short',month:'short',day:'2-digit',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})
+                              %>
+                          </div>
+                        </div>
+                        <span class="status-pill <%=
+                order.orderStatus==='Pending'     ? 's-pending'    :
+                order.orderStatus==='Shipped'     ? 's-shipped'    :
+                order.orderStatus==='On Delivery' ? 's-ondelivery' :
+                order.orderStatus==='Delivered'   ? 's-delivered'  :
+                order.orderStatus==='Cancelled'   ? 's-cancelled'  :
+                order.orderStatus==='Return'      ? 's-return'     : ''
+              %>">
+                          <%= order.orderStatus %>
+                        </span>
+                      </div>
+
+                      <!-- Meta row -->
+                      <div class="order-meta">
+                        <div class="order-meta-item"><b>Total:</b> ₹<%= order.Final_Amount %>
+                        </div>
+                        <div class="order-meta-item"><b>Payment:</b>
+                          <%= order.payment %>
+                        </div>
+                        <div class="order-meta-item"><b>Payment Status:</b>
+                          <%= order.paymentStatus %>
+                        </div>
+                      </div>
+
+                      <% if (order.payment==='razorpay' && order.paymentStatus==='Pending' ) { %>
+                        <div class="mb-2"><span class="payment-warn"><i
+                              class="fas fa-exclamation-triangle me-1"></i>Please complete your payment</span></div>
+                        <% } %>
+
+                          <!-- Actions row -->
+                          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
+                            <div class="d-flex gap-2 flex-wrap">
+                              <% if (order.orderStatus !=='Cancelled' && order.orderStatus !=='Delivered' &&
+                                order.orderStatus !=='Returned' ) { %>
+                                <button type="button" data-id="<%= order._id %>" onclick="cancel(this)"
+                                  class="btn btn-sm btn-outline-danger" style="border-radius:8px;font-size:13px;">
+                                  <i class="fas fa-times me-1"></i>Cancel Order
+                                </button>
+                                <% } else if (order.orderStatus==='Delivered' ) { %>
+                                  <% if (order.Return.req===false) { %>
+                                    <button type="button" data-id="<%= order._id %>" onclick="orderReturn(this)"
+                                      class="btn btn-sm btn-outline-warning" style="border-radius:8px;font-size:13px;">
+                                      <i class="fas fa-undo me-1"></i>Return
+                                    </button>
+                                    <% } else if (order.Return.req===true) { %>
+                                      <button class="btn btn-sm btn-secondary" style="border-radius:8px;font-size:13px;"
+                                        disabled>Requested for Return</button>
+                                      <% } %>
+                                        <% } %>
+                            </div>
+                            <a href="/orderDetails/<%= order.id %>" class="btn-orange"
+                              style="font-size:13px;padding:8px 18px;">
+                              <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                          </div>
+                    </div>
+                    <% }) %>
+                      <% } %>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center gap-2 mt-4">
+                          <% if (currentPage> 1) { %>
+                            <a href="/orderList?page=<%= currentPage - 1 %>" class="pagination-btn"><i
+                                class="fas fa-chevron-left me-1"></i>Prev</a>
+                            <% } %>
+                              <% const maxButtons=3; let startPage=Math.max(1,currentPage-Math.floor(maxButtons/2)); let
+                                endPage=Math.min(totalPages,startPage+maxButtons-1);
+                                if(endPage-startPage+1<maxButtons){startPage=Math.max(1,endPage-maxButtons+1);} %>
+                                <% for(let i=startPage;i<=endPage;i++){%>
+                                  <a href="/orderList?page=<%= i %>"
+                                    class="pagination-btn <%= i===currentPage?'active':'' %>">
+                                    <%= i %>
+                                  </a>
+                                  <%}%>
+                                    <% if (currentPage < totalPages) { %>
+                                      <a href="/orderList?page=<%= currentPage + 1 %>" class="pagination-btn">Next<i
+                                          class="fas fa-chevron-right ms-1"></i></a>
+                                      <% } %>
+                        </div>
           </div>
-        </div>
-       
-  
-        
-        <!-- Product Details -->
-        
-           
-          
-            
-        
-       
-       
+        </main>
+  </div>
+
+  <!-- Return Modal -->
+  <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:var(--fr-radius); border:none;">
+        <form action="" id="return-form" enctype="multipart/form-data">
+          <div class="modal-header"
+            style="background:var(--fr-orange-light); border-bottom:1px solid var(--fr-border);">
+            <h5 class="modal-title" id="returnModalLabel" style="color:var(--fr-orange);font-weight:700;">
+              <i class="fas fa-undo me-2"></i>Return Request
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3 p-3" style="background:#f8f9fb;border-radius:8px;">
+              <h6 style="font-weight:600;color:var(--fr-text);">Return Policy</h6>
+              <p style="font-size:13px;color:var(--fr-muted);margin:0">We only accept returns for: damaged products, or
+                products with expired dates. Please provide proof.</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Upload Image of Product</label>
+              <input type="file" id="productImage" class="form-control" accept="image/png,image/jpeg,image/jpg"
+                required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Reason for Return</label>
+              <textarea id="returnReason" class="form-control" rows="3" placeholder="Describe the reason..."
+                required></textarea>
+            </div>
+            <input type="hidden" id="OrderId">
+            <input type="hidden" id="productId">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+              style="border-radius:8px;">Cancel</button>
+            <button type="submit" class="btn-orange" id="submitReturn" style="border:none;">Submit Request</button>
+          </div>
+        </form>
       </div>
-        <% }) %>
-        <%}%>
-     
     </div>
   </div>
- 
-</div>
-<div class="row" style="padding-bottom: 20px;padding-top: 20px;">
-  <div class="col-lg-12 text-center">
-    <div class="pagination-wrap">
-      
-      <ul>
-        <li style="border-radius: 20px;"><% if (currentPage > 1) { %>
-          <a href="/orderList?page=<%= currentPage - 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
-            Previous
-          </a>
-        <% } %></li>
-      
-        
-        <% 
-                  const maxButtons = 3;	
-                  let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-                  let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-  
-                
-                  if (endPage - startPage + 1 < maxButtons) {
-                      startPage = Math.max(1, endPage - maxButtons + 1);
-                  }
-              %>
-  
-        <li><% for (let i = startPage; i <= endPage; i++) { %>
-          <a href="/orderList?page=<%= i %>" class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">
-            <%= i %>
-          </a>
-        <% } %></li>
 
-        <li><% if (currentPage < totalPages) { %>
-                  <a href="/orderList?page=<%= currentPage + 1 %>" class="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-200">
-                      Next
-                  </a>
-              <% } %></li>
-        
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <form action="" id="return-form" enctype="multipart/form-data">
-              <div class="modal-header" style="background-color: #d1f2b8f1;color: #707070;">
-                  <h5 class="modal-title" id="returnModalLabel">Return Request</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <!-- Return Policy Section -->
-                  <div class="mb-3">
-                      <h6>Return Policy:</h6>
-                      <p>
-                          We only accept returns for the following reasons:
-                      </p>
-                      <ul>
-                          <li>Damaged products on delivery.</li>
-                          <li>Products dispatched accidentally with an expired date.</li>
-                      </ul>
-                      <p>Please upload a clear image of the product as proof and provide a valid reason for return.</p>
-                  </div>
-
-                  <!-- Image Upload Section -->
-                  <div class="mb-3">
-                      <label for="productImage" class="form-label">Upload Image of Product</label>
-                      <input type="file" id="productImage" class="form-control" accept="image/png, image/jpeg, image/jpg" required>
-                  </div>
-
-                  <!-- Reason Input Section -->
-                  <div class="mb-3">
-                      <label for="returnReason" class="form-label">Reason for Return</label>
-                      <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..." required></textarea>
-                  </div>
-
-                  <!-- Hidden Inputs -->
-                  <input type="text" id="OrderId" hidden>
-                  <input type="text" id="productId" hidden>
-              </div>
-
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-success" id="submitReturn">Submit</button>
-              </div>
-          </form>
-      </div>
-  </div>
-</div>
-
-<!-- Bootstrap 5.3 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Include Bootstrap JS Bundle (includes Popper.js) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="/TOAST.js"></script>
-<script src="/js/orderListEjs.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <script src="/TOAST.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/orderListEjs.js"></script>
+  <script>
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const userSidebar = document.getElementById('userSidebar');
+    if (sidebarToggleBtn && userSidebar)
+      sidebarToggleBtn.addEventListener('click', () => userSidebar.classList.toggle('collapsed'));
+  </script>
 </body>
+
 </html>

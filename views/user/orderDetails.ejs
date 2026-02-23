@@ -1,443 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Details</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
-    }
-    .details-container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .section-title {
-      font-weight: bold;
-      font-size: 18px;
-      color: #f37421;
-      margin-bottom: 10px;
-    }
-    .product {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .product img {
-      max-width: 80px;
-      border-radius: 8px;
-      margin-right: 15px;
-    }
-    .product-details p {
-      margin: 0;
-    }
-    .address, .delivery-method {
-      margin-bottom: 20px;
-    }
-    .btn-action {
-      margin-right: 10px;
-      border-radius: 20px;
-    }
-    .btn-cancel {
-      background-color: #f37421;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-    }
-    .btn-return {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-    }
-    .btn-back {
-      background-color: #f37421;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 20px;
-    }
-    th{
-        width: 150px;
-    }
-    /* Example CSS */
-.pending {
-  color: orange;
- /* color: lightyellow; */
-}
-
-.shipped {
-  color: #0088ff;
-  background-color:#cfeeff ;
-  border-radius: 20px;
-  padding: 1px 4px 1px 4px;
-  /* color: lightblue; */
-}
-
-.on-delivery {
-  color: green;
-  /* color: lightgreen; */
-}
-
-.delivered {
-  color: darkgreen;
-  /* color: lightseagreen; */
-}
-
-.cancelled {
-  /* color: white; */
- color: red;
-}
-
-.return {
-  color: darkorange;
-  /* background-color: lightcoral; */
-}
-
-  </style>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .tracking-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      margin-bottom: 30px;
-    }
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      margin: 20px 0;
-    }
-    .status-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      width: 20%;
-    }
-    .status-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: #d3d3d3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 20px;
-    }
-    .status-icon.completed {
-      background-color: #4caf50;
-    }
-    .status-icon.current {
-      background-color: #ff9800;
-    }
-    .status-label {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .status-line {
-      position: absolute;
-      top: 25px;
-      left: 12%;
-      height: 4px;
-      width: 76%;
-      background-color: #d3d3d3;
-      z-index: -1;
-    }
-    .status-line.completed {
-      background-color: #4caf50;
-    }
-   
-  </style>
+  <title>Order Details — Fruitkha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="/SHOW.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="/user-theme.css">
+  <link rel="stylesheet" href="/css/pages/order-details.css">
+
 </head>
+
 <body>
-  <!-- Order Details Container -->
 
-  <div class="details-container">
-    <h2 class="text-center mb-4">Order Details</h2>
-<%-include('../partials/block.ejs')%>
-    <!-- Order Summary -->
-    
-    <div>
-      <p><strong>Order ID:</strong> <%=Order._id%></p>
-      <p><strong>Order Date:</strong> <%= new Date(Order.createdAt).toLocaleString('en-US', {
-        weekday: 'short', 
-        month: 'short',    
-        day: '2-digit',    
-        year: 'numeric',   
-        hour: 'numeric',   
-        minute: '2-digit', 
-        hour12: true      
-      }) %></p>
-      <% if(Order.orderStatus !== 'Cancelled'){%>
-      <p><strong>Expected Delivery:</strong> 
-        <%= new Date(new Date(Order.createdAt).getTime() + 24 * 60 * 60 * 1000).toLocaleString('en-US', {
-            weekday: 'short', 
-            month: 'short',    
-            day: '2-digit',    
-            year: 'numeric',   
-            hour: 'numeric',   
-            minute: '2-digit', 
-            hour12: true      
-        }) %>
-    </p>
-    <%}%>
-      <div style="display: flex;justify-content: space-between;align-items: center">
-        <p><strong>Order Status:</strong> <span class="<%= 
-          Order.orderStatus === 'Pending' ? 'pending' : 
-          Order.orderStatus === 'Shipped' ? 'shipped' : 
-          Order.orderStatus === 'On Delivery' ? 'on-delivery' : 
-          Order.orderStatus === 'Delivered' ? 'delivered' : 
-          Order.orderStatus === 'Cancelled' ? 'cancelled' : 
-          Order.orderStatus === 'Returned' ? 'return' : '' 
-          %>"><%=Order.orderStatus%></span> </p>
-          <div style="display: flex;gap: 20px;">
-          <%if(Order.payment=='razorpay'&&Order.paymentStatus==='Pending' && Order.orderStatus!=='Cancelled'){%> 
-            <button class="btn btn-light" id="orderID" data-id="<%=Order._id%>" style="color: #066eca;font-weight: 600;"> Retry Payment</button>
-           
-          <%}%>
-          <% if(Order.paymentStatus==='Completed'){%>
-          <button onclick="download('<%=Order.id%>')" class="home-button" id="kk">Invoice</button>
-          <%}%>
+  <!-- Top bar with back button -->
+  <header class="od-topbar">
+    <a href="/"><img src="/img/logo.png" alt="Fruitkha"></a>
+    <a href="/orderList" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Orders
+    </a>
+  </header>
+
+  <%- include('../partials/block.ejs') %>
+
+    <div class="od-page">
+
+      <!-- Order Status Tracking -->
+      <% const statuses=['Pending','Shipped','On Delivery','Delivered']; const
+        currentIdx=statuses.indexOf(Order.orderStatus); %>
+        <% if (Order.orderStatus !=='Cancelled' && Order.orderStatus !=='Returned' ) { %>
+          <div class="section-card">
+            <div class="section-card-title"><i class="fas fa-route"></i> Order Tracking</div>
+            <div class="tracking-bar">
+              <% const icons=['fas fa-box','fas fa-truck','fas fa-shipping-fast','fas fa-check-circle']; %>
+                <% statuses.forEach((st, idx)=> { %>
+                  <div class="track-step">
+                    <div class="track-icon <%= idx < currentIdx ? 'done' : (idx === currentIdx ? 'current' : '') %>">
+                      <i class="<%= icons[idx] %>"></i>
+                    </div>
+                    <span class="track-label">
+                      <%= st %>
+                    </span>
+                  </div>
+                  <% }) %>
+            </div>
           </div>
+          <% } %>
+
+            <!-- Order Info -->
+            <div class="section-card">
+              <div class="section-card-title"><i class="fas fa-info-circle"></i> Order Information</div>
+              <div class="od-info-grid">
+                <div class="od-info-item">
+                  <div class="label">Order ID</div>
+                  <div class="value" style="font-family:monospace;font-size:12.5px;">
+                    <%= Order._id %>
+                  </div>
+                </div>
+                <div class="od-info-item">
+                  <div class="label">Order Date</div>
+                  <div class="value">
+                    <%= new
+                      Date(Order.createdAt).toLocaleString('en-IN',{weekday:'short',month:'short',day:'2-digit',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})
+                      %>
+                  </div>
+                </div>
+                <% if (Order.orderStatus !=='Cancelled' ) { %>
+                  <div class="od-info-item">
+                    <div class="label">Expected Delivery</div>
+                    <div class="value">
+                      <%= new Date(new
+                        Date(Order.createdAt).getTime()+24*60*60*1000).toLocaleString('en-IN',{weekday:'short',month:'short',day:'2-digit',year:'numeric'})
+                        %>
+                    </div>
+                  </div>
+                  <% } %>
+                    <div class="od-info-item">
+                      <div class="label">Order Status</div>
+                      <div class="value">
+                        <span class="status-pill <%=
+              Order.orderStatus==='Pending'?'s-pending':
+              Order.orderStatus==='Shipped'?'s-shipped':
+              Order.orderStatus==='On Delivery'?'s-ondelivery':
+              Order.orderStatus==='Delivered'?'s-delivered':
+              Order.orderStatus==='Cancelled'?'s-cancelled':
+              Order.orderStatus==='Returned'?'s-return':''
+            %>">
+                          <%= Order.orderStatus %>
+                        </span>
+                      </div>
+                    </div>
+              </div>
+              <!-- Action buttons -->
+              <div class="d-flex gap-3 flex-wrap mt-4">
+                <% if(Order.payment==='razorpay' && Order.paymentStatus==='Pending' && Order.orderStatus!=='Cancelled'
+                  ){ %>
+                  <button class="btn-orange" id="orderID" data-id="<%= Order._id %>">
+                    <i class="fas fa-credit-card me-1"></i> Retry Payment
+                  </button>
+                  <% } %>
+                    <% if(Order.paymentStatus==='Completed' ){ %>
+                      <button onclick="download('<%= Order.id %>')" class="btn-outline-orange"
+                        style="border-radius:8px;">
+                        <i class="fas fa-file-invoice me-1"></i> Download Invoice
+                      </button>
+                      <% } %>
+              </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="section-card">
+              <div class="section-card-title"><i class="fas fa-boxes"></i> Products</div>
+              <div class="table-responsive">
+                <table class="prod-table">
+                  <thead>
+                    <tr>
+                      <th colspan="2">Product</th>
+                      <th>Qty</th>
+                      <th>Price</th>
+                      <th>Subtotal</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% Order.Products.forEach(item=>{ %>
+                      <tr>
+                        <td><img src="/images/<%= item.product.primaryImage %>" class="prod-img" alt=""></td>
+                        <td>
+                          <div class="prod-title">
+                            <%= item.product.productTitle %>
+                          </div>
+                          <div class="prod-desc">
+                            <%= item.product.description ? item.product.description.substring(0,50) : '' %>
+                          </div>
+                        </td>
+                        <td>
+                          <%= item.quantity %> kg
+                        </td>
+                        <td>
+                          <% if (item.product.Offer && item.product.Offer.OfferPrice) { %>
+                            <span style="color:#1a7a3a;font-weight:600;">₹<%= item.product.Offer.OfferPrice %></span>
+                            <div><del style="color:#aaa;font-size:12px;">₹<%= item.product.RegulerPrice %></del></div>
+                            <% } else { %>
+                              <span style="font-weight:600;">₹<%= item.product.RegulerPrice %></span>
+                              <% } %>
+                        </td>
+                        <td style="font-weight:600;">₹<%= item.TOTAL %>
+                        </td>
+                        <td>
+                          <span class="status-pill <%=
+                  item.status==='Pending'?'s-pending':
+                  item.status==='Shipped'?'s-shipped':
+                  item.status==='On Delivery'?'s-ondelivery':
+                  item.status==='Delivered'?'s-delivered':
+                  item.status==='Cancelled'?'s-cancelled':
+                  item.status==='Returned'?'s-return':''
+                %>">
+                            <%= item.status %>
+                          </span>
+                        </td>
+                        <td>
+                          <% if(item.status==='Delivered' && item.return.req===false && Order.orderStatus!=='Returned'
+                            ){ %>
+                            <button class="btn btn-sm btn-outline-secondary" style="border-radius:8px;font-size:12px;"
+                              data-order-id="<%= Order._id %>" data-product="<%= item.product.id %>"
+                              onclick="returnItem(this)">
+                              <i class="fas fa-undo me-1"></i>Return
+                            </button>
+                            <% } else if(item.status!=='Cancelled' && item.return.req===false &&
+                              item.status!=='Delivered' && item.status!=='Returned' ){ %>
+                              <button class="btn btn-sm btn-outline-danger" style="border-radius:8px;font-size:12px;"
+                                data-id="<%= item.id %>" data-order-id="<%= Order._id %>"
+                                data-product="<%= item.product.id %>" data-quantity="<%= item.quantity %>"
+                                onclick="cancelFromButton(this)">
+                                <i class="fas fa-times me-1"></i>Cancel
+                              </button>
+                              <% } else if(item.return.req===true && item.status!=='Returned' ){ %>
+                                <span style="color:#e65100;font-size:12px;"><i class="fas fa-clock me-1"></i>Return
+                                  Requested</span>
+                                <% } %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Address + Pricing + Payment row -->
+            <div class="row g-4">
+              <div class="col-md-5">
+                <div class="section-card h-100">
+                  <div class="section-card-title"><i class="fas fa-map-marker-alt"></i> Delivery Address</div>
+                  <div style="font-size:14px;line-height:1.8;">
+                    <p style="margin:0;font-weight:600;">
+                      <%= Order.addressId.Name %>
+                    </p>
+                    <p style="margin:0;color:var(--fr-muted)">
+                      <%= Order.addressId.place %>, <%= Order.addressId.District %>
+                    </p>
+                    <p style="margin:0;color:var(--fr-muted)">
+                      <%= Order.addressId.State %> — <%= Order.addressId.PIN %>
+                    </p>
+                    <p style="margin:0;color:var(--fr-muted)">Landmark: <%= Order.addressId.mark %>
+                    </p>
+                    <p style="margin:0;margin-top:6px;"><i class="fas fa-phone me-1"
+                        style="color:var(--fr-orange)"></i>+91 <%= Order.UserID.phone %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="section-card h-100">
+                  <div class="section-card-title"><i class="fas fa-receipt"></i> Price Summary</div>
+                  <div class="price-row"><span class="label">Subtotal</span><span>₹<%= (Order.subTotal).toFixed(2) %>
+                    </span></div>
+                  <div class="price-row"><span class="label">GST</span><span>₹<%= (Order.GST).toFixed(2) %></span></div>
+                  <div class="price-row"><span class="label">Discount</span><span style="color:#1a7a3a;">−₹<%=
+                        (Order.Coupon.discountValue).toFixed(2) %></span></div>
+                  <div class="price-row"><span class="label">Shipping</span><span>₹<%= (Order.Shipping).toFixed(2) %>
+                    </span></div>
+                  <div class="price-row total"><span>Total</span><span style="color:var(--fr-orange)">₹<%=
+                        (Order.Final_Amount).toFixed(2) %></span></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="section-card h-100">
+                  <div class="section-card-title"><i class="fas fa-credit-card"></i> Payment</div>
+                  <div style="font-size:14px;">
+                    <% if(Order.payment==='COD' ){ %>
+                      <div style="font-weight:600;"><i class="fas fa-money-bill me-2"
+                          style="color:var(--fr-orange)"></i>Cash on Delivery</div>
+                      <% } else if(Order.payment==='razorpay' ){ %>
+                        <div style="font-weight:600;"><i class="fas fa-bolt me-2"
+                            style="color:var(--fr-orange)"></i>Razorpay</div>
+                        <div style="color:var(--fr-muted);font-size:13px;margin-top:4px;">
+                          <%= Order.paymentStatus %>
+                        </div>
+                        <% } else if(Order.payment==='wallet' ){ %>
+                          <div style="font-weight:600;"><i class="fas fa-wallet me-2"
+                              style="color:var(--fr-orange)"></i>Wallet</div>
+                          <div style="color:var(--fr-muted);font-size:13px;margin-top:4px;">
+                            <%= Order.paymentStatus %>
+                          </div>
+                          <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+    </div><!-- /od-page -->
+
+    <!-- Return Modal -->
+    <div class="modal fade" id="returnModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:var(--fr-radius);border:none;">
+          <form id="return-form" enctype="multipart/form-data">
+            <div class="modal-header"
+              style="background:var(--fr-orange-light);border-bottom:1px solid var(--fr-border);">
+              <h5 class="modal-title" style="color:var(--fr-orange);font-weight:700;"><i
+                  class="fas fa-undo me-2"></i>Return Request</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3 p-3" style="background:#f8f9fb;border-radius:8px;">
+                <p style="font-size:13px;color:var(--fr-muted);margin:0;">Returns accepted for: damaged or expired
+                  products. Upload proof and provide reason.</p>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Upload Product Image</label>
+                <input type="file" id="productImage" class="form-control" accept="image/png,image/jpeg,image/jpg"
+                  required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Reason for Return</label>
+                <textarea id="returnReason" class="form-control" rows="3" placeholder="Describe the issue..."
+                  required></textarea>
+              </div>
+              <input type="hidden" id="OrderId">
+              <input type="hidden" id="productId">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                style="border-radius:8px;">Cancel</button>
+              <button type="submit" class="btn-orange" id="submitReturn" style="border:none;">Submit Request</button>
+            </div>
+          </form>
         </div>
-    </div>
-    <hr>
-   
-    <!-- Product Details -->
-    <div>
-      <h4 class="section-title">Products</h4>
-     
-        <div class="product" style="display: flex;">
-           <table>
-            <thead style="height: 30px; background-color: #f4f4f4;">
-                <tr  >
-                    <th>Product details</th>
-                    <th></th>
-                    
-                    <th>Quality</th>
-                    <th>Price</th>
-                    <th>Sub Total</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-        <tbody>
-         <%Order.Products.forEach(item=>{%>
-          <tr>
-
-           <td> <img src="http://localhost:4000/images/<%= item.product.primaryImage %>" alt="Product Image"></td>
-       
-              
-                    <td>
-                            <div >
-                            <p style="margin-bottom: 1px;"><strong><%= item.product.productTitle %></strong></p>
-                            <p><%=item.product.description %></p>
-                            </div>                    
-                     </td>
-                       <td>                    <div>
-                                            <p>Quantity: <%= item.quantity %></p>
-                                        </div>
-                                    </td> 
-                                    <td>               
-                                            <p> <% if (item.product.Offer.OfferPrice) { %>
-                                            <div >
-                                            
-                                            <span><h4 style="color: green; margin: 5px 0; font-size: 14px;">Offer: <%= item.product.Offer.OfferPrice %> ₹</h4></span>
-                                            <p style="color : gray; margin: 5px 0; font-size: 12px;">
-                                                <span style="color: red;">Per Kg</span>
-                                                <del style="color: red;"><%= item.product.RegulerPrice %></del>₹
-                                            </p>
-                                            </div>
-                                            
-                                                <% } else { %>
-                                                    <p style="margin: 5px 0; font-size: 14px;">Per Kg <span style="font-weight: bold;"><%= item.product.RegulerPrice %></span>₹</p>
-                                                <% } %>
-                                               </p>
-                                            </td> 
-                                            <td>
-                                        <div>
-                                        <p>SubTotal : ₹<%=item.TOTAL%></p>
-                                        </div>
-                                    </td>
-                                    <td class="<%= 
-                                            item.status === 'Pending' ? 'pending' : 
-                                            item.status === 'Shipped' ? 'shipped' : 
-                                            item.status === 'On Delivery' ? 'on-delivery' : 
-                                            item.status === 'Delivered' ? 'delivered' : 
-                                            item.status === 'Cancelled' ? 'cancelled' : 
-                                            item.status === 'Returned' ? 'return' : '' 
-                                            %>">
-                                            <%= item.status %>
-                                            </td>
-
-                                     <td>
-                                        <div class="text-end"></div>
-                                        
-                                        <% if (item.status === 'Delivered' && item.return.req === false && Order.orderStatus!=='Returned') { %>
-                                        
-                                          <button class="btn btn-outline-secondary" 
-                                            data-order-id="<%= Order._id %>"
-                                            data-product="<%= item.product.id %>"
-                                            onclick="returnItem(this)">Return</button>
-                                      <% } else if (item.status !== 'Cancelled' && item.return.req === false && item.status !== 'Delivered'&&item.status !== 'Returned') { %>
-                                        
-                                          <button 
-                                              class="btn btn-outline-danger"
-                                              data-id="<%= item.id %>"
-                                              data-order-id="<%= Order._id %>"
-                                              data-product="<%= item.product.id %>"
-                                              data-quantity="<%= item.quantity %>"
-                                              onclick="cancelFromButton(this)">
-                                              Cancel
-                                          </button>
-                                      <% }else if(item.return.req===true&&item.status!=='Returned'){%>
-                                        <p style="color: red;"> Requested for Return</p>
-                                      <%} %>
-                                      
-                                        
-                                       
-                                
-                                    </div>
-                                  </td>
-           
-          </tr>
-          <%})%>
-            </tbody>
-
-           </table>
-          </div>
-     
-      
-      
-    </div>
-    <hr>
- <div style="display: flex;justify-content: space-around;">
-    <!-- Delivery Address -->
-    <div  >
-      <h4 class="section-title">Delivery Address</h4>
-      <div class="address">
-        <p style="margin-bottom: 1px;"><strong>Recipient Name:</strong> <%=Order.addressId.Name %></p>
-        <p style="margin-bottom: 1px;"><strong>Address:</strong> <%=Order.addressId.District %>, <%=Order.addressId.State %> <br><%=Order.addressId.PIN %>, <%=Order.addressId.place %>, <%=Order.addressId.mark %></p>
-        <p style="margin-bottom: 1px;"><strong>Contact:</strong> +91 <%=Order.UserID.phone%></p>
       </div>
     </div>
-    <hr>
 
-    <!-- Delivery Method -->
-    <div>
-     
-      <div class="delivery-method" style="line-height: 10px;">
-        <p>SubTotal: ₹<%=(Order.subTotal).toFixed(1)%></p>
-        <p>GST : ₹<%=(Order.GST).toFixed(1)%></p>
-        <p>Discount : ₹<%=(Order.Coupon.discountValue).toFixed(1)%></p>
-        <p>Shipping : ₹<%=(Order.Shipping).toFixed(1)%></p>
-      
-       
-        <hr>
-        <h5>TOTAL Amount : ₹<%=(Order. Final_Amount).toFixed(2)%></h5> 
-        
-      </div>
-    </div>
-
-     <div>
-        <h4>Payment Method</h4>
-        <%if (Order.payment==='COD'){%>
-            <p>Cash On Deliery</p>
-        <%}else if(Order.payment==='razorpay'){%> 
-          <p>RazorPay</p>
-          <p><%=Order.paymentStatus%></p>
-        <%}else if(Order.payment==='wallet'){%>
-          <p>Wallet Payment</p>
-          <p>payment Status :<%=Order.paymentStatus%></p>
-        <%}%>
-     </div>
- </div>
-    <!-- Back Button -->
-    <div class="text-end">
-      <a href="/orderList" class="btn btn-back">Back to Order List</a>
-    </div>
-  </div>
-  <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="" id="return-form" enctype="multipart/form-data">
-                <div class="modal-header" style="background-color: #d1f2b8f1;color: #707070;">
-                    <h5 class="modal-title" id="returnModalLabel">Return Request</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Return Policy Section -->
-                    <div class="mb-3">
-                        <h6>Return Policy:</h6>
-                        <p>
-                            We only accept returns for the following reasons:
-                        </p>
-                        <ul>
-                            <li>Damaged products on delivery.</li>
-                            <li>Products dispatched accidentally with an expired date.</li>
-                        </ul>
-                        <p>Please upload a clear image of the product as proof and provide a valid reason for return.</p>
-                    </div>
-
-                    <!-- Image Upload Section -->
-                    <div class="mb-3">
-                        <label for="productImage" class="form-label">Upload Image of Product</label>
-                        <input type="file" id="productImage" class="form-control" accept="image/png, image/jpeg, image/jpg" required>
-                    </div>
-
-                    <!-- Reason Input Section -->
-                    <div class="mb-3">
-                        <label for="returnReason" class="form-label">Reason for Return</label>
-                        <textarea id="returnReason" class="form-control" rows="4" placeholder="Write your reason for returning the order..." required></textarea>
-                    </div>
-
-                    <!-- Hidden Inputs -->
-                    <input type="text" id="OrderId" hidden>
-                    <input type="text" id="productId" hidden>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" id="submitReturn">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-  <script src="/TOAST.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-
-  ></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-  <script src="/js/userOrderDetails.js"></script>
-
+    <script src="/TOAST.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/userOrderDetails.js"></script>
 </body>
+
 </html>
