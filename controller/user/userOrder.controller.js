@@ -1,6 +1,6 @@
-const ORDER = require("../../model/ADMIN/order-schema");
-const PRODUCT = require("../../model/ADMIN/product");
-const WALLET = require("../../model/User/wallet");
+const ORDER = require("../../model/admin/order-schema");
+const PRODUCT = require("../../model/admin/product");
+const WALLET = require("../../model/user/wallet");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
 const { ORDER_STATUS } = require("../../constant/status/orderStatus");

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const couponController = require("../../controller/admin/coupon.controller");
+const couponController = require("../../controller/admin_temp/coupon.controller");
 const adminAuth = require("../../middleware/auth");
 const { COUPON_API } = require("../../constant/api/coupon.api");
 

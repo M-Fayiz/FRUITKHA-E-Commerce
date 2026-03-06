@@ -1,13 +1,13 @@
-const User = require("../../model/User/userModel");
+const User = require("../../model/user/userModel");
 const mailSender = require("../../utils/mail_sender");
 const bcrypt = require("bcrypt");
-const COUPON = require("../../model/ADMIN/Coupon");
-const category = require("../../model/ADMIN/category");
-const wishList = require("../../model/User/wishList");
-const PRODUCT = require("../../model/ADMIN/product");
+const COUPON = require("../../model/admin/coupon");
+const category = require("../../model/admin/category");
+const wishList = require("../../model/user/wishList");
+const PRODUCT = require("../../model/admin/product");
 
 const CART = require("../../model/user/cart");
-const notify = require("../../model/User/notification");
+const notify = require("../../model/user/notification");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
 const { COUPON_STATUS } = require("../../constant/status/couponStatus");

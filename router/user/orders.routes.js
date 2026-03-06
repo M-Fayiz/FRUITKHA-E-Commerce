@@ -3,7 +3,7 @@ const router = express.Router();
 const Auth = require("../../middleware/auth");
 const upload = require("../../utils/multer");
 const userOrderController = require("../../controller/user/userOrder.controller");
-const adminOrderController = require("../../controller/admin/order.controller");
+const adminOrderController = require("../../controller/admin_temp/order.controller");
 const { ORDER_API } = require("../../constant/api/order.api");
 
 router.get(

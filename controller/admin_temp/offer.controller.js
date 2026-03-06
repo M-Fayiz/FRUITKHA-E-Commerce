@@ -1,6 +1,6 @@
 const PRODUCT = require("../../model/admin/product");
 const category = require("../../model/admin/category");
-const OFFER = require("../../model/admin/Offer");
+const OFFER = require("../../model/admin/offer");
 const mongoose = require("mongoose");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");

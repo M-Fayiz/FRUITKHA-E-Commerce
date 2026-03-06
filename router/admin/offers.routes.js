@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const offerController = require("../../controller/admin/offer.controller");
+const offerController = require("../../controller/admin_temp/offer.controller");
 const adminAuth = require("../../middleware/auth");
 const { OFFER_API } = require("../../constant/api/offer.api");
 

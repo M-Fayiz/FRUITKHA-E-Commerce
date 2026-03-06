@@ -1,4 +1,4 @@
-const WALLET = require("../../model/User/wallet");
+const WALLET = require("../../model/user/wallet");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
 

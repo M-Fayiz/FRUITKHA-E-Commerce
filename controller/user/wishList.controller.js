@@ -1,6 +1,6 @@
-const PRODUCT = require("../../model/ADMIN/product");
-const USER = require("../../model/User/userModel");
-const WISHLIST = require("../../model/User/wishList");
+const PRODUCT = require("../../model/admin/product");
+const USER = require("../../model/user/userModel");
+const WISHLIST = require("../../model/user/wishList");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
 

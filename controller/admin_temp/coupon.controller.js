@@ -1,4 +1,4 @@
-const COUPON = require("../../model/admin/Coupon");
+const COUPON = require("../../model/admin/coupon");
 const USER = require("../../model/user/userModel");
 const CART = require("../../model/user/cart");
 const httpStatusCode = require("../../constant/httpStatusCode");

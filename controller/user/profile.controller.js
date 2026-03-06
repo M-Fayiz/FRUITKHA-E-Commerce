@@ -1,9 +1,9 @@
-const USER = require("../../model/User/userModel");
+const USER = require("../../model/user/userModel");
 const bcrypt = require("bcrypt");
 
 const { sendForgotPasswordMail } = require("../../utils/mail_sender");
 const secret = require("../../utils/env");
-const TOKEN = require("../../model/User/token");
+const TOKEN = require("../../model/user/token");
 const crypto = require("crypto");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");

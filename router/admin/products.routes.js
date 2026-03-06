@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../../controller/ADMIN/product.controller");
+const productController = require("../../controller/admin_temp/product.controller");
 const upload = require("../../utils/multer");
 const adminAuth = require("../../middleware/auth");
 const { PRODUCT_API } = require("../../constant/api/product.api");
