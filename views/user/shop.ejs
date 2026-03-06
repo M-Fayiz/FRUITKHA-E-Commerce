@@ -106,6 +106,9 @@
               <input type="text" id="search-input" placeholder="Search products by name…" autocomplete="off">
               <i class="fas fa-search"></i>
             </div>
+            <button class="search-submit-btn" id="searchSubmitBtn">
+              <i class="fas fa-search"></i> Search
+            </button>
             <button class="filter-open-btn" id="filterToggleBtn">
               <i class="fas fa-sliders-h"></i> Filters
             </button>
@@ -260,7 +263,7 @@
       if (closeFilterBtn) closeFilterBtn.addEventListener('click', closeFilter);
       if (overlay) overlay.addEventListener('click', closeFilter);
 
-      /* Keyboard a11y for product cards */
+
       document.querySelectorAll('.product-card').forEach(card => {
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {

@@ -431,6 +431,97 @@
     color: #fff;
 }
 
+/* Notification Drawer */
+.fk-notify-drawer {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 390px;
+    max-width: 95vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 1150;
+    box-shadow: -6px 0 40px rgba(0, 0, 0, .14);
+    transition: right .3s cubic-bezier(.4, 0, .2, 1);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+}
+
+.fk-notify-drawer.open {
+    right: 0;
+}
+
+.fk-notify-header {
+    background: #0D1B2A;
+    color: #fff;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.fk-notify-header h5 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.fk-notify-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, .70);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.fk-notify-body {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.fk-notify-item {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #94a3b8;
+    border-radius: 10px;
+    background: #f8fafc;
+    margin-bottom: 10px;
+}
+
+.fk-notify-item p {
+    margin: 0;
+    font-size: 13px;
+    color: #334155;
+}
+
+.fk-notify-item.success {
+    border-left-color: #16a34a;
+}
+
+.fk-notify-item.warning {
+    border-left-color: #f59e0b;
+}
+
+.fk-notify-item.error,
+.fk-notify-item.danger {
+    border-left-color: #dc2626;
+}
+
+.fk-notify-empty {
+    color: #64748b;
+    font-size: 13px;
+    text-align: center;
+    margin: 20px 0;
+}
+
 /* ── Overlay backdrop (for coupon drawer) ── */
 .fk-overlay {
     position: fixed;

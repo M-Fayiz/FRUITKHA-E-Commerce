@@ -22,10 +22,24 @@
             <!-- Right icons -->
             <div class="fk-icons">
                 <!-- Search -->
-                <button class="fk-icon-btn" id="fkSearchBtn" aria-label="Search"
-                    style="border:none;cursor:pointer;background:transparent;">
-                    <i class="fas fa-search"></i>
-                </button>
+                <% if (_cp !=='shop' ) { %>
+                    <button class="fk-icon-btn" id="fkSearchBtn" aria-label="Search"
+                        style="border:none;cursor:pointer;background:transparent;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <% } %>
+
+                        <!-- Notification -->
+                        <button class="fk-icon-btn" id="fkNotifyBtn" aria-label="Notifications"
+                            style="border:none;cursor:pointer;background:transparent;">
+                            <i class="fas fa-bell"></i>
+                            <% if (typeof NOtify !=='undefined' && NOtify && Array.isArray(NOtify.notification) &&
+                                NOtify.notification.length> 0) { %>
+                                <span class="fk-badge">
+                                    <%= NOtify.notification.length %>
+                                </span>
+                                <% } %>
+                        </button>
 
                 <!-- Cart -->
                 <a href="/cart" class="fk-icon-btn" aria-label="Cart">
@@ -58,7 +72,7 @@
     </nav>
 
     <!-- ── Breadcrumb bar ── -->
-    <% if (_cp && _cp !=='home' ) { %>
+    <!-- <% if (_cp && _cp !=='home' ) { %>
         <div class="fk-breadcrumb-bar">
             <div class="fk-breadcrumb-inner">
                 <a href="/" class="fk-bc-item"><i class="fas fa-home"></i> Home</a>
@@ -97,7 +111,7 @@
                                     <% } %>
             </div>
         </div>
-        <% } %>
+        <% } %> -->
 
             <!-- ── Coupon Drawer ── -->
             <button class="fk-coupon-toggle" id="fkCouponToggle" title="View Coupons">
@@ -133,16 +147,39 @@
                 </div>
             </div>
 
-            <!-- ── Search Overlay ── -->
-            <div class="fk-search-overlay" id="fkSearchOverlay">
-                <div class="fk-search-box">
-                    <i class="fas fa-search" style="color:#F28123;font-size:18px;"></i>
-                    <input type="text" id="fkSearchInput" placeholder="Search for fruits, categories…">
-                    <button
-                        onclick="window.location='/shop?search='+document.getElementById('fkSearchInput').value">Search</button>
+            <div class="fk-notify-drawer" id="fkNotifyDrawer">
+                <div class="fk-notify-header">
+                    <h5><i class="fas fa-bell me-2" style="color:#F28123"></i>Notifications</h5>
+                    <button class="fk-notify-close" id="fkNotifyClose"><i class="fas fa-times"></i></button>
                 </div>
-                <button class="fk-search-close" id="fkSearchClose"><i class="fas fa-times"></i></button>
+                <div class="fk-notify-body">
+                    <% if (typeof NOtify !=='undefined' && NOtify && Array.isArray(NOtify.notification) &&
+                        NOtify.notification.length> 0) { %>
+                        <% NOtify.notification.sort((a, b)=> new Date(b.createdAt) - new Date(a.createdAt)).forEach(item => { %>
+                            <div class="fk-notify-item <%= item.status || '' %>">
+                                <p>
+                                    <%= item.message %>
+                                </p>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <p class="fk-notify-empty">No notifications available</p>
+                                    <% } %>
+                </div>
             </div>
+
+
+            <% if (_cp !=='shop' ) { %>
+                <div class="fk-search-overlay" id="fkSearchOverlay">
+                    <div class="fk-search-box">
+                        <i class="fas fa-search" style="color:#F28123;font-size:18px;"></i>
+                        <input type="text" id="fkSearchInput" placeholder="Search for fruits, categories…">
+                        <button
+                            onclick="window.location='/shop?search='+document.getElementById('fkSearchInput').value">Search</button>
+                    </div>
+                    <button class="fk-search-close" id="fkSearchClose"><i class="fas fa-times"></i></button>
+                </div>
+                <% } %>
 
             <script>
                 (function () {
@@ -153,6 +190,9 @@
                     const searchOverlay = document.getElementById('fkSearchOverlay');
                     const searchClose = document.getElementById('fkSearchClose');
                     const searchInput = document.getElementById('fkSearchInput');
+                    const notifyBtn = document.getElementById('fkNotifyBtn');
+                    const notifyDrawer = document.getElementById('fkNotifyDrawer');
+                    const notifyClose = document.getElementById('fkNotifyClose');
 
                     if (couponToggle && couponDrawer) {
                         couponToggle.addEventListener('click', () => couponDrawer.classList.toggle('open'));
@@ -165,6 +205,15 @@
                         searchInput && searchInput.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter') window.location = '/shop?search=' + encodeURIComponent(searchInput.value);
                             if (e.key === 'Escape') searchOverlay.classList.remove('open');
+                        });
+                    }
+                    if (notifyBtn && notifyDrawer) {
+                        notifyBtn.addEventListener('click', () => notifyDrawer.classList.toggle('open'));
+                        notifyClose && notifyClose.addEventListener('click', () => notifyDrawer.classList.remove('open'));
+                        document.addEventListener('click', (e) => {
+                            if (!notifyDrawer.classList.contains('open')) return;
+                            if (e.target.closest('#fkNotifyBtn') || e.target.closest('#fkNotifyDrawer')) return;
+                            notifyDrawer.classList.remove('open');
                         });
                     }
                 })();

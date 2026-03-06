@@ -50,32 +50,8 @@
 	<!--PreLoader Ends-->
 
 	<!-- header -->
-	<%-include('.. /partials/Header.ejs') %>
+	<%-include('../partials/Header.ejs') %>
 		<!-- end header -->
-		<div class="notification-icon" onclick="toggleSidebaR()">
-			<span>&#128276;</span>
-		</div>
-
-		<div id="notification-sidebar" class="sidebar">
-			<div class="sidebar-header">
-				<h4>Notifications</h4>
-				<button class="close-btn" onclick="toggleSidebaR()">&#10006;</button>
-			</div>
-			<div class="sidebar-content">
-				<% if (NOtify && Array.isArray(NOtify.notification) && NOtify.notification.length> 0) { %>
-					<% NOtify.notification .sort((a, b)=> b.createdAt - a.createdAt)
-						.forEach(item => { %>
-						<div class="notification-item <%= item.status %>">
-							<p>
-								<%= item.message %>
-							</p>
-						</div>
-						<% }); %>
-							<% } else { %>
-								<p>No notifications available</p>
-								<% } %>
-			</div>
-		</div>
 
 		<!-- search area -->
 		<div class="search-area">
@@ -389,19 +365,6 @@
 		<script src="/js/sticker.js"></script>
 		<!-- main js -->
 		<script src="/js/main.js"></script>
-		<script>
-			function toggleSidebaR() {
-				const sidebar = document.getElementById('notification-sidebar');
-				if (sidebar) {
-					sidebar.classList.toggle('active');
-					console.log('Sidebar toggled:', sidebar.classList.contains('active'));
-				} else {
-					console.error('Sidebar not found');
-				}
-			}
-
-		</script>
-
 </body>
 
 </html>

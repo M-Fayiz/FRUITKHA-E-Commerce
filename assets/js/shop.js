@@ -4,6 +4,7 @@
 
 const dom = {
   searchInput: document.getElementById('search-input'),
+  searchSubmitBtn: document.getElementById('searchSubmitBtn'),
   productsContainer: document.getElementById('productsContainer'),
   shopMessage: document.getElementById('shopMessage'),
   sortBy: document.getElementById('sortBy'),
@@ -37,8 +38,8 @@ function buildUrl(overrides = {}) {
 /* ── Filter panel open/close ── */
 function toggleFilter(open) {
   if (!dom.filterPanel || !dom.overlay) return;
-  dom.filterPanel.classList.toggle('active', open);
-  dom.overlay.classList.toggle('active', open);
+  dom.filterPanel.classList.toggle('open', open);
+  dom.overlay.classList.toggle('open', open);
 }
 
 /* ── Apply filters → navigate to new URL ── */
@@ -55,10 +56,11 @@ function applyFilters() {
 
   // Keep search if already in url
   const existingSearch = p.get('search');
+
   if (existingSearch) p.set('search', existingSearch);
 
   if (checkedCats.length) {
-    p.set('category', checkedCats[0]); // backend takes one category ObjectId
+    p.set('category', checkedCats[0]);
   } else {
     p.delete('category');
   }
@@ -71,16 +73,25 @@ function applyFilters() {
   window.location.href = '/shop?' + p.toString();
 }
 
-/* ── Search on Enter — product name only ── */
 function bindSearch() {
   if (!dom.searchInput) return;
+  const doSearch = () => {
+    const q = dom.searchInput.value.trim();
+    window.location.href = buildUrl({ search: q || null });
+  };
+
   dom.searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const q = dom.searchInput.value.trim();
-      window.location.href = buildUrl({ search: q || null });
+      doSearch();
     }
   });
+  if (dom.searchSubmitBtn) {
+    dom.searchSubmitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      doSearch();
+    });
+  }
 
   const p = getCurrentParams();
   if (p.get('search') && dom.searchInput) {
@@ -135,7 +146,7 @@ function addToCart(productId, e) {
     .catch(() => showToast('Something went wrong.', 'error'));
 }
 
-/* ── Toggle Wishlist ── */
+
 function wishList(val, e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
   fetch('/api/wishlist/items/toggle', {

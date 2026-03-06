@@ -280,6 +280,7 @@ const email = (req, res) => {
 
 const shop = async (req, res) => {
   const cart = await CART.findOne({ UserID: req.session.user });
+  const NOtify = await notify.findOne({ UserId: req.session.user });
   let carSize;
   if (cart && cart.Products) {
     carSize = cart.Products.length;
@@ -377,6 +378,7 @@ const shop = async (req, res) => {
       coupon,
       size,
       carSize,
+      NOtify,
     });
   } catch (error) {
     console.error("Error fetching products:", error);
