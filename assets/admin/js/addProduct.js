@@ -102,13 +102,16 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("quantity", document.getElementById("stock").value.trim());
 
     imageInputs.forEach((input, index) => {
-      const file = input.files[0];
       if (croppedBlobs[index]) {
+        // Prefer the cropped version if the user went through the crop flow
         formData.append(
           "primaryImageInput",
           croppedBlobs[index],
           `image-${index}-cropped.jpg`,
         );
+      } else if (input.files[0]) {
+        // Fallback: send the raw selected file directly
+        formData.append("primaryImageInput", input.files[0], input.files[0].name);
       }
     });
 

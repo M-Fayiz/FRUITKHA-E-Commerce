@@ -313,7 +313,7 @@ const Load_User = async (req, res) => {
     }
     const user = await USER.find(query).skip(skip).limit(limit);
 
-    const totalUser = await PRODUCT.countDocuments({});
+    const totalUser = await USER.countDocuments(query);
     const totalPages = Math.ceil(totalUser / limit);
 
     if (skip >= totalUser && totalUser > 0) {

@@ -130,7 +130,7 @@
                   <tbody>
                     <% Order.Products.forEach(item=>{ %>
                       <tr>
-                        <td><img src="<%= item.product.primaryImage %>" class="prod-img" alt=""></td>
+                        <td><img src="<%= item.product.primaryImage %>" class="prod-img" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:6px;"></td>
                         <td>
                           <div class="prod-title">
                             <%= item.product.productTitle %>
@@ -143,12 +143,10 @@
                           <%= item.quantity %> kg
                         </td>
                         <td>
-                          <% if (item.product.Offer && item.product.Offer.OfferPrice) { %>
-                            <span style="color:#1a7a3a;font-weight:600;">₹<%= item.product.Offer.OfferPrice %></span>
+                          <span style="font-weight:600;color:#1a7a3a;">₹<%= item.Price %></span>
+                          <% if (item.Price < item.product.RegulerPrice) { %>
                             <div><del style="color:#aaa;font-size:12px;">₹<%= item.product.RegulerPrice %></del></div>
-                            <% } else { %>
-                              <span style="font-weight:600;">₹<%= item.product.RegulerPrice %></span>
-                              <% } %>
+                          <% } %>
                         </td>
                         <td style="font-weight:600;">₹<%= item.TOTAL %>
                         </td>
