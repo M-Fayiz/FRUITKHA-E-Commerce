@@ -4,6 +4,7 @@ const app = express();
 const session = require("express-session");
 let MongoStore = require("connect-mongo");
 const path = require("path");
+const morgan = require("morgan");
 
 const passport = require("./config/passport");
 const {
@@ -29,7 +30,7 @@ app.use(
     }),
   }),
 );
-
+app.use(morgan("dev"))
 const nocache = require("nocache");
 app.use(nocache());
 
