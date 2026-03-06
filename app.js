@@ -44,6 +44,14 @@ app.use(express.static(path.join(__dirname, "assets")));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+app.get("/health", (req, res) => {
+  res.status(httpStatusCode.OK).json({
+    status: httpResponse.OK,
+    timestamp: Date.now()
+  });
+});
+
 const userRouter = require("./router/user");
 const adminRouter = require("./router/admin");
 
@@ -51,6 +59,8 @@ app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
 const connectDB = require("./config/db");
+const httpStatusCode = require("./constant/httpStatusCode");
+const httpResponse = require("./constant/httpResponse");
 startExpired();
 StockExpire();
 manageExpiration();
