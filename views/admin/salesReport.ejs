@@ -184,11 +184,16 @@
                                     <% } %>
 
                                         <!-- Page Numbers -->
-                                        <% const maxButtons=3; // Maximum visible page buttons let startPage=Math.max(1,
-                                            currentPage - Math.floor(maxButtons / 2)); let endPage=Math.min(totalPages,
-                                            startPage + maxButtons - 1); if (endPage - startPage + 1 < maxButtons) {
-                                            startPage=Math.max(1, endPage - maxButtons + 1); } %>
+                                        <%
+                                                    const maxButtons = 3; // Maximum visible page buttons
 
+                                                    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                                                    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+                                                    if (endPage - startPage + 1 < maxButtons) {
+                                                    startPage = Math.max(1, endPage - maxButtons + 1);
+                                                    }
+                                                    %>
                                             <% for (let i=startPage; i <=endPage; i++) { %>
                                                 <a href="/admin/generoteReport?page=<%= i %>"
                                                     class="px-3 py-1 text-sm <%= i === currentPage ? 'bg-emerald-500 text-white' : 'border border-gray-200' %> rounded hover:bg-emerald-600 transition-colors duration-200">

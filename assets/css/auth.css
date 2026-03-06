@@ -1,0 +1,440 @@
+/* =====================================================
+   FRUITKHA - Auth Pages CSS (Login & Signup)
+   Theme: Orange (#FF6B35), White, Gray
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --orange:        #e56434;
+  --orange-dark:   #f55e27;
+  --orange-light:  #fff3ee;
+  --orange-mid:    #ffead9;
+  --gray-100:      #f8f8f8;
+  --gray-200:      #f0f0f0;
+  --gray-300:      #e0e0e0;
+  --gray-400:      #bdbdbd;
+  --gray-500:      #9e9e9e;
+  --gray-600:      #757575;
+  --gray-700:      #616161;
+  --gray-800:      #424242;
+  --gray-900:      #212121;
+  --white:         #ffffff;
+  --error:         #e53935;
+  --success:       #43a047;
+  --radius:        14px;
+  --radius-sm:     8px;
+  --shadow-card:   0 20px 60px rgba(0,0,0,0.10);
+  --shadow-input:  0 2px 8px rgba(255,107,53,0.08);
+  --transition:    all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Poppins', Arial, sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+/* ─── PAGE WRAPPER ─────────────────────────────────── */
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ─── LEFT PANEL (decorative) ───────────────────────── */
+.auth-left {
+  flex: 1;
+  background: linear-gradient(145deg, #fefefe 0%, #ff9a5c 50%, #ffbe93 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-left::before {
+  content: '';
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  top: -80px;
+  right: -80px;
+}
+
+.auth-left::after {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: rgba(255,255,255,0.09);
+  border-radius: 50%;
+  bottom: -60px;
+  left: -60px;
+}
+
+.auth-left-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--white);
+}
+
+.auth-left-inner .brand-logo {
+  width: 160px;
+  padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  margin-bottom: 36px;
+  display: block;
+}
+
+.auth-left-inner h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.auth-left-inner p {
+  font-size: 0.97rem;
+  font-weight: 300;
+  line-height: 1.7;
+  opacity: 0.92;
+  max-width: 320px;
+}
+
+.auth-left-inner .fruit-illustration {
+  width: 220px;
+  margin-top: 40px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+  animation: floatAnim 3s ease-in-out infinite;
+}
+
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+/* ─── RIGHT PANEL (form) ────────────────────────────── */
+.auth-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  background: var(--white);
+  overflow-y: auto;
+}
+
+/* ─── AUTH CARD ─────────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-card .card-logo {
+  display: none; /* shown on mobile only */
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-card .card-logo img {
+  width: 140px;
+}
+
+.auth-card .card-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.auth-card .card-subtitle {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+/* ─── FORM FIELDS ───────────────────────────────────── */
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-wrap .field-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--gray-400);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.field-wrap input {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.92rem;
+  color: var(--gray-900);
+  background: var(--gray-100);
+  outline: none;
+  transition: var(--transition);
+  box-shadow: var(--shadow-input);
+}
+
+.field-wrap input::placeholder {
+  color: var(--gray-400);
+  font-weight: 300;
+}
+
+.field-wrap input:focus {
+  border-color: var(--orange);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.12);
+}
+
+.field-wrap input:focus + .field-icon-right,
+.field-wrap input:focus ~ .field-icon {
+  color: var(--orange);
+}
+
+/* Password toggle icon */
+.field-wrap .toggle-password {
+  position: absolute;
+  right: 14px;
+  color: var(--gray-400);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+  z-index: 2;
+}
+
+.field-wrap .toggle-password:hover {
+  color: var(--orange);
+}
+
+/* Password input needs extra right padding */
+.field-wrap input.has-toggle {
+  padding-right: 42px;
+}
+
+/* ─── FIELD WITH FOCUS ICON HIGHLIGHT ───────────────── */
+.field-wrap:focus-within .field-icon {
+  color: var(--orange);
+}
+
+/* ─── ERROR TEXT ─────────────────────────────────────── */
+.field-error {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--error);
+  margin-top: 5px;
+  min-height: 16px;
+  font-weight: 400;
+}
+
+/* ─── TWO-COLUMN ROW ─────────────────────────────────── */
+.field-row {
+  display: flex;
+  gap: 14px;
+}
+
+.field-row .field-group {
+  flex: 1;
+}
+
+/* ─── FORGOT PASSWORD ────────────────────────────────── */
+.forgot-link-wrap {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+.forgot-link-wrap a {
+  font-size: 0.8rem;
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.forgot-link-wrap a:hover {
+  color: var(--orange-dark);
+  text-decoration: underline;
+}
+
+/* ─── SUBMIT BUTTON ──────────────────────────────────── */
+.auth-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+  letter-spacing: 0.02em;
+  margin-bottom: 22px;
+}
+
+.auth-submit-btn:hover {
+  background: linear-gradient(135deg, var(--orange-dark) 0%, #c93b0e 100%);
+  box-shadow: 0 6px 22px rgba(255,107,53,0.45);
+  transform: translateY(-1px);
+}
+
+.auth-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ─── DIVIDER ────────────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  color: var(--gray-400);
+  font-size: 0.82rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-300);
+}
+
+/* ─── GOOGLE BUTTON ──────────────────────────────────── */
+.google-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--white);
+  color: var(--gray-700);
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.google-auth-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.google-auth-btn:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+  color: var(--gray-800);
+}
+
+/* ─── AUTH SWITCH LINK ───────────────────────────────── */
+.auth-switch {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.87rem;
+  color: var(--gray-500);
+}
+
+.auth-switch a {
+  color: var(--orange);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.auth-switch a:hover {
+  color: var(--orange-dark);
+  text-decoration: underline;
+}
+
+/* ─── GLOBAL RESULT / ERROR MSG ──────────────────────── */
+#result {
+  font-size: 0.8rem;
+  color: var(--error);
+  text-align: center;
+  min-height: 18px;
+  margin-bottom: 8px;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .auth-left {
+    display: none;
+  }
+
+  .auth-right {
+    flex: 1 1 100%;
+    padding: 36px 20px;
+    min-height: 100vh;
+  }
+
+  .auth-card .card-logo {
+    display: block;
+  }
+
+  .auth-card {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .field-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .auth-card .card-title {
+    font-size: 1.4rem;
+  }
+}

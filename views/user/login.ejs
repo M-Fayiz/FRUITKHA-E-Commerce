@@ -1,80 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fruitkha - Login</title>
-    <link rel="stylesheet" href="/css/pages/login.css">
-    <link rel="stylesheet" href="/toast.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <%-include('../partials/toast.ejs')%>
-        <!-- In your header -->
-        <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Fruitkha</title>
 
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/toast.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-    <div>
-        <div class="toast-container" id="toastContainer"></div>
-        <div class="container">
-            <div class="logo-container">
-                <img src="/img/logo.png" alt="Fruitkha Logo" width="250">
-                <!-- <img src="/images/logo.png"> -->
-                <!-- <div class="logo-text">
-                <h1>Fruitkha</h1>
-                <p>Fresh Fruits Online</p>
-            </div> -->
-            </div>
-        </div>
-        <form class="login-form" id="login_form">
-            <h2 style="font-weight:500 ;">Log in</h2>
+<div class="auth-page">
 
-            <div class="form-group">
-                <input type="email" name="email" id="email" placeholder="Email" required>
-            </div>
-
-            <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="Password" required>
-            </div>
-
-            <button type="submit" class="login-btn">Log in</button>
-
-            <div class="divider">
-                <span>or</span>
-            </div>
-
-            <div class="links">
-                <a href="/signUp">Create an Account</a>
-                <a href="/rest">Forgot Password</a>
-            </div>
-
-            <a style="text-decoration: none;" href="/auth/google" class="google-btn">
-                <img src="/img/icons8-google-logo-96.png" alt="Google Icon" width="20">
-                Sign in with Google
-            </a>
-
-            <!-- <% if (locals.error) { %>
-                <div class="error-message" style="color: red; text-align: center;">
-                    <%= error %>
-                </div>
-            <% } %> -->
-        </form>
+  <!-- ── LEFT PANEL ─────────────────────────────────── -->
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <img src="/img/logo.png" alt="Fruitkha" class="brand-logo">
+      <h1>Fresh & Organic<br>Delivered to You</h1>
+      <p>Shop the finest fruits and vegetables sourced straight from the farm. Healthy living starts here.</p>
+      <img src="/img/fruits-illustration.png" alt="" class="fruit-illustration"
+           onerror="this.style.display='none'">
     </div>
+  </div>
 
-    <script src="js/login.js"></script>
-    <script src="/showNotification.js"></script>
+  <!-- ── RIGHT PANEL ────────────────────────────────── -->
+  <div class="auth-right">
+    <div class="auth-card">
 
-    <script>
-        // function handleForgot(e){
-        //   const email= document.getElementById('email').value
-        //   console.log(email, " ", e)
-        //   e.href = `/getOTP/${email}`
+      <!-- Logo shown only on mobile -->
+      <div class="card-logo">
+        <img src="/img/logo.png" alt="Fruitkha">
+      </div>
 
-        // }
-    </script>
+      <h2 class="card-title">Welcome Back 👋</h2>
+      <p class="card-subtitle">Sign in to your Fruitkha account</p>
+
+      <form id="login_form" novalidate>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="email">Email Address</label>
+          <div class="field-wrap">
+            <i class="fa fa-envelope field-icon"></i>
+            <input type="email" id="email" name="email"
+                   placeholder="you@example.com" autocomplete="email" required>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <div class="field-wrap">
+            <i class="fa fa-lock field-icon"></i>
+            <input type="password" id="password" name="password"
+                   placeholder="Enter your password" class="has-toggle"
+                   autocomplete="current-password" required>
+            <i class="fa fa-eye toggle-password" id="toggleLoginPassword"
+               title="Show/hide password"></i>
+          </div>
+        </div>
+
+        <!-- Forgot -->
+        <div class="forgot-link-wrap">
+          <a href="/rest">Forgot Password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="auth-submit-btn">
+          <i class="fa fa-sign-in-alt"></i>
+          Sign In
+        </button>
+
+        <!-- Divider -->
+        <div class="auth-divider">or continue with</div>
+
+        <!-- Google -->
+        <a href="/auth/google" class="google-auth-btn">
+          <img src="/img/icons8-google-logo-96.png" alt="Google">
+          Continue with Google
+        </a>
+
+        <!-- Switch -->
+        <p class="auth-switch">
+          Don't have an account? <a href="/signup">Create one free</a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Password show/hide
+  document.getElementById('toggleLoginPassword').addEventListener('click', function () {
+    const input = document.getElementById('password');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye', !isHidden);
+    this.classList.toggle('fa-eye-slash', isHidden);
+  });
+</script>
+
+<script src="/js/login.js"></script>
+<script src="/showNotification.js"></script>
 </body>
-
 </html>

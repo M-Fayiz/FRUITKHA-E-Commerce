@@ -141,7 +141,7 @@ body {
     border: 1px solid var(--border);
 }
 
-.item-cell>div {}
+/* .item-cell>div {} */
 
 .item-name {
     font-size: 15px;

@@ -1,87 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fruitkha - Sign Up</title>
-    <link rel="stylesheet" href="/toast.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/pages/signup.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Fruitkha</title>
+
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/toast.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Signup-specific tweak: smaller vertical padding so form fits nicely */
+    .auth-right { padding: 32px; }
+    .auth-card   { max-width: 480px; }
+    .auth-card .card-subtitle { margin-bottom: 24px; }
+    .field-group  { margin-bottom: 14px; }
+  </style>
 </head>
 
 <body>
-    <div class="toast-container" id="toastContainer"></div>
-    <div class="container">
-        <div class="logo-container">
-            <img src="/img/logo.png" alt="Fruitkha Logo" width="250">
+<div class="auth-page">
 
+  <!-- ── LEFT PANEL ─────────────────────────────────── -->
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <img src="/img/logo.png" alt="Fruitkha" class="brand-logo">
+      <h1>Join the<br>Fruitkha Family</h1>
+      <p>Create your free account and enjoy fresh organic fruits delivered right to your doorstep every day.</p>
+      <img src="/img/fruits-illustration.png" alt="" class="fruit-illustration"
+           onerror="this.style.display='none'">
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ────────────────────────────────── -->
+  <div class="auth-right">
+    <div class="auth-card">
+
+      <!-- Logo shown only on mobile -->
+      <div class="card-logo">
+        <img src="/img/logo.png" alt="Fruitkha">
+      </div>
+
+      <h2 class="card-title">Create Account 🍊</h2>
+      <p class="card-subtitle">Fill in the details below to get started</p>
+
+      <form id="signupForm" action="/signup" method="post" novalidate>
+
+        <!-- First & Last Name -->
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="firstName">First Name</label>
+            <div class="field-wrap">
+              <i class="fa fa-user field-icon"></i>
+              <input type="text" id="firstName" name="firstName"
+                     placeholder="John" autocomplete="given-name">
+            </div>
+            <span class="field-error" id="firstNameerror"></span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="lastName">Last Name</label>
+            <div class="field-wrap">
+              <i class="fa fa-user field-icon"></i>
+              <input type="text" id="lastName" name="lastName"
+                     placeholder="Doe" autocomplete="family-name">
+            </div>
+            <span class="field-error" id="lasterror"></span>
+          </div>
         </div>
 
-        <form id="signupForm" class="signup-form" action="/signup" method="post">
-            <h2 style="font-weight: 200; color: #575757;">Sign up</h2>
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="email">Email Address</label>
+          <div class="field-wrap">
+            <i class="fa fa-envelope field-icon"></i>
+            <input type="email" id="email" name="email"
+                   placeholder="you@example.com" autocomplete="email">
+          </div>
+          <span class="field-error" id="EMIALerror"></span>
+        </div>
 
-            <div class="name-group">
-                <div class="form-group">
-                    <input id="firstName" type="text" name="firstName" placeholder="First Name">
-                    <span style="color: #ff1a1a; font-size: 12px;" class="error" id="firstNameerror"></span>
+        <!-- Phone -->
+        <div class="field-group">
+          <label class="field-label" for="phone">Phone Number</label>
+          <div class="field-wrap">
+            <i class="fa fa-phone field-icon"></i>
+            <input type="tel" id="phone" name="phone"
+                   placeholder="10-digit Indian mobile" autocomplete="tel">
+          </div>
+          <span class="field-error" id="PHONEerror"></span>
+        </div>
 
-                </div>
-                <div class="form-group">
-                    <input id="lastName" type="text" name="lastName" placeholder="Last Name">
-                    <span style="color: #ff1a1a; font-size: 12px;" class="error" id="lasterror"></span>
-                </div>
-            </div>
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <div class="field-wrap">
+            <i class="fa fa-lock field-icon"></i>
+            <input type="password" id="password" name="password"
+                   placeholder="Min 8 chars, number &amp; symbol"
+                   class="has-toggle" autocomplete="new-password">
+            <i class="fa fa-eye toggle-password" id="togglePassword"
+               title="Show/hide password"></i>
+          </div>
+          <span class="field-error" id="Passworderror"></span>
+        </div>
 
-            <div class="form-group">
-                <input id="email" type="email" name="email" placeholder="Email">
-                <span style="color: #ff1a1a; font-size: 12px;" class="error" id="EMIALerror"></span>
-            </div>
+        <!-- Confirm Password -->
+        <div class="field-group">
+          <label class="field-label" for="confirmPassword">Confirm Password</label>
+          <div class="field-wrap">
+            <i class="fa fa-lock field-icon"></i>
+            <input type="password" id="confirmPassword" name="confirmPassword"
+                   placeholder="Re-enter your password"
+                   class="has-toggle" autocomplete="new-password">
+            <i class="fa fa-eye toggle-password" id="toggleConfirm"
+               title="Show/hide password"></i>
+          </div>
+          <span class="field-error" id="Confirmerror"></span>
+        </div>
 
-            <div class="form-group">
-                <input id="phone" type="tel" name="phone" placeholder="Phone">
-                <span style="color: #ff1a1a; font-size: 12px;" class=" error" id="PHONEerror"></span>
-            </div>
+        <!-- Global error -->
+        <div id="result" style="font-size:0.8rem;color:#e53935;text-align:center;min-height:18px;margin-bottom:6px;"></div>
 
-            <div class="form-group">
-                <input id="password" type="password" name="password" placeholder="Password">
-                <span class="error" style="color: #ff1a1a; font-size: 12px;" id="Passworderror"></span>
-            </div>
+        <!-- Submit -->
+        <button type="submit" class="auth-submit-btn">
+          <i class="fa fa-user-plus"></i>
+          Create Account
+        </button>
 
-            <div class="form-group">
-                <input id="confirmPassword" type="password" name="confirmPassword" placeholder="Confirm Password">
-                <span class="error" style="color: #ff1a1a; font-size: 12px;" id="Confirmerror"></span>
-            </div>
-            <div>
-                <h4 id="result" style="color: #ff1a1a; font-size: 12px;" class=""></h4>
+        <!-- Divider -->
+        <div class="auth-divider">or sign up with</div>
 
-            </div>
+        <!-- Google -->
+        <a href="/auth/google" class="google-auth-btn">
+          <img src="/img/icons8-google-logo-96.png" alt="Google">
+          Sign up with Google
+        </a>
 
+        <!-- Switch -->
+        <p class="auth-switch">
+          Already have an account? <a href="/login">Sign in</a>
+        </p>
 
-            <button type="submit" class="signup-btn">Sign up</button>
-
-            <p class="login-link">
-                Already have an account? <a href="/login">Sign in</a>
-            </p>
-
-            <a style="text-decoration: none;" href="/auth/google" class="google-btn">
-                <img src="/img/icons8-google-logo-96.png" alt="Google Icon" width="20">
-                Sign in with Google
-            </a>
-
-            <!-- <% if (locals.error) { %>
-                <div class="error-message">
-                    <%= error %>
-                </div>
-            <% } %> -->
-        </form>
-        <script src="/showNotification.js"></script>
-        <script src="/js/signup.js"></script>
+      </form>
     </div>
-</body>
+  </div>
 
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // Password show/hide — password field
+  document.getElementById('togglePassword').addEventListener('click', function () {
+    const input = document.getElementById('password');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye', !isHidden);
+    this.classList.toggle('fa-eye-slash', isHidden);
+  });
+
+  // Password show/hide — confirm field
+  document.getElementById('toggleConfirm').addEventListener('click', function () {
+    const input = document.getElementById('confirmPassword');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye', !isHidden);
+    this.classList.toggle('fa-eye-slash', isHidden);
+  });
+</script>
+
+<script src="/showNotification.js"></script>
+<script src="/js/signup.js"></script>
+</body>
 </html>
