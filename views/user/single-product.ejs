@@ -74,24 +74,24 @@
 										</span>
 										<% } %>
 											<% } %>
-												<img id="mainImage" src="/images/<%= item.primaryImage %>"
+												<img id="mainImage" src="<%= item.primaryImage %>"
 													alt="<%= item.productTitle %>">
 						</div>
 						<div class="pd-thumbs">
 							<div class="pd-thumb active"
-								onclick="changeThumb(this, '/images/<%= item.primaryImage %>')">
-								<img src="/images/<%= item.primaryImage %>" alt="Thumbnail 1">
+								onclick="changeThumb(this, '<%= item.primaryImage %>')">
+								<img src="<%= item.primaryImage %>" alt="Thumbnail 1">
 							</div>
 							<% if (item.additonalImage && item.additonalImage[0]) { %>
 								<div class="pd-thumb"
-									onclick="changeThumb(this, '/images/<%= item.additonalImage[0] %>')">
-									<img src="/images/<%= item.additonalImage[0] %>" alt="Thumbnail 2">
+									onclick="changeThumb(this, '<%= item.additonalImage[0] %>')">
+									<img src="<%= item.additonalImage[0] %>" alt="Thumbnail 2">
 								</div>
 								<% } %>
 									<% if (item.additonalImage && item.additonalImage[1]) { %>
 										<div class="pd-thumb"
-											onclick="changeThumb(this, '/images/<%= item.additonalImage[1] %>')">
-											<img src="/images/<%= item.additonalImage[1] %>" alt="Thumbnail 3">
+											onclick="changeThumb(this, '<%= item.additonalImage[1] %>')">
+											<img src="<%= item.additonalImage[1] %>" alt="Thumbnail 3">
 										</div>
 										<% } %>
 						</div>
@@ -340,7 +340,7 @@
 												</span>
 												<% } %>
 													<% } %>
-														<img src="/images/<%= rel.primaryImage %>"
+														<img src="<%= rel.primaryImage %>"
 															alt="<%= rel.productTitle %>" loading="lazy">
 								</div>
 								<div class="rel-body">

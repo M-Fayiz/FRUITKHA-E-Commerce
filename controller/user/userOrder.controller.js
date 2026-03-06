@@ -152,7 +152,7 @@ const ReturnOrder = async (req, res) => {
 
     order.Return.req = true;
     order.Return.reason = Reason;
-    order.Return.image = prodctImage.filename;
+    order.Return.image = prodctImage.path;
     await order.save();
     return res
       .status(httpStatusCode.OK)
@@ -209,10 +209,10 @@ const productReturn = async (req, res) => {
       });
     }
 
-    console.log(productImage.filename, "Product image");
+    console.log(productImage.path, "Product image");
     product.return.req = true;
     product.return.reason = Reason;
-    product.return.image = productImage.filename;
+    product.return.image = productImage.path;
 
     await order.save();
 

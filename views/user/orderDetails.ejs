@@ -130,7 +130,7 @@
                   <tbody>
                     <% Order.Products.forEach(item=>{ %>
                       <tr>
-                        <td><img src="/images/<%= item.product.primaryImage %>" class="prod-img" alt=""></td>
+                        <td><img src="<%= item.product.primaryImage %>" class="prod-img" alt=""></td>
                         <td>
                           <div class="prod-title">
                             <%= item.product.productTitle %>

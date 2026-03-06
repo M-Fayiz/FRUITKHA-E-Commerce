@@ -45,7 +45,7 @@
                     <div class="form-group">
                         <label>Main Image</label>
                         <div class="image-preview">
-                            <img id="mainImagePreview" src="/images/<%=result.primaryImage%>" alt="Main product image">
+                            <img id="mainImagePreview" src="<%=result.primaryImage%>" alt="Main product image">
                         </div>
                         <input type="file" id="primaryImageInput" accept="image/*" style="margin-top: 10px;">
                     </div>
@@ -56,13 +56,13 @@
 
                             <div class="gallery-item">
 
-                                <img src="/images/<%= result.additonalImage[0] %>" alt="Gallery image ">
+                                <img src="<%= result.additonalImage[0] %>" alt="Gallery image ">
 
                             </div>
                             <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">
 
                             <div class="gallery-item">
-                                <img src="/images/<%= result.additonalImage[1] %>" alt="Gallery image ">
+                                <img src="<%= result.additonalImage[1] %>" alt="Gallery image ">
 
                             </div>
                             <input type="file" class="additionalImageInput" accept="image/*" style="margin-top: 10px;">

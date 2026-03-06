@@ -67,7 +67,7 @@
                                             <p>User Request: <span style="color: red;">for Return</span> </p>
                                             <button type="button" class="btn btn-link p-0" data-bs-toggle="modal"
                                                 data-bs-target="#infoModal" data-reason="<%= orders.Return.reason %>"
-                                                data-image="/images/<%=orders.Return.image %>"
+                                                data-image="<%=orders.Return.image %>"
                                                 style="border: none; color: #00b3ff; background: none;">
                                                 <i class="bi bi-info-circle me-2"></i>
                                             </button>
@@ -170,7 +170,7 @@
                                                         <td>
                                                             <a class="itemside" href="#">
                                                                 <div class="left">
-                                                                    <img src="/images/<%= item.product.primaryImage %>"
+                                                                    <img src="<%= item.product.primaryImage %>"
                                                                         width="40" height="40" class="img-xs"
                                                                         alt="Item" />
                                                                 </div>
@@ -223,7 +223,7 @@
                                                                 <button type="button" class="btn btn-link p-0"
                                                                     data-bs-toggle="modal" data-bs-target="#infoModal"
                                                                     data-reason="<%= item.return.reason %>"
-                                                                    data-image="/images/<%= item.return.image %>"
+                                                                    data-image="<%= item.return.image %>"
                                                                     style="border: none; color: #00b3ff; background: none;">
                                                                     <i class="bi bi-info-circle me-2"></i>
                                                                 </button>

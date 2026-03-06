@@ -47,7 +47,7 @@
                             <% wish.Products.forEach(item=> { %>
                                 <div class="wish-item">
                                     <% if (item.product.primaryImage) { %>
-                                        <img src="/images/<%= item.product.primaryImage %>" class="wish-img"
+                                        <img src="<%= item.product.primaryImage %>" class="wish-img"
                                             alt="<%= item.product.productTitle %>">
                                         <% } else { %>
                                             <div class="wish-img-placeholder"><i class="fas fa-image"></i></div>

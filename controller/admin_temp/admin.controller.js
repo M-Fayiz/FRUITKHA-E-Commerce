@@ -94,7 +94,7 @@ const addCategory = async (req, res) => {
 
     const saveCategory = new category({
       category: title,
-      image: image.filename,
+      image: image.path,
       description: discription,
     });
 
@@ -144,29 +144,24 @@ const EditCategory = async (req, res) => {
   try {
     const { modalTitle, modalDescription, productId } = req.body;
 
-    const test = await category.findOne({
-      category: { $regex: new RegExp("^" + modalTitle + "$", "i") },
-    });
-    if (test) {
-      return res
-        .status(httpStatusCode.ITEM_EXIST)
-        .json({ success: false, message: httpResponse.CATEGORY_EXISTS });
+    // Only check for duplicate name when a new title is actually provided
+    if (modalTitle) {
+      const test = await category.findOne({
+        category: { $regex: new RegExp("^" + modalTitle + "$", "i") },
+        _id: { $ne: productId }, // exclude current category from the check
+      });
+      if (test) {
+        return res
+          .status(httpStatusCode.ITEM_EXIST)
+          .json({ success: false, message: httpResponse.CATEGORY_EXISTS });
+      }
     }
 
     const updates = {};
 
-    if (modalTitle) {
-      updates.category = modalTitle;
-    }
-    if (modalDescription) {
-      updates.description = modalDescription;
-    }
-
-    if (req.file) {
-      updates.image = req.file.filename;
-    }
-
-    console.log(updates);
+    if (modalTitle)       updates.category    = modalTitle;
+    if (modalDescription) updates.description = modalDescription;
+    if (req.file)         updates.image       = req.file.path;
 
     const response = await category.findByIdAndUpdate(productId, updates, {
       new: true,
@@ -180,10 +175,10 @@ const EditCategory = async (req, res) => {
         message: httpResponse.CATEGORY_UPDATED,
       });
   } catch (error) {
+    console.log(error.message);
     res
       .status(httpStatusCode.SERVER_ERROR)
       .json({ success: false, message: error.message });
-    console.log(error.message);
   }
 };
 

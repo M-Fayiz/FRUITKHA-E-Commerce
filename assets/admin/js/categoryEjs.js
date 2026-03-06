@@ -1,214 +1,179 @@
+// ─── Image preview for Add Category ─────────────────────────────────────────
 document.getElementById("image").addEventListener("change", function (event) {
   const file = event.target.files[0];
   const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
   if (!file || !allowedTypes.includes(file.type)) {
-    showToast(
-      "Invalid file type! Please upload a PNG or JPEG image ..",
-      "info",
-    );
+    showToast("Invalid file type! Please upload a PNG or JPEG image.", "info");
+    this.value = "";
     return;
   }
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const modalImage = document.getElementById("modalImage");
-      modalImage.src = e.target.result;
-
-      document.getElementById("imageModal").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    document.getElementById("modalImage").src = e.target.result;
+    document.getElementById("imageModal").style.display = "block";
+  };
+  reader.readAsDataURL(file);
 });
 
 document.getElementById("closeModal").addEventListener("click", function () {
   document.getElementById("imageModal").style.display = "none";
 });
 
+
+// ─── List / Unlist category ──────────────────────────────────────────────────
 function toggleItemStatus(itemId, condition) {
-  console.log("working");
-  console.log(itemId, condition);
   fetch(`/admin/api/categories/${itemId}/status`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
+    headers: { "Content-Type": "application/json; charset=UTF-8" },
     body: JSON.stringify({ condition }),
   })
     .then((res) => res.json())
     .then((data) => {
       if (data.success) {
         showToast(data.message, "success");
-        setTimeout(() => {
-          location.reload();
-        });
-        // alert(data.message)
-        // updateHtml(data.response)
+        setTimeout(() => location.reload(), 800);
       } else {
         showToast(data.message, "error");
       }
-    });
+    })
+    .catch(() => showToast("Something went wrong.", "error"));
 }
-//    end List and Unlist
 
-//      EDIT CATEGORY
+
+// ─── Edit Category ────────────────────────────────────────────────────────────
+// Populate the edit modal fields and store the current productId
+let currentEditId = null;
+
+function editCategory(itemId, category, description, img) {
+  currentEditId = itemId;
+  document.getElementById("modalTitle").value       = category;
+  document.getElementById("modalDescription").value = description;
+  // img is now a full Cloudinary URL — use it directly
+  document.getElementById("editImg").src = img;
+  document.getElementById("editModal").style.display = "flex";
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-  const editButtons = document.querySelectorAll(".edit-btn");
-  const modal = document.getElementById("editModal");
+  const modal           = document.getElementById("editModal");
   const closeUpdateModal = document.getElementById("closeUpdateModal");
-  const updateButton = document.getElementById("updateButton");
 
-  // Open modal for clicked item
-  editButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const productId = this.getAttribute("data-id");
-      console.log("Edit button clicked for product ID:", productId);
-
-      modal.style.display = "flex";
-      console.log("Modal should now be visible.");
-
-      document
-        .getElementById("edit-category")
-        .addEventListener("submit", (e) => {
-          e.preventDefault(); // Prevent default form submission
-
-          const modalTitle = document.getElementById("modalTitle").value.trim();
-          const modalDescription = document
-            .getElementById("modalDescription")
-            .value.trim();
-
-          const imageFile = document.getElementById("modalImageInput").files[0];
-          const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
-
-          if (!imageFile || !allowedTypes.includes(imageFile.type)) {
-            alert(
-              "Invalid file type! Please upload a PNG or JPEG image ..",
-              "info",
-            );
-            return;
-          }
-
-          // Only show an alert if the title or description fields are non-empty and contain invalid characters
-          if (
-            (modalTitle && !modalTitle.match(/^[A-Za-z ]+$/)) ||
-            (modalDescription && !modalDescription.match(/^[A-Za-z ]+$/))
-          ) {
-            alert(
-              "Title and Description should contain only letters and spaces.",
-            );
-            return; // Stop execution if validation fails
-          }
-          const formData = new FormData();
-
-          if (modalTitle) {
-            formData.append("modalTitle", modalTitle);
-          }
-          if (modalDescription) {
-            formData.append("modalDescription", modalDescription);
-          }
-
-          if (imageFile) {
-            formData.append("image", imageFile);
-          }
-          formData.append("productId", productId);
-          console.log("nbnm");
-
-          fetch(`/admin/api/categories/${productId}`, {
-            method: "PATCH",
-            body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              if (data.success) {
-                showToast(data.message, "success");
-                // alert(data.message)
-                setTimeout(() => {
-                  location.reload();
-                });
-              } else {
-                showToast(data.message, "error");
-                // alert(data.message)
-              }
-            })
-            .catch((error) => console.error("Error:", error));
-        });
-    });
-  });
-
+  // Close on X button
   closeUpdateModal.addEventListener("click", function () {
     modal.style.display = "none";
-    console.log("Modal closed.");
   });
 
-  updateButton.addEventListener("click", function () {
-    console.log("Update button clicked.");
-    // Add your update logic here
-    modal.style.display = "none";
-  });
-
+  // Close on outside click
   window.addEventListener("click", function (event) {
-    if (event.target == modal) {
+    if (event.target === modal) {
       modal.style.display = "none";
-      console.log("Modal closed by clicking outside.");
     }
   });
-});
 
-// End Edit Category [[[[[[[[[[]]]]]]]]]]
+  // Submit handler — attached once here, not inside editCategory()
+  document.getElementById("edit-category").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-//####### ADDDD CATEGORY
+    const productId        = currentEditId;
+    const modalTitle       = document.getElementById("modalTitle").value.trim();
+    const modalDescription = document.getElementById("modalDescription").value.trim();
+    const imageFile        = document.getElementById("modalImageInput").files[0];
+    const allowedTypes     = ["image/png", "image/jpeg", "image/jpg"];
 
-document.getElementById("form-category").addEventListener("submit", (e) => {
-  console.log("add Category");
-  e.preventDefault();
-  const title = document.getElementById("title").value.trim();
-  const discription = document.getElementById("discr").value.trim();
+    // At least title or description must be provided
+    if (!modalTitle && !modalDescription && !imageFile) {
+      showToast("Please update at least one field.", "info");
+      return;
+    }
 
-  if (!title.match(/^[A-Za-z ]+$/) || !discription.match(/^[A-Za-z ]+$/)) {
-    showToast(
-      "Name  and Discriotion should contain only letters and spaces.",
-      "info",
-    );
+    // Validate title/description characters (if provided)
+    if (modalTitle && !/^[A-Za-z ]+$/.test(modalTitle)) {
+      showToast("Title should contain only letters and spaces.", "info");
+      return;
+    }
+    if (modalDescription && !/^[A-Za-z ]+$/.test(modalDescription)) {
+      showToast("Description should contain only letters and spaces.", "info");
+      return;
+    }
 
-    return;
-  }
-  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
-  const file = document.getElementById("image").files[0];
-  if (!file || !allowedTypes.includes(file.type)) {
-    alert("Invalid file type! Please upload a PNG or JPEG image ..", "info");
-    return;
-  }
-  const formData = new FormData();
-  formData.append("title", document.getElementById("title").value.trim());
-  formData.append("discription", document.getElementById("discr").value.trim());
-  formData.append("image", file);
+    // Validate image type only if a file was actually selected
+    if (imageFile && !allowedTypes.includes(imageFile.type)) {
+      showToast("Invalid file type! Please upload a PNG or JPEG image.", "info");
+      return;
+    }
 
-  try {
-    fetch("/admin/api/categories", {
-      method: "post",
+    const formData = new FormData();
+    if (modalTitle)       formData.append("modalTitle",       modalTitle);
+    if (modalDescription) formData.append("modalDescription", modalDescription);
+    if (imageFile)        formData.append("image",            imageFile);
+    formData.append("productId", productId);
+
+    fetch(`/admin/api/categories/${productId}`, {
+      method: "PATCH",
       body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert(data.message, "success");
-          setTimeout(() => {
-            location.reload();
-          });
+          showToast(data.message, "success");
+          modal.style.display = "none";
+          setTimeout(() => location.reload(), 1000);
         } else {
-          alert(data.message, "error");
+          showToast(data.message, "error");
         }
-      });
-  } catch (error) {
-    console.log(error.message);
-  }
+      })
+      .catch(() => showToast("Something went wrong.", "error"));
+  });
 });
 
-function editCategory(itemId, Category, description, img) {
-  document.getElementById("modalTitle").value = Category;
-  document.getElementById("modalDescription").value = description;
-  const modalImage = document.getElementById("editImg");
-  modalImage.src = `/images/${img}`;
-}
+
+// ─── Add Category ─────────────────────────────────────────────────────────────
+document.getElementById("form-category").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const title       = document.getElementById("title").value.trim();
+  const discription = document.getElementById("discr").value.trim();
+  const file        = document.getElementById("image").files[0];
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+  if (!title || !discription) {
+    showToast("Title and description are required.", "info");
+    return;
+  }
+
+  if (!title.match(/^[A-Za-z ]+$/)) {
+    showToast("Title should contain only letters and spaces.", "info");
+    return;
+  }
+
+  if (!discription.match(/^[A-Za-z ]+$/)) {
+    showToast("Description should contain only letters and spaces.", "info");
+    return;
+  }
+
+  if (!file || !allowedTypes.includes(file.type)) {
+    showToast("Invalid file type! Please upload a PNG or JPEG image.", "info");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("title",       title);
+  formData.append("discription", discription);
+  formData.append("image",       file);
+
+  fetch("/admin/api/categories", {
+    method: "POST",
+    body: formData,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        showToast(data.message, "success");
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        showToast(data.message, "error");
+      }
+    })
+    .catch(() => showToast("Server error. Try again later.", "error"));
+});

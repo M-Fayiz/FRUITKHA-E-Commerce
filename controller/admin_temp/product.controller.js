@@ -45,8 +45,8 @@ const addProduct = async (req, res) => {
 
     const image = req.files
       ? Array.isArray(req.files)
-        ? req.files.map((file) => file.filename)
-        : [req.files.filename]
+        ? req.files.map((file) => file.path)
+        : [req.files.path]
       : [];
 
     const primaryImage = image[0];
@@ -219,7 +219,7 @@ const editProduct = async (req, res) => {
     };
 
     if (req.files.primaryImage && req.files.primaryImage[0]) {
-      updateData.primaryImage = req.files.primaryImage[0].filename;
+      updateData.primaryImage = req.files.primaryImage[0].path;
     }
 
     let updatedAdditionalImages = [...(product.additonalImage || [])];
@@ -228,8 +228,8 @@ const editProduct = async (req, res) => {
       const match = key.match(/additionalImage(\d+)/);
       if (match) {
         const index = parseInt(match[1], 10);
-        if (req.files[key][0] && req.files[key][0].filename) {
-          updatedAdditionalImages[index] = req.files[key][0].filename;
+        if (req.files[key][0] && req.files[key][0].path) {
+          updatedAdditionalImages[index] = req.files[key][0].path;
         }
       }
     });
