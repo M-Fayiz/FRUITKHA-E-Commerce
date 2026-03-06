@@ -30,8 +30,9 @@
     <div class="od-page">
 
       <!-- Order Status Tracking -->
-      <% const statuses=['Pending','Shipped','On Delivery','Delivered']; const
-        currentIdx=statuses.indexOf(Order.orderStatus); %>
+      <% const statuses=['Pending','Shipped','Out for Delivery','Delivered']; const
+        normalizedStatus=(Order.orderStatus==='On Delivery' ? 'Out for Delivery' : Order.orderStatus);
+        currentIdx=statuses.indexOf(normalizedStatus); %>
         <% if (Order.orderStatus !=='Cancelled' && Order.orderStatus !=='Returned' ) { %>
           <div class="section-card">
             <div class="section-card-title"><i class="fas fa-route"></i> Order Tracking</div>
@@ -57,8 +58,8 @@
               <div class="od-info-grid">
                 <div class="od-info-item">
                   <div class="label">Order ID</div>
-                  <div class="value" style="font-family:monospace;font-size:12.5px;">
-                    <%= Order._id %>
+                  <div class="value" style="font-weight:600;color:var(--fr-orange);">
+                    <%= Order.orderNumber || Order.id %>
                   </div>
                 </div>
                 <div class="od-info-item">
@@ -85,7 +86,7 @@
                         <span class="status-pill <%=
               Order.orderStatus==='Pending'?'s-pending':
               Order.orderStatus==='Shipped'?'s-shipped':
-              Order.orderStatus==='On Delivery'?'s-ondelivery':
+              (Order.orderStatus==='Out for Delivery' || Order.orderStatus==='On Delivery')?'s-ondelivery':
               Order.orderStatus==='Delivered'?'s-delivered':
               Order.orderStatus==='Cancelled'?'s-cancelled':
               Order.orderStatus==='Returned'?'s-return':''
@@ -154,7 +155,7 @@
                           <span class="status-pill <%=
                   item.status==='Pending'?'s-pending':
                   item.status==='Shipped'?'s-shipped':
-                  item.status==='On Delivery'?'s-ondelivery':
+                  (item.status==='Out for Delivery' || item.status==='On Delivery')?'s-ondelivery':
                   item.status==='Delivered'?'s-delivered':
                   item.status==='Cancelled'?'s-cancelled':
                   item.status==='Returned'?'s-return':''
@@ -297,6 +298,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/js/userOrderDetails.js"></script>
+    <script>
+      // EJS-dependent runtime checks (cannot live in a static .js file)
+      window.addEventListener('DOMContentLoaded', function () {
+        const paymentMethod = '<%= Order.payment %>';
+        const paymentStatus = '<%= Order.paymentStatus %>';
+        if (paymentMethod === 'razorpay' && paymentStatus === 'Pending') {
+          showToast('Your payment is pending. Please complete your payment.', 'info');
+        }
+      });
+    </script>
 </body>
 
 </html>

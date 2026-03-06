@@ -2,8 +2,10 @@ document.getElementById("status-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const Status = document.getElementById("status").value;
   const OrderID = document.getElementById("OrdeID").value;
-
-  console.log(Status, OrdeID);
+  if (!Status || Status === "Change status") {
+    showToast("Please select a valid order status.", "info");
+    return;
+  }
 
   fetch(`/admin/api/orders/${OrderID}/status`, {
     method: "PATCH",

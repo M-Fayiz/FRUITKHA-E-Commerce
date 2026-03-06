@@ -8,6 +8,10 @@ const ORDER = require("../../model/admin/order-schema");
 const PRODUCT = require("../../model/admin/product");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
+const {
+  getUploadImagePath,
+  normalizeStoredImagePath,
+} = require("../../utils/imagePath.util");
 
 const securePassword = async (password) => {
   try {
@@ -92,9 +96,11 @@ const addCategory = async (req, res) => {
         });
     }
 
+    const imagePath = getUploadImagePath(image);
+
     const saveCategory = new category({
       category: title,
-      image: image.path,
+      image: imagePath,
       description: discription,
     });
 
@@ -161,7 +167,7 @@ const EditCategory = async (req, res) => {
 
     if (modalTitle)       updates.category    = modalTitle;
     if (modalDescription) updates.description = modalDescription;
-    if (req.file)         updates.image       = req.file.path;
+    if (req.file)         updates.image       = getUploadImagePath(req.file);
 
     const response = await category.findByIdAndUpdate(productId, updates, {
       new: true,
@@ -287,6 +293,11 @@ const LoadCategory = async (req, res) => {
       .populate("Offer")
       .skip(skip)
       .limit(limit);
+
+    data.forEach((item) => {
+      item.image = normalizeStoredImagePath(item.image);
+    });
+
     res.render("admin/page-categories", {
       data,
       CURRENTpage: "category",

@@ -96,7 +96,7 @@ const OrderStatus = async (req, res) => {
     });
 
     await sendNotification(
-      req.session.user,
+      order.UserID,
       `Your Order has been ${Status}.`,
       NOTIFICATION_STATUS.SUCCESS,
     );
@@ -199,7 +199,7 @@ const handleProductAction = async (req, res) => {
       (order.payment === PAYMENT_METHOD.RAZORPAY ||
         order.payment === PAYMENT_METHOD.WALLET)
     ) {
-      await refundWallet(order.UserID, calculation.refundAmount);
+      await refundWallet(order.UserID, calculation.refundAmount, order.orderNumber);
     }
 
     const allProductsCancelled = order.Products.every(
@@ -264,7 +264,7 @@ const ReturnHandle = async (req, res) => {
 
         const calculation = calculateRefundAndAdjustments(order, product);
 
-        await refundWallet(order.UserID, calculation.refundAmount);
+        await refundWallet(order.UserID, calculation.refundAmount, order.orderNumber);
 
         await ORDER.findOneAndUpdate(
           { _id: orderId, "Products._id": itemId },
@@ -318,7 +318,7 @@ const ReturnHandle = async (req, res) => {
           },
         );
 
-        await refundWallet(order.UserID, refundAmount);
+        await refundWallet(order.UserID, refundAmount, order.orderNumber);
         await sendNotification(
           req.session.user,
           "Order approved and marked as returned.",

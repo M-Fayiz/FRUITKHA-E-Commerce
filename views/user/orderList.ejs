@@ -52,7 +52,7 @@
                       <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
                         <div>
                           <div class="order-id"><i class="fas fa-hashtag me-1"></i>
-                            <%= order._id %>
+                            <%= order.orderNumber || order.id %>
                           </div>
                           <div class="order-date mt-1">
                             <i class="far fa-clock me-1"></i>
@@ -64,7 +64,7 @@
                         <span class="status-pill <%=
                 order.orderStatus==='Pending'     ? 's-pending'    :
                 order.orderStatus==='Shipped'     ? 's-shipped'    :
-                order.orderStatus==='On Delivery' ? 's-ondelivery' :
+                (order.orderStatus==='Out for Delivery' || order.orderStatus==='On Delivery') ? 's-ondelivery' :
                 order.orderStatus==='Delivered'   ? 's-delivered'  :
                 order.orderStatus==='Cancelled'   ? 's-cancelled'  :
                 order.orderStatus==='Return'      ? 's-return'     : ''

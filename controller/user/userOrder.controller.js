@@ -90,13 +90,23 @@ const CANCELallORDER = async (req, res) => {
     ) {
       const wallet = await WALLET.findOne({ userId: user });
       if (wallet) {
-        wallet.transactions.push({ type: "credit", amount: refundAmount });
+        wallet.transactions.push({
+          type: "credit",
+          amount: refundAmount,
+          orderNumber: order.orderNumber,
+        });
         await wallet.save();
       } else {
         const newWallet = new WALLET({
           userId: user,
           balance: 0,
-          transactions: [{ type: "credit", amount: refundAmount }],
+          transactions: [
+            {
+              type: "credit",
+              amount: refundAmount,
+              orderNumber: order.orderNumber,
+            },
+          ],
         });
         await newWallet.save();
       }

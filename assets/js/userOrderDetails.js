@@ -122,14 +122,8 @@ function returnItem(element) {
   });
 }
 
-window.onload = function () {
-  const paymentMethod = "<%= Order.payment %>";
-  const paymentStatus = "<%= Order.paymentStatus %>";
 
-  if (paymentMethod === "razorpay" && paymentStatus === "Pending") {
-    showToast("Your payment is pending. Please complete your payment.", "info");
-  }
-};
+
 
 const retryBtn = document.getElementById("orderID");
 if (retryBtn) {

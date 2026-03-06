@@ -140,6 +140,7 @@ const placeOrder = async (req, res) => {
       }
     }
 
+    const orderNumber = generateOrderNumber();
     let paymentStatus = PAYMENT_STATUS.PENDING;
 
     if (paymentMethod === PAYMENT_METHOD.RAZORPAY) {
@@ -177,7 +178,11 @@ const placeOrder = async (req, res) => {
           });
       }
 
-      wallet.transactions.push({ type: "debit", amount: totalAmount });
+      wallet.transactions.push({
+        type: "debit",
+        amount: totalAmount,
+        orderNumber,
+      });
       await wallet.save();
       paymentStatus = PAYMENT_STATUS.COMPLETED;
     } else if (paymentMethod === PAYMENT_METHOD.COD) {
@@ -185,7 +190,7 @@ const placeOrder = async (req, res) => {
     }
 
     const orderData = {
-      orderNumber: generateOrderNumber(),
+      orderNumber,
       UserID: User,
       Products: cart.Products.map((item) => ({
         product: item.productId,
@@ -432,9 +437,10 @@ const invoice = async (req, res) => {
     const doc = new PDFDocument({ margin: 30 });
 
     res.setHeader("Content-Type", "application/pdf");
+    const invoiceOrderId = order.orderNumber || order._id.toString();
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=invoice_${order._id}.pdf`,
+      `attachment; filename=invoice_${invoiceOrderId}.pdf`,
     );
 
     doc.pipe(res);
@@ -447,7 +453,7 @@ const invoice = async (req, res) => {
     doc.moveDown();
 
     doc.fontSize(12).fillColor("#000").text(`Invoice No: INC${randomNumber}`);
-    doc.text(`Order ID: ${order._id}`);
+    doc.text(`Order ID: ${invoiceOrderId}`);
     doc.text(
       `Date: ${new Date(order.createdAt).toLocaleString("en-US", {
         weekday: "short",

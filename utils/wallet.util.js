@@ -2,7 +2,7 @@ const WALLET = require("../model/user/wallet");
 const httpResponse = require("../constant/httpResponse");
 const { WALLET_TRANSACTION_TYPE } = require("../constant/status/walletStatus");
 
-const refundWallet = async (userId, amount) => {
+const refundWallet = async (userId, amount, orderNumber = null) => {
   try {
     let wallet = await WALLET.findOne({ userId });
 
@@ -10,6 +10,7 @@ const refundWallet = async (userId, amount) => {
       wallet.transactions.push({
         type: WALLET_TRANSACTION_TYPE.CREDIT,
         amount,
+        orderNumber,
       });
       await wallet.save();
       return { success: true };
@@ -17,7 +18,9 @@ const refundWallet = async (userId, amount) => {
 
     wallet = new WALLET({
       userId,
-      transactions: [{ type: WALLET_TRANSACTION_TYPE.CREDIT, amount }],
+      transactions: [
+        { type: WALLET_TRANSACTION_TYPE.CREDIT, amount, orderNumber },
+      ],
     });
     await wallet.save();
     return { success: true };

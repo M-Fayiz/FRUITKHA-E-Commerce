@@ -7,6 +7,7 @@ const PRODUCT = require("../../model/admin/product");
 const categoryModel = require("../../model/admin/category");
 const httpStatusCode = require("../../constant/httpStatusCode");
 const httpResponse = require("../../constant/httpResponse");
+const { getUploadImagePath } = require("../../utils/imagePath.util");
 
 const addProduct = async (req, res) => {
   try {
@@ -45,8 +46,8 @@ const addProduct = async (req, res) => {
 
     const image = req.files
       ? Array.isArray(req.files)
-        ? req.files.map((file) => file.path)
-        : [req.files.path]
+        ? req.files.map((file) => getUploadImagePath(file))
+        : [getUploadImagePath(req.files)]
       : [];
 
     const primaryImage = image[0];
@@ -219,7 +220,7 @@ const editProduct = async (req, res) => {
     };
 
     if (req.files.primaryImage && req.files.primaryImage[0]) {
-      updateData.primaryImage = req.files.primaryImage[0].path;
+      updateData.primaryImage = getUploadImagePath(req.files.primaryImage[0]);
     }
 
     let updatedAdditionalImages = [...(product.additonalImage || [])];
@@ -229,7 +230,7 @@ const editProduct = async (req, res) => {
       if (match) {
         const index = parseInt(match[1], 10);
         if (req.files[key][0] && req.files[key][0].path) {
-          updatedAdditionalImages[index] = req.files[key][0].path;
+          updatedAdditionalImages[index] = getUploadImagePath(req.files[key][0]);
         }
       }
     });

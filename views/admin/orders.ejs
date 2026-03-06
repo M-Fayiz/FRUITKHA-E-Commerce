@@ -57,7 +57,7 @@
 
 
 
-                                                        <td>#<%=item._id%>
+                                                        <td>#<%=item.orderNumber || item._id%>
                                                         </td>
                                                         <td>
                                                             <%=item.UserID.firstName%>
@@ -65,7 +65,7 @@
                                                         <td class="<%= 
                                                 item.orderStatus === 'Pending' ? 'pending' : 
                                                 item.orderStatus === 'Shipped' ? 'shipped' : 
-                                                item.orderStatus === 'On Delivery' ? 'on-delivery' : 
+                                                (item.orderStatus === 'Out for Delivery' || item.orderStatus === 'On Delivery') ? 'on-delivery' : 
                                                 item.orderStatus === 'Delivered' ? 'delivered' : 
                                                 item.orderStatus === 'Cancelled' ? 'cancelled' : 
                                                 item.orderStatus === 'Return' ? 'return' : '' 

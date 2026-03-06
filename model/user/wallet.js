@@ -18,6 +18,10 @@ const transactionSchema = new mongoose.Schema(
       default: Date.now,
       required: true,
     },
+    orderNumber: {
+      type: String,
+      default: null,
+    },
   },
   { _id: false },
 );

@@ -49,13 +49,13 @@
                                                     , hour: 'numeric' , minute: '2-digit' , hour12: true }) %>
                                             </b> </span> <br />
                                         <small style="color: rgb(36, 36, 36); font-size: 18px   ;">Order ID:
-                                            <%=orders.id%></small>
+                                            <%=orders.orderNumber || orders.id%></small>
 
                                     </div>
                                     <p style="color: #747474;">Order Status : <span class="<%= 
                                 orders.orderStatus === 'Pending' ? 'pending' : 
                                 orders.orderStatus === 'Shipped' ? 'shipped' : 
-                                orders.orderStatus === 'On Delivery' ? 'on-delivery' : 
+                                (orders.orderStatus === 'Out for Delivery' || orders.orderStatus === 'On Delivery') ? 'on-delivery' : 
                                 orders.orderStatus === 'Delivered' ? 'delivered' : 
                                 orders.orderStatus === 'Cancelled' ? 'cancelled' : 
                                 orders.orderStatus === 'Returned ' ? 'return' : '' 
@@ -79,7 +79,7 @@
                                                     <option value="Cancel">Cancel</option>
 
                                                 </select>
-                                                <input type="text" id="orderrrID" value="<%=orders.id%>" hidden>
+                                                    <input type="text" id="orderrrID" value="<%=orders._id%>" hidden>
                                             </form>
                                         </div>
 
@@ -95,7 +95,7 @@
                                                             </option>
                                                             <%})%>
                                                     </select>
-                                                    <input type="text" name="" id="OrdeID" value="<%=orders.id%>"
+                                                    <input type="text" name="" id="OrdeID" value="<%=orders._id%>"
                                                         hidden>
                                                     <button type="submit" class="btn btn-primary" href="#">Save</button>
                                                     <!-- <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a> -->
@@ -210,7 +210,7 @@
                                                         <td class="<%= 
                                             item.status === 'Pending' ? 'pending' : 
                                             item.status === 'Shipped' ? 'shipped' : 
-                                            item.status === 'On Delivery' ? 'on-delivery' : 
+                                            (item.status === 'Out for Delivery' || item.status === 'On Delivery') ? 'on-delivery' : 
                                             item.status === 'Delivered' ? 'delivered' : 
                                             item.status === 'Cancelled' ? 'cancelled' : 
                                             item.status === 'Return' ? 'return' : '' 

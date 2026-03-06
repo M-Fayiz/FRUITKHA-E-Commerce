@@ -22,7 +22,7 @@
         <%=value%>
       </p>
       <p><strong>OrderID :</strong>
-        <%=order.id%>
+        <%=order.orderNumber || order.id%>
       </p>
       <p><strong>Date:</strong>
         <%= new Date(order.createdAt).toLocaleString('en-US', { weekday: 'short' , month: 'short' , day: '2-digit' ,

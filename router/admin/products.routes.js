@@ -12,7 +12,11 @@ router.post(
   (req, res, next) => {
     upload.array("primaryImageInput", 3)(req, res, (err) => {
       if (err) {
-        return res.status(400).json({ success: false, message: err.message });
+        const msg =
+          err.message ||
+          (err.error && err.error.message) ||
+          "Image upload failed. Please check Cloudinary configuration.";
+        return res.status(400).json({ success: false, message: msg });
       }
       next();
     });
