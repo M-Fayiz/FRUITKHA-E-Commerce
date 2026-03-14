@@ -21,12 +21,15 @@ const securePassword = async (password) => {
 
 let LoadProfile = async (req, res) => {
   try {
-    console.log(typeof req.params.id);
-
-    let userId = req.params.id;
+    let userId = req.params.id || req.session.user;
+    console.log(typeof userId);
     console.log(userId);
 
     const user = await USER.findById(userId);
+
+    if (!user) {
+      return res.redirect("/login");
+    }
 
     res.render("user/profile", { user, CURRENTpage: "Profile" });
   } catch (error) {
