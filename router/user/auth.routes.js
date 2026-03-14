@@ -8,6 +8,7 @@ const { AUTH_API } = require("../../constant/api/auth.api");
 router.get("/signUp", Auth.userAuth, userController.loadSignUp);
 router.get("/login", Auth.userAuth, userController.getlogin);
 router.post(AUTH_API.USER_LOGIN, userController.Login);
+router.get("/logOut", userController.logOut);
 router.get("/logOut/:id", userController.logOut);
 
 router.get(

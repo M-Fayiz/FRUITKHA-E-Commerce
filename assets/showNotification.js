@@ -13,7 +13,13 @@ window.showToast = function (message, status = "info") {
   }
 
   // Create and configure the new toast
-  const container = document.getElementById("toastContainer");
+  let container = document.getElementById("toastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
   const toast = document.createElement("div");
   toast.className = `toast ${status}`;
 
