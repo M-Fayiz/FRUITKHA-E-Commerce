@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             canvas.toBlob((blob) => {
               croppedBlobs[inputIndex] = blob;
 
-              // Update Preview
+           
               if (previewElement) {
                 previewElement.src = URL.createObjectURL(blob);
                 previewElement.style.display = "block";
@@ -103,14 +103,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     imageInputs.forEach((input, index) => {
       if (croppedBlobs[index]) {
-        // Prefer the cropped version if the user went through the crop flow
+      
         formData.append(
           "primaryImageInput",
           croppedBlobs[index],
           `image-${index}-cropped.jpg`,
         );
       } else if (input.files[0]) {
-        // Fallback: send the raw selected file directly
+      
         formData.append("primaryImageInput", input.files[0], input.files[0].name);
       }
     });

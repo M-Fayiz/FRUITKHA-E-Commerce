@@ -3,8 +3,7 @@ const { Resend } = require("resend");
 const resend = new Resend(process.env.RESEND_API_KEY);
 const sendMail = async (email, otp) => {
  
-  console.log(' email:',email)
-  console.log('otp :',otp)
+
   try {
    const sent = await resend.emails.send({
       from: "Fruitkha <no-reply@codeaspire.online>",
