@@ -65,7 +65,8 @@ const httpResponse = require("./constant/httpResponse");
 startExpired();
 StockExpire();
 manageExpiration();
-app.listen(PORT, () => {
+
+app.listen(PORT||4000, () => {
   connectDB();
   console.log(".................. RUNNING....................");
 });
