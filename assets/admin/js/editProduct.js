@@ -9,6 +9,46 @@ document.addEventListener("DOMContentLoaded", function () {
   const cropButton = document.getElementById("cropButton");
   let cropper;
   let croppedBlobs = {};
+  const MAX_IMAGE_DIMENSION = 1600;
+  const MAX_UPLOAD_BYTES = 9 * 1024 * 1024;
+
+  function exportCanvasBlob(canvas) {
+    const attempts = [
+      { type: "image/jpeg", quality: 0.82 },
+      { type: "image/jpeg", quality: 0.72 },
+      { type: "image/jpeg", quality: 0.6 },
+    ];
+
+    return new Promise((resolve, reject) => {
+      const tryAttempt = (index) => {
+        const attempt = attempts[index];
+        if (!attempt) {
+          reject(new Error("Unable to compress image for upload."));
+          return;
+        }
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Failed to process image."));
+              return;
+            }
+
+            if (blob.size <= MAX_UPLOAD_BYTES || index === attempts.length - 1) {
+              resolve(blob);
+              return;
+            }
+
+            tryAttempt(index + 1);
+          },
+          attempt.type,
+          attempt.quality,
+        );
+      };
+
+      tryAttempt(0);
+    });
+  }
 
   function handleImageCrop(file, inputName, previewElement) {
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
@@ -37,21 +77,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         cropButton.onclick = () => {
           if (cropper) {
-            const canvas = cropper.getCroppedCanvas();
-            canvas.toBlob((blob) => {
-              croppedBlobs[inputName] = blob;
-              console.log(croppedBlobs, "blobs");
-
-              // Update Preview
-              if (previewElement) {
-                const url = URL.createObjectURL(blob);
-                previewElement.src = url;
-              }
-
-              imageCropModal.style.display = "none";
-              cropper.destroy();
-              cropper = null;
+            const canvas = cropper.getCroppedCanvas({
+              maxWidth: MAX_IMAGE_DIMENSION,
+              maxHeight: MAX_IMAGE_DIMENSION,
+              imageSmoothingEnabled: true,
+              imageSmoothingQuality: "high",
             });
+            exportCanvasBlob(canvas)
+              .then((blob) => {
+                croppedBlobs[inputName] = blob;
+
+                if (previewElement) {
+                  const url = URL.createObjectURL(blob);
+                  previewElement.src = url;
+                }
+
+                imageCropModal.style.display = "none";
+                cropper.destroy();
+                cropper = null;
+              })
+              .catch((error) => {
+                showToast(error.message, "error");
+              });
           }
         };
       };
@@ -140,13 +187,35 @@ document.addEventListener("DOMContentLoaded", function () {
         method: "PATCH",
         body: formData,
       })
-        .then((res) => res.json())
+        .then(async (res) => {
+          const contentType = res.headers.get("content-type") || "";
+          const data = contentType.includes("application/json")
+            ? await res.json()
+            : {
+                success: false,
+                message: "Product update failed. Please try again.",
+              };
+
+          if (!res.ok) {
+            throw new Error(
+              data.message || "Product update failed. Please try again.",
+            );
+          }
+
+          return data;
+        })
         .then((data) => {
           if (data.success) {
             showToast(data.message, "success");
           } else {
             showToast(data.message, "error");
           }
+        })
+        .catch((error) => {
+          showToast(
+            error.message || "Product update failed. Please try again.",
+            "error",
+          );
         });
     });
 });

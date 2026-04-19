@@ -17,6 +17,10 @@ const hasCloudinaryConfig = Boolean(
     process.env.CLOUDINARY_API_SECRET,
 );
 
+const uploadProvider = String(process.env.UPLOAD_PROVIDER || "").toLowerCase();
+const useCloudinaryStorage =
+  uploadProvider === "local" ? false : hasCloudinaryConfig;
+
 const getFileExtension = (file) => {
   if (file.mimetype === "image/png") return ".png";
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
@@ -39,7 +43,7 @@ const localStorage = multer.diskStorage({
 });
 
 // Store files directly to Cloudinary when configured, otherwise fall back to local disk storage.
-const storage = hasCloudinaryConfig
+const storage = useCloudinaryStorage
   ? new CloudinaryStorage({
       cloudinary,
       params: async (req, file) => ({

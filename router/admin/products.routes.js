@@ -16,6 +16,7 @@ router.post(
           err.message ||
           (err.error && err.error.message) ||
           "Image upload failed. Please check Cloudinary configuration.";
+        console.error("Product image upload failed:", err);
         return res.status(400).json({ success: false, message: msg });
       }
       next();
@@ -44,6 +45,7 @@ router.patch(
       { name: "additionalImage1", maxCount: 1 },
     ])(req, res, (err) => {
       if (err) {
+        console.error("Product edit image upload failed:", err);
         return res.status(400).json({ success: false, message: err.message });
       }
       next();

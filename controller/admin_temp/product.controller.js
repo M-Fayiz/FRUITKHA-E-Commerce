@@ -219,13 +219,13 @@ const editProduct = async (req, res) => {
       Category: category,
     };
 
-    if (req.files.primaryImage && req.files.primaryImage[0]) {
+    if (req.files?.primaryImage && req.files.primaryImage[0]) {
       updateData.primaryImage = getUploadImagePath(req.files.primaryImage[0]);
     }
 
     let updatedAdditionalImages = [...(product.additonalImage || [])];
 
-    Object.keys(req.files).forEach((key) => {
+    Object.keys(req.files || {}).forEach((key) => {
       const match = key.match(/additionalImage(\d+)/);
       if (match) {
         const index = parseInt(match[1], 10);
